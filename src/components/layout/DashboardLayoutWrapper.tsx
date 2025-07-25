@@ -1,3 +1,4 @@
+
 // src/components/layout/DashboardLayoutWrapper.tsx
 'use client';
 
@@ -11,7 +12,6 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet";
 import {
   Popover,
@@ -61,6 +61,19 @@ type MenuItem = {
   roles: string[];
   featureFlag?: boolean;
 };
+
+// Helper function to convert a base64 string to a Uint8Array.
+const urlBase64ToUint8Array = (base64String: string) => {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+};
+
 
 const getUserRoleIcon = (role: string | undefined) => {
     if (!role) return User;
@@ -124,36 +137,55 @@ export default function DashboardLayoutWrapper({ children, attendanceEnabled }: 
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  // Effect for registering the service worker & handling notifications
+  // Effect for setting up push notifications
   useEffect(() => {
-    if ('serviceWorker' in navigator && currentUser) {
-      navigator.serviceWorker.register('/sw.js')
-        .then((registration) => {
-          console.log('Service Worker registration successful, scope:', registration.scope);
-          // Ensure the service worker is active before sending a message
-          if (registration.active) {
-            registration.active.postMessage({
-              type: 'SET_USER_ID',
-              userId: currentUser.id,
-            });
-            console.log('User ID sent to active Service Worker.');
-          } else {
-             // If not active, listen for controller change
-             navigator.serviceWorker.addEventListener('controllerchange', () => {
-                if (navigator.serviceWorker.controller) {
-                    navigator.serviceWorker.controller.postMessage({
-                        type: 'SET_USER_ID',
-                        userId: currentUser.id,
-                    });
-                    console.log('User ID sent to newly activated Service Worker.');
+    if (isClient && 'serviceWorker' in navigator && currentUser) {
+        navigator.serviceWorker.ready.then(registration => {
+            // Check if we already have a subscription
+            registration.pushManager.getSubscription().then(subscription => {
+                if (subscription === null) {
+                    // No subscription, so subscribe
+                    subscribeUser(registration);
+                } else {
+                    // We have a subscription, check if its associated user is the current user
+                    console.log('Existing subscription found.');
                 }
-             });
-          }
-        }).catch((err) => {
-          console.error('Service Worker registration failed:', err);
+            });
         });
     }
-  }, [currentUser]);
+  }, [isClient, currentUser]);
+
+  const subscribeUser = async (registration: ServiceWorkerRegistration) => {
+    try {
+        const response = await fetch('/api/notifications/vapid-public-key');
+        const vapidPublicKey = await response.text();
+        const applicationServerKey = urlBase64ToUint8Array(vapidPublicKey);
+        
+        const subscription = await registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: applicationServerKey
+        });
+        
+        console.log('User is subscribed:', subscription);
+        
+        await fetch('/api/notifications/subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: currentUser!.id, subscription: subscription })
+        });
+        toast({
+          title: notificationsDict.permissionGrantedTitle,
+          description: notificationsDict.permissionGrantedDesc
+        });
+    } catch (err) {
+        console.error('Failed to subscribe the user: ', err);
+        toast({
+          title: notificationsDict.permissionErrorTitle,
+          description: (err as Error).message || notificationsDict.permissionErrorDesc,
+          variant: 'destructive'
+        });
+    }
+  };
 
 
   const fetchNotifications = useCallback(async () => {
@@ -174,40 +206,11 @@ export default function DashboardLayoutWrapper({ children, attendanceEnabled }: 
     }
   }, [isClient, currentUser]);
   
-  // Effect for requesting notification permission
-  useEffect(() => {
-      if (isClient && 'Notification' in window && notificationsDict) {
-          if (Notification.permission === 'default') {
-              Notification.requestPermission().then(permission => {
-                  if (permission === 'granted') {
-                      toast({
-                          title: notificationsDict.permissionGrantedTitle,
-                          description: notificationsDict.permissionGrantedDesc,
-                      });
-                  } else if (permission === 'denied') {
-                       toast({
-                          title: notificationsDict.permissionDeniedTitle,
-                          description: notificationsDict.permissionDeniedDesc,
-                          variant: 'destructive'
-                      });
-                  }
-              }).catch(err => {
-                  console.error('Error requesting notification permission:', err);
-                  toast({
-                      title: notificationsDict.permissionErrorTitle,
-                      description: notificationsDict.permissionErrorDesc,
-                      variant: 'destructive'
-                  });
-              });
-          }
-      }
-  }, [isClient, toast, notificationsDict]);
-
   // Effect for fetching in-app notifications (bell icon)
   useEffect(() => {
     if (isClient && currentUser) {
       fetchNotifications();
-      const intervalId = setInterval(fetchNotifications, 15000); 
+      const intervalId = setInterval(fetchNotifications, 30000); 
       return () => clearInterval(intervalId);
     }
   }, [isClient, currentUser, fetchNotifications]);

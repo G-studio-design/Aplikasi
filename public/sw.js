@@ -1,87 +1,57 @@
-// public/sw.js
-'use strict';
 
-let userId = null;
-let lastNotificationTimestamp = null;
+// /public/sw.js
 
-self.addEventListener('message', (event) => {
-    if (event.data && event.data.type === 'SET_USER_ID') {
-        userId = event.data.userId;
-        console.log(`[SW] User ID set to: ${userId}`);
-        lastNotificationTimestamp = new Date().toISOString(); // Reset timestamp when user is set
+self.addEventListener('push', (event) => {
+  console.log('[Service Worker] Push Received.');
+  let data;
+  try {
+    data = event.data.json();
+  } catch (e) {
+    console.error('[Service Worker] Push event but no data', e);
+    data = { title: 'Notifikasi Baru', message: 'Anda memiliki pembaruan baru.' };
+  }
+
+  const title = data.title || 'Pembaruan Proyek Msarch';
+  const options = {
+    body: data.message,
+    icon: '/msarch-logo.png', // Main app icon
+    badge: '/msarch-logo.png', // Icon for notification tray on mobile
+    vibrate: [200, 100, 200],
+    data: {
+      url: data.url || '/' // URL to open on click
     }
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
 });
-
-async function fetchAndDisplayNotifications() {
-    if (!userId) {
-        console.log('[SW] User ID not set, skipping notification check.');
-        return;
-    }
-
-    try {
-        const response = await fetch(`/api/notifications?userId=${userId}`);
-        if (!response.ok) {
-            console.error('[SW] Failed to fetch notifications, status:', response.status);
-            return;
-        }
-
-        const notifications = await response.json();
-
-        if (notifications && notifications.length > 0) {
-            const latestNotification = notifications[0]; // Assuming sorted by timestamp desc
-
-            // Check if this is a new notification since the last check
-            if (!latestNotification.isRead && (!lastNotificationTimestamp || new Date(latestNotification.timestamp) > new Date(lastNotificationTimestamp))) {
-                
-                lastNotificationTimestamp = latestNotification.timestamp;
-                
-                self.registration.showNotification('Msarch App Notification', {
-                    body: latestNotification.message,
-                    icon: '/msarch-logo.png', // Main app logo
-                    badge: '/icon.png', // Smaller icon for notification bar
-                    data: {
-                        url: latestNotification.projectId 
-                             ? `/dashboard/projects?projectId=${latestNotification.projectId}` 
-                             : '/dashboard'
-                    }
-                });
-            }
-        }
-    } catch (error) {
-        console.error('[SW] Error fetching notifications:', error);
-    }
-}
-
-// Check for notifications periodically
-setInterval(fetchAndDisplayNotifications, 30000); // Check every 30 seconds
 
 self.addEventListener('notificationclick', (event) => {
-    event.notification.close();
-    const urlToOpen = event.notification.data.url || '/dashboard';
-    
-    event.waitUntil(
-        clients.matchAll({
-            type: 'window'
-        }).then((clientList) => {
-            for (const client of clientList) {
-                if (client.url === urlToOpen && 'focus' in client) {
-                    return client.focus();
-                }
-            }
-            if (clients.openWindow) {
-                return clients.openWindow(urlToOpen);
-            }
-        })
-    );
+  console.log('[Service Worker] Notification click Received.');
+  event.notification.close();
+
+  const urlToOpen = event.notification.data.url || '/';
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      // Check if a window is already open
+      for (let i = 0; i < clientList.length; i++) {
+        const client = clientList[i];
+        if (client.url === urlToOpen && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      // If not, open a new window
+      if (clients.openWindow) {
+        return clients.openWindow(urlToOpen);
+      }
+    })
+  );
 });
 
-// Basic install and activate listeners for PWA functionality
-self.addEventListener('install', (event) => {
-    console.log('[SW] Service worker installed');
-    // self.skipWaiting();
-});
-
-self.addEventListener('activate', (event) => {
-    console.log('[SW] Service worker activated');
-    // event.waitUntil(clients.claim());
+self.addEventListener('message', (event) => {
+  // This listener is no longer the primary way to get notifications,
+  // but we can keep it for other potential commands.
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });

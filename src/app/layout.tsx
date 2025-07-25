@@ -23,6 +23,8 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/msarch-logo.png"></link>
+        <meta name="theme-color" content="#1A237E" />
       </head>
       <body className={inter.className}>
         <AuthProvider>
