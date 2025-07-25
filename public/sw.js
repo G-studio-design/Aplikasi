@@ -1,57 +1,67 @@
+// public/sw.js
 
-// /public/sw.js
+self.addEventListener('install', (event) => {
+  console.log('Service Worker installing.');
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  console.log('Service Worker activating.');
+});
 
 self.addEventListener('push', (event) => {
   console.log('[Service Worker] Push Received.');
-  let data;
+  console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
+
+  let pushData;
   try {
-    data = event.data.json();
+    pushData = event.data.json();
   } catch (e) {
-    console.error('[Service Worker] Push event but no data', e);
-    data = { title: 'Notifikasi Baru', message: 'Anda memiliki pembaruan baru.' };
+    console.error("Failed to parse push data as JSON", e);
+    pushData = {
+      title: 'Msarch App',
+      message: event.data.text(),
+    };
   }
 
-  const title = data.title || 'Pembaruan Proyek Msarch';
+  const title = pushData.title || 'Msarch App Notification';
   const options = {
-    body: data.message,
+    body: pushData.message || 'You have a new update.',
     icon: '/msarch-logo.png', // Main app icon
-    badge: '/msarch-logo.png', // Icon for notification tray on mobile
+    badge: '/msarch-logo-badge.png', // A smaller icon for the notification bar
     vibrate: [200, 100, 200],
     data: {
-      url: data.url || '/' // URL to open on click
-    }
+      url: pushData.url || '/', // URL to open on click
+    },
   };
 
-  event.waitUntil(self.registration.showNotification(title, options));
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
 });
 
 self.addEventListener('notificationclick', (event) => {
   console.log('[Service Worker] Notification click Received.');
+
   event.notification.close();
 
   const urlToOpen = event.notification.data.url || '/';
 
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      // Check if a window is already open
-      for (let i = 0; i < clientList.length; i++) {
-        const client = clientList[i];
+    clients.matchAll({
+      type: 'window',
+      includeUncontrolled: true,
+    }).then((clientList) => {
+      // If a window for the app is already open, focus it
+      for (const client of clientList) {
         if (client.url === urlToOpen && 'focus' in client) {
           return client.focus();
         }
       }
-      // If not, open a new window
+      // Otherwise, open a new window
       if (clients.openWindow) {
         return clients.openWindow(urlToOpen);
       }
     })
   );
-});
-
-self.addEventListener('message', (event) => {
-  // This listener is no longer the primary way to get notifications,
-  // but we can keep it for other potential commands.
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
 });

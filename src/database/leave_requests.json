@@ -85,5 +85,17 @@
     "approvedRejectedBy": "usr_owner_default",
     "approvedRejectedAt": "2025-07-25T05:40:22.369Z",
     "rejectionReason": "jangan dlu\n"
+  },
+  {
+    "id": "leave_1753422833687_q9cow",
+    "userId": "usr_1747799008584_4r22a",
+    "username": "komangmerta",
+    "displayName": "Komang Merta",
+    "requestDate": "2025-07-25T05:53:53.687Z",
+    "leaveType": "Cuti Tahunan",
+    "startDate": "2025-07-25",
+    "endDate": "2025-07-26",
+    "reason": "sibuk dirumah",
+    "status": "Pending"
   }
 ]
