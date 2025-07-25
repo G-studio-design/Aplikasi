@@ -52,6 +52,7 @@ async function findUsersByRole(role: string): Promise<User[]> {
 
 async function sendPushNotification(subscription: PushSubscription, payload: string) {
     try {
+        // payload di sini HARUS berupa string. Kita akan mengirim string JSON.
         await webPush.sendNotification(subscription, payload);
     } catch (error: any) {
         console.error(`Failed to send push notification to ${subscription.endpoint}. Error: ${error.message}`);
@@ -87,11 +88,11 @@ async function notifyUser(user: User, payload: NotificationPayload, projectId?: 
     const subscriptions = await readDb<SubscriptionRecord[]>(SUBSCRIPTION_DB_PATH, []);
     const userSubscriptions = subscriptions.filter(sub => sub.userId === user.id);
     
-    // The payload sent to the push service is the structured JSON object.
-    const pushPayload = JSON.stringify(payload);
+    // Ubah payload menjadi string JSON untuk dikirim.
+    const pushPayloadString = JSON.stringify(payload);
     
     for (const subRecord of userSubscriptions) {
-        await sendPushNotification(subRecord.subscription, pushPayload);
+        await sendPushNotification(subRecord.subscription, pushPayloadString);
     }
 }
 
