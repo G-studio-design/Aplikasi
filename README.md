@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Msarch App
 
 Aplikasi starter Next.js untuk manajemen proyek dan tugas karyawan.
@@ -47,6 +46,3 @@ NEXT_PUBLIC_GOOGLE_REDIRECT_URI="http://localhost:4000/api/auth/google/callback"
 ```
 
 **PENTING**: File `.env` berisi informasi sensitif. File ini sudah tercantum di dalam `.gitignore` untuk mencegahnya diunggah ke GitHub secara tidak sengaja. Jangan pernah membagikan file `.env` Anda atau memasukkannya ke dalam riwayat Git.
-=======
-# Aplikasi
-
