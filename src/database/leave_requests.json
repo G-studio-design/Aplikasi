@@ -96,6 +96,24 @@
     "startDate": "2025-07-25",
     "endDate": "2025-07-26",
     "reason": "sibuk dirumah",
-    "status": "Pending"
+    "status": "Rejected",
+    "approvedRejectedBy": "usr_owner_default",
+    "approvedRejectedAt": "2025-07-25T06:06:02.581Z",
+    "rejectionReason": "jangan dulu"
+  },
+  {
+    "id": "leave_1753423533118_cml6y",
+    "userId": "usr_1747799008584_4r22a",
+    "username": "komangmerta",
+    "displayName": "Komang Merta",
+    "requestDate": "2025-07-25T06:05:33.118Z",
+    "leaveType": "Cuti Tahunan",
+    "startDate": "2025-07-25",
+    "endDate": "2025-07-26",
+    "reason": "sibuk ada acara",
+    "status": "Rejected",
+    "approvedRejectedBy": "usr_owner_default",
+    "approvedRejectedAt": "2025-07-25T06:05:51.899Z",
+    "rejectionReason": "jangan dulu"
   }
 ]
