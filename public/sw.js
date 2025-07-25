@@ -1,48 +1,44 @@
-self.addEventListener('push', function (event) {
-  if (!event.data) {
-    console.log('Push event but no data');
-    return;
-  }
-  const data = event.data.json();
+// public/sw.js
+
+// Event listener untuk push notifications
+self.addEventListener('push', (event) => {
+  const data = event.data.json(); // Mengurai data payload dari push event
+
   const title = data.title || 'Msarch App Notification';
   const options = {
     body: data.message,
-    icon: '/msarch-logo.png', // Main icon
-    badge: '/msarch-logo.png', // Small icon for notification bar
+    icon: '/msarch-logo.png', // Ikon notifikasi
+    badge: '/msarch-logo.png', // Ikon kecil untuk status bar Android
+    vibrate: [200, 100, 200],
     data: {
-      url: data.url || '/',
+      url: data.url || '/', // URL untuk dibuka saat notifikasi diklik
     },
   };
+
   event.waitUntil(self.registration.showNotification(title, options));
 });
 
-self.addEventListener('notificationclick', function (event) {
-  event.notification.close();
+// Event listener untuk klik notifikasi
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close(); // Menutup notifikasi setelah diklik
+
+  const urlToOpen = event.notification.data.url;
+
+  // Membuka tab baru atau fokus ke tab yang sudah ada dengan URL yang dituju
   event.waitUntil(
-    clients
-      .matchAll({
-        type: 'window',
-      })
-      .then(function (clientList) {
-        const urlToOpen = event.notification.data.url || '/';
-        for (let i = 0; i < clientList.length; i++) {
-          const client = clientList[i];
-          if (client.url === urlToOpen && 'focus' in client) {
-            return client.focus();
-          }
+    clients.matchAll({
+      type: 'window',
+      includeUncontrolled: true,
+    }).then((clientList) => {
+      for (let i = 0; i < clientList.length; i++) {
+        const client = clientList[i];
+        if (client.url === urlToOpen && 'focus' in client) {
+          return client.focus();
         }
-        if (clients.openWindow) {
-          return clients.openWindow(urlToOpen);
-        }
-      })
+      }
+      if (clients.openWindow) {
+        return clients.openWindow(urlToOpen);
+      }
+    })
   );
-});
-
-// Empty install and activate listeners to ensure the service worker takes control immediately.
-self.addEventListener('install', (event) => {
-  event.waitUntil(self.skipWaiting());
-});
-
-self.addEventListener('activate', (event) => {
-  event.waitUntil(self.clients.claim());
 });
