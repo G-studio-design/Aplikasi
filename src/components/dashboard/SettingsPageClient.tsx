@@ -1,3 +1,4 @@
+
 // src/components/dashboard/SettingsPageClient.tsx
 'use client';
 
@@ -118,8 +119,17 @@ export default function SettingsPageClient() {
     
     setIsSubscribing(true);
     try {
-        const registration = await navigator.serviceWorker.ready;
-        
+        const permission = await Notification.requestPermission();
+        if (permission !== 'granted') {
+            setNotificationPermission(permission);
+            throw new Error(notificationsDict.permissionDeniedTitle);
+        }
+
+        const registration = await navigator.serviceWorker.getRegistration();
+        if (!registration) {
+            throw new Error("Service Worker not found. Please reload the page.");
+        }
+
         let subscription = await registration.pushManager.getSubscription();
         if (subscription) {
             toast({ title: "Notifications Already Enabled", description: "You are already subscribed to notifications." });
@@ -150,7 +160,9 @@ export default function SettingsPageClient() {
     } catch (err) {
         console.error('Failed to subscribe the user: ', err);
         toast({ title: notificationsDict.permissionErrorTitle, description: (err as Error).message || notificationsDict.permissionErrorDesc, variant: 'destructive' });
-        setNotificationPermission(Notification.permission);
+        if (Notification.permission !== 'granted') {
+          setNotificationPermission(Notification.permission);
+        }
     } finally {
         setIsSubscribing(false);
     }

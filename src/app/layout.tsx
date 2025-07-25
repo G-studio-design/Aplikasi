@@ -5,6 +5,7 @@ import './globals.css';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { AuthProvider } from '@/context/AuthContext';
 import { Toaster } from '@/components/ui/toaster';
+import Script from 'next/script';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -13,9 +14,9 @@ export const metadata: Metadata = {
   description: 'Aplikasi manajemen proyek dan tugas karyawan',
   manifest: '/manifest.json',
   icons: {
-    icon: '/msarch-logo.png?v=4',
-    shortcut: '/msarch-logo.png?v=4',
-    apple: '/msarch-logo.png?v=4',
+    icon: '/msarch-logo.png?v=5',
+    shortcut: '/msarch-logo.png?v=5',
+    apple: '/msarch-logo.png?v=5',
   },
 };
 
@@ -36,6 +37,19 @@ export default function RootLayout({
             <Toaster />
           </LanguageProvider>
         </AuthProvider>
+        <Script id="service-worker-registration">
+          {`
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                  console.log('Service Worker registered with scope:', registration.scope);
+                }).catch(error => {
+                  console.error('Service Worker registration failed:', error);
+                });
+              });
+            }
+          `}
+        </Script>
       </body>
     </html>
   );
