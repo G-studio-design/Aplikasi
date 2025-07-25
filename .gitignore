@@ -2,30 +2,20 @@
 
 # Dependencies
 /node_modules
-/.pnp
-.pnp.js
-
-# Testing
-/coverage
 
 # Next.js build output
 /.next/
-/out/
 
-# Production
+# Production build
 /build
 
-# Misc
-.DS_Store
-*.pem
+# Static site generator output
+/out/
 
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+# Test results
+/coverage
 
-# Local .env file
+# Environment variables
 .env
 .env.local
 .env.development.local
@@ -34,8 +24,19 @@ pnpm-debug.log*
 
 # IDE files
 .vscode/
+*.swp
+*~
 .idea/
 
-# Temp files
-*.tmp
-*.swp
+# macOS files
+.DS_Store
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Other
+*.pem
+*.cer
