@@ -6,6 +6,7 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { sanitizeForPath } from '@/lib/path-utils'; 
 import { getAllUsers } from '@/services/data-access/user-data';
+import { addFilesToProject } from '@/services/project-service';
 
 // This route is now primarily for single-file uploads outside the project creation flow.
 // For project creation, file handling is integrated into POST /api/projects.
@@ -51,6 +52,16 @@ export async function POST(request: Request) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     await fs.writeFile(absoluteFilePath, buffer);
+    
+    const fileEntry = {
+        name: originalFilename,
+        path: relativeFilePath.replace(/\\/g, '/'),
+        timestamp: new Date().toISOString(),
+        uploadedBy: user.role
+    };
+
+    await addFilesToProject(projectId, [fileEntry], user.username);
+
 
     console.log(`[API Upload] File uploaded successfully to: ${absoluteFilePath}`);
     return NextResponse.json({ 
