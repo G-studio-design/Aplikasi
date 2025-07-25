@@ -1,4 +1,3 @@
-
 // src/app/api/notifications/vapid-public-key/route.ts
 import { NextResponse } from 'next/server';
 

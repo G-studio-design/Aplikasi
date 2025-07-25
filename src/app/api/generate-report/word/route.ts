@@ -1,4 +1,3 @@
-
 // src/app/api/generate-report/word/route.ts
 import { NextResponse } from 'next/server';
 import { generateWordReport } from '@/lib/report-generator';

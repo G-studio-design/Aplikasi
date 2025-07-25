@@ -1,4 +1,3 @@
-
 // src/app/api/notify-division/route.ts
 import { NextResponse } from 'next/server';
 import { notifyUsersByRole } from '@/services/notification-service';

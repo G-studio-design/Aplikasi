@@ -1,4 +1,3 @@
-
 // src/app/api/projects/[projectId]/route.ts
 import { NextResponse } from 'next/server';
 import { deleteProject, getProjectById } from '@/services/project-service';

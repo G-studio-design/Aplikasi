@@ -1,4 +1,3 @@
-
 // src/app/api/settings/feature-toggle/route.ts
 import { NextResponse } from 'next/server';
 import { setAttendanceFeatureEnabled } from '@/services/settings-service';

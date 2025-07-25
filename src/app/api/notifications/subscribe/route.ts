@@ -1,4 +1,3 @@
-
 // src/app/api/notifications/subscribe/route.ts
 import { NextResponse } from 'next/server';
 import { saveSubscription } from '@/services/notification-service';

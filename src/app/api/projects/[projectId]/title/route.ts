@@ -1,4 +1,3 @@
-
 // src/app/api/projects/[projectId]/title/route.ts
 import { NextResponse } from 'next/server';
 import { updateProjectTitle } from '@/services/project-service';
