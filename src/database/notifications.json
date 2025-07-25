@@ -1,10 +1,17 @@
 [
   {
+    "id": "notif_1753442235524_conh4",
+    "userId": "usr_owner_default",
+    "message": "Permintaan izin baru dari Komang Merta (Cuti Tahunan) dari tanggal 2025-07-25 hingga 2025-07-26.",
+    "timestamp": "2025-07-25T11:17:15.524Z",
+    "isRead": false
+  },
+  {
     "id": "notif_1753440586802_9eg65",
     "userId": "usr_1747799008584_4r22a",
     "message": "Permintaan izin Anda (Cuti Tahunan) dari 2025-07-25 hingga 2025-07-26 telah disetujui oleh sudina.",
     "timestamp": "2025-07-25T10:49:46.801Z",
-    "isRead": false
+    "isRead": true
   },
   {
     "id": "notif_1753440560543_3yep6",

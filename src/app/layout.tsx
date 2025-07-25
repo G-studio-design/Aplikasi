@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   icons: {
     icon: '/msarch-logo.png',
+    shortcut: '/msarch-logo.png',
     apple: '/msarch-logo.png',
   },
 };
