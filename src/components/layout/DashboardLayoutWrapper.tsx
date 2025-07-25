@@ -62,19 +62,6 @@ type MenuItem = {
   featureFlag?: boolean;
 };
 
-// Helper function to convert a base64 string to a Uint8Array.
-const urlBase64ToUint8Array = (base64String: string) => {
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-};
-
-
 const getUserRoleIcon = (role: string | undefined) => {
     if (!role) return User;
     const roleLower = role.toLowerCase().trim();
@@ -137,61 +124,17 @@ export default function DashboardLayoutWrapper({ children, attendanceEnabled }: 
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  // Effect for setting up push notifications
+  // Check notification permission status on load
   useEffect(() => {
-    if (isClient && 'serviceWorker' in navigator && currentUser) {
-        navigator.serviceWorker.ready.then(registration => {
-            // Check if we already have a subscription
-            registration.pushManager.getSubscription().then(subscription => {
-                if (subscription === null) {
-                    subscribeUser(registration);
-                }
-            });
-        });
-    }
-  }, [isClient, currentUser]);
-
-  const subscribeUser = async (registration: ServiceWorkerRegistration) => {
-    if (!('Notification' in window)) {
-        toast({ title: notificationsDict.notSupportedTitle, description: notificationsDict.notSupportedDesc, variant: 'destructive' });
-        return;
-    }
-    
-    if (Notification.permission === 'denied') {
-        toast({ title: notificationsDict.permissionDeniedTitle, description: notificationsDict.permissionDeniedDesc, variant: 'destructive', duration: 10000 });
-        return;
-    }
-
-    try {
-        const response = await fetch('/api/notifications/vapid-public-key');
-        const vapidPublicKey = await response.text();
-        const applicationServerKey = urlBase64ToUint8Array(vapidPublicKey);
-        
-        const subscription = await registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: applicationServerKey
-        });
-        
-        console.log('User is subscribed:', subscription);
-        
-        await fetch('/api/notifications/subscribe', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId: currentUser!.id, subscription: subscription })
-        });
+    if (isClient && 'Notification' in window && Notification.permission === 'denied') {
         toast({
-          title: notificationsDict.permissionGrantedTitle,
-          description: notificationsDict.permissionGrantedDesc
-        });
-    } catch (err) {
-        console.error('Failed to subscribe the user: ', err);
-        toast({
-          title: notificationsDict.permissionErrorTitle,
-          description: (err as Error).message || notificationsDict.permissionErrorDesc,
-          variant: 'destructive'
+            title: notificationsDict.permissionDeniedTitle,
+            description: notificationsDict.permissionDeniedDesc,
+            variant: 'destructive',
+            duration: 10000
         });
     }
-  };
+  }, [isClient, toast, notificationsDict]);
 
 
   const fetchNotifications = useCallback(async () => {

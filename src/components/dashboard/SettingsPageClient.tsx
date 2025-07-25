@@ -18,7 +18,7 @@ import {
 import { useLanguage } from '@/context/LanguageContext';
 import { getDictionary } from '@/lib/translations';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Upload, Link as LinkIcon, Unlink } from 'lucide-react';
+import { Loader2, Upload, Link as LinkIcon, Unlink, BellPlus, BellOff, XCircle } from 'lucide-react';
 import type { User, UpdateProfileData } from '@/types/user-types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/context/AuthContext';
@@ -26,6 +26,18 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 const defaultDict = getDictionary('en');
+
+// Helper function to convert a base64 string to a Uint8Array.
+const urlBase64ToUint8Array = (base64String: string) => {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+};
 
 export default function SettingsPageClient() {
    const { language, setLanguage } = useLanguage();
@@ -37,6 +49,7 @@ export default function SettingsPageClient() {
    const [isClient, setIsClient] = React.useState(false);
    const [dict, setDict] = React.useState(defaultDict);
    const settingsDict = dict.settingsPage;
+   const notificationsDict = dict.notifications;
 
    const [username, setUsername] = React.useState('');
    const [email, setEmail] = React.useState('');
@@ -49,6 +62,10 @@ export default function SettingsPageClient() {
    const [isUpdatingPassword, setIsUpdatingPassword] = React.useState(false);
    const [isDisconnectingGoogle, setIsDisconnectingGoogle] = React.useState(false);
 
+   const [notificationPermission, setNotificationPermission] = React.useState('default');
+   const [isSubscribing, setIsSubscribing] = React.useState(false);
+
+
    React.useEffect(() => {
        if (currentUser) {
             setUsername(currentUser.username);
@@ -57,7 +74,13 @@ export default function SettingsPageClient() {
        }
    }, [currentUser]);
 
-   React.useEffect(() => setIsClient(true), []);
+   React.useEffect(() => {
+     setIsClient(true);
+     if ('Notification' in window) {
+       setNotificationPermission(Notification.permission);
+     }
+   }, []);
+
    React.useEffect(() => { if (isClient) setDict(getDictionary(language)); }, [language, isClient]);
 
    React.useEffect(() => {
@@ -86,6 +109,53 @@ export default function SettingsPageClient() {
     setLanguage(value as 'en' | 'id');
     toast({ title: settingsDict.toast.languageChanged, description: settingsDict.toast.languageChangedDesc });
   };
+  
+  const handleEnableNotifications = async () => {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window) || !currentUser) {
+        toast({ title: notificationsDict.notSupportedTitle, description: notificationsDict.notSupportedDesc, variant: 'destructive' });
+        return;
+    }
+    
+    setIsSubscribing(true);
+    try {
+        const registration = await navigator.serviceWorker.ready;
+        
+        let subscription = await registration.pushManager.getSubscription();
+        if (subscription) {
+            toast({ title: "Notifications Already Enabled", description: "You are already subscribed to notifications." });
+            setIsSubscribing(false);
+            setNotificationPermission('granted');
+            return;
+        }
+
+        const response = await fetch('/api/notifications/vapid-public-key');
+        if (!response.ok) throw new Error("Could not fetch VAPID public key.");
+        const vapidPublicKey = await response.text();
+        const applicationServerKey = urlBase64ToUint8Array(vapidPublicKey);
+
+        subscription = await registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: applicationServerKey
+        });
+        
+        await fetch('/api/notifications/subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: currentUser.id, subscription: subscription })
+        });
+        
+        toast({ title: notificationsDict.permissionGrantedTitle, description: notificationsDict.permissionGrantedDesc });
+        setNotificationPermission('granted');
+
+    } catch (err) {
+        console.error('Failed to subscribe the user: ', err);
+        toast({ title: notificationsDict.permissionErrorTitle, description: (err as Error).message || notificationsDict.permissionErrorDesc, variant: 'destructive' });
+        setNotificationPermission(Notification.permission);
+    } finally {
+        setIsSubscribing(false);
+    }
+  };
+
 
   const handleProfileUpdate = async () => {
      if (!currentUser) return;
@@ -226,6 +296,41 @@ export default function SettingsPageClient() {
                      <Button onClick={handlePasswordUpdate} disabled={isUpdatingPassword || !currentPassword || !newPassword || !confirmPassword} className="w-full sm:w-auto">{isUpdatingPassword ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" />{settingsDict.updatingPasswordButton}</>) : (settingsDict.updatePasswordButton)}</Button>
                  </CardContent>
             </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-lg">{settingsDict.notificationsCardTitle}</CardTitle>
+                    <CardDescription>{settingsDict.pushNotificationsDesc}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    {notificationPermission === 'granted' && (
+                        <div className="flex items-center gap-2 text-green-600">
+                            <BellPlus className="h-5 w-5" />
+                            <p className="font-medium">{notificationsDict.permissionGrantedTitle}</p>
+                        </div>
+                    )}
+                    {notificationPermission === 'default' && (
+                        <Button onClick={handleEnableNotifications} disabled={isSubscribing} className="w-full sm:w-auto">
+                            {isSubscribing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <BellPlus className="mr-2 h-4 w-4" />}
+                            {settingsDict.enablePushNotificationsButton}
+                        </Button>
+                    )}
+                    {notificationPermission === 'denied' && (
+                        <div className="flex items-center gap-2 text-destructive">
+                            <BellOff className="h-5 w-5" />
+                            <div>
+                                <p className="font-medium">{notificationsDict.permissionDeniedTitle}</p>
+                                <p className="text-xs">{notificationsDict.permissionDeniedDesc}</p>
+                            </div>
+                        </div>
+                    )}
+                    {notificationPermission !== 'granted' && notificationPermission !== 'default' && notificationPermission !== 'denied' && (
+                         <div className="flex items-center gap-2 text-muted-foreground">
+                            <XCircle className="h-5 w-5" />
+                            <p className="font-medium">{notificationsDict.notSupportedTitle}</p>
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
             <Card><CardHeader><CardTitle className="text-lg">{settingsDict.googleCalendarCardTitle}</CardTitle></CardHeader>
                  <CardContent>
                     {isGoogleConnected ? (
@@ -250,18 +355,6 @@ export default function SettingsPageClient() {
                             <SelectContent><SelectItem value="en">{settingsDict.languageEnglish}</SelectItem><SelectItem value="id">{settingsDict.languageIndonesian}</SelectItem></SelectContent>
                           </Select>
                          <p className="text-xs text-muted-foreground">{settingsDict.languageSelectHint}</p>
-                    </div>
-                 </CardContent>
-            </Card>
-            <Card><CardHeader><CardTitle className="text-lg">{settingsDict.notificationsCardTitle}</CardTitle></CardHeader>
-                 <CardContent className="space-y-4">
-                    <div className="flex items-center justify-between space-x-2">
-                        <Label htmlFor="email-notifications" className="flex flex-col space-y-1 flex-1"><span>{settingsDict.emailNotificationsLabel}</span><span className="font-normal leading-snug text-muted-foreground text-xs sm:text-sm">{settingsDict.emailNotificationsHint}</span></Label>
-                        <Switch id="email-notifications" defaultChecked disabled />
-                    </div>
-                     <div className="flex items-center justify-between space-x-2">
-                        <Label htmlFor="in-app-notifications" className="flex flex-col space-y-1 flex-1"><span>{settingsDict.inAppNotificationsLabel}</span><span className="font-normal leading-snug text-muted-foreground text-xs sm:text-sm">{settingsDict.inAppNotificationsHint}</span></Label>
-                        <Switch id="in-app-notifications" defaultChecked disabled />
                     </div>
                  </CardContent>
             </Card>

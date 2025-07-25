@@ -324,5 +324,35 @@
     "approvedRejectedBy": "usr_owner_default",
     "approvedRejectedAt": "2025-07-25T12:33:10.478Z",
     "rejectionReason": "jangan"
+  },
+  {
+    "id": "leave_1753447060043_f3qxp",
+    "userId": "usr_1747799008584_4r22a",
+    "username": "komangmerta",
+    "displayName": "Komang Merta",
+    "requestDate": "2025-07-25T12:37:40.043Z",
+    "leaveType": "Cuti Tahunan",
+    "startDate": "2025-07-25",
+    "endDate": "2025-07-25",
+    "reason": "ijin dong min ",
+    "status": "Rejected",
+    "approvedRejectedBy": "usr_owner_default",
+    "approvedRejectedAt": "2025-07-25T12:37:53.846Z",
+    "rejectionReason": "jangan"
+  },
+  {
+    "id": "leave_1753447114878_un9vu",
+    "userId": "usr_1747799008584_4r22a",
+    "username": "komangmerta",
+    "displayName": "Komang Merta",
+    "requestDate": "2025-07-25T12:38:34.878Z",
+    "leaveType": "Keperluan Pribadi",
+    "startDate": "2025-07-25",
+    "endDate": "2025-07-25",
+    "reason": "ijin dong min",
+    "status": "Rejected",
+    "approvedRejectedBy": "usr_owner_default",
+    "approvedRejectedAt": "2025-07-25T12:38:56.754Z",
+    "rejectionReason": "jangan"
   }
 ]

@@ -1,5 +1,33 @@
 [
   {
+    "id": "notif_1753447136813_blszd",
+    "userId": "usr_1747799008584_4r22a",
+    "message": "Permintaan izin Anda (Keperluan Pribadi) dari 2025-07-25 hingga 2025-07-25 telah ditolak oleh sudina. Alasan: jangan",
+    "timestamp": "2025-07-25T12:38:56.813Z",
+    "isRead": true
+  },
+  {
+    "id": "notif_1753447114894_vcmcr",
+    "userId": "usr_owner_default",
+    "message": "Permintaan izin baru dari Komang Merta (Keperluan Pribadi) dari tanggal 2025-07-25 hingga 2025-07-25.",
+    "timestamp": "2025-07-25T12:38:34.894Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1753447073916_02slz",
+    "userId": "usr_1747799008584_4r22a",
+    "message": "Permintaan izin Anda (Cuti Tahunan) dari 2025-07-25 hingga 2025-07-25 telah ditolak oleh sudina. Alasan: jangan",
+    "timestamp": "2025-07-25T12:37:53.916Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1753447060072_etby2",
+    "userId": "usr_owner_default",
+    "message": "Permintaan izin baru dari Komang Merta (Cuti Tahunan) dari tanggal 2025-07-25 hingga 2025-07-25.",
+    "timestamp": "2025-07-25T12:37:40.072Z",
+    "isRead": false
+  },
+  {
     "id": "notif_1753446790598_eot7a",
     "userId": "usr_1747799008584_4r22a",
     "message": "Permintaan izin Anda (Keperluan Pribadi) dari 2025-07-25 hingga 2025-07-26 telah ditolak oleh sudina. Alasan: jangan",
