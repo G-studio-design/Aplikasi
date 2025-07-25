@@ -1,63 +1,60 @@
-// public/sw.js
+'use strict';
 
-self.addEventListener('install', (event) => {
-  event.waitUntil(self.skipWaiting()); // Activate new service worker as soon as it's installed
+self.addEventListener('install', event => {
+  event.waitUntil(self.skipWaiting());
 });
 
-self.addEventListener('activate', (event) => {
-  event.waitUntil(self.clients.claim()); // Become available to all pages
+self.addEventListener('activate', event => {
+  event.waitUntil(self.clients.claim());
 });
 
-
-self.addEventListener('push', (event) => {
-  let data;
-  try {
-    data = event.data.json();
-  } catch (e) {
-    console.warn('Push event without JSON data, falling back to text.');
-    data = { body: event.data.text() };
+self.addEventListener('push', function(event) {
+  let data = {};
+  if (event.data) {
+    try {
+      data = event.data.json();
+    } catch (e) {
+      console.error('Push event data is not JSON, treating as text.', e);
+      data = { body: event.data.text() };
+    }
   }
 
-  const title = data.title || 'Msarch App Notification';
+  const title = data.title || 'Msarch App';
   const options = {
-    body: data.body || 'You have a new update.',
+    body: data.body || 'Anda memiliki pemberitahuan baru.',
     icon: '/msarch-logo.png',
     badge: '/msarch-logo-badge.png',
     data: {
-      url: data.url || '/',
-    },
+      url: data.url || '/'
+    }
   };
 
-  event.waitUntil(self.registration.showNotification(title, options));
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
 });
 
-
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener('notificationclick', function(event) {
   event.notification.close();
 
-  const targetUrl = event.notification.data.url || '/';
+  const urlToOpen = new URL(event.notification.data.url || '/', self.location.origin).href;
 
   event.waitUntil(
-    clients
-      .matchAll({
-        type: 'window',
-        includeUncontrolled: true,
-      })
-      .then((clientList) => {
-        // Check if there's already a window open with the same URL.
-        for (const client of clientList) {
-          // Use URL objects to compare paths without getting confused by query params or hash.
-          const clientUrl = new URL(client.url);
-          const targetUrlObj = new URL(targetUrl, self.location.origin);
-
-          if (clientUrl.pathname === targetUrlObj.pathname && 'focus' in client) {
-            return client.focus();
+    clients.matchAll({
+      type: 'window',
+      includeUncontrolled: true
+    }).then(function(clientList) {
+      if (clientList.length > 0) {
+        let client = clientList[0];
+        for (let i = 0; i < clientList.length; i++) {
+          if (clientList[i].focused) {
+            client = clientList[i];
           }
         }
-        // If no window is found, open a new one.
-        if (clients.openWindow) {
-          return clients.openWindow(targetUrl);
-        }
-      })
+        client.navigate(urlToOpen);
+        return client.focus();
+      }
+      return clients.openWindow(urlToOpen);
+    })
   );
 });
