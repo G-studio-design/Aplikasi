@@ -13,9 +13,9 @@ export const metadata: Metadata = {
   description: 'Aplikasi manajemen proyek dan tugas karyawan',
   manifest: '/manifest.json',
   icons: {
-    icon: '/msarch-logo.png',
-    shortcut: '/msarch-logo.png',
-    apple: '/msarch-logo.png',
+    icon: '/msarch-logo.png?v=4',
+    shortcut: '/msarch-logo.png?v=4',
+    apple: '/msarch-logo.png?v=4',
   },
 };
 

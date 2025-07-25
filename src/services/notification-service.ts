@@ -79,10 +79,13 @@ async function notifyUser(user: User, message: string, projectId?: string): Prom
     const subscriptions = await readDb<SubscriptionRecord[]>(SUBSCRIPTION_DB_PATH, []);
     const userSubscriptions = subscriptions.filter(sub => sub.userId === user.id);
     
+    // Standardized payload for the service worker
     const pushPayload = {
         title: "Pembaruan Proyek Msarch",
-        message: message,
-        url: projectId ? `/dashboard/projects?projectId=${projectId}` : '/dashboard'
+        body: message, // Use 'body' instead of 'message'
+        data: {
+          url: projectId ? `/dashboard/projects?projectId=${projectId}` : '/dashboard'
+        }
     };
     
     for (const subRecord of userSubscriptions) {

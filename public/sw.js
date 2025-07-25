@@ -1,68 +1,76 @@
+
 // public/sw.js
 
-// This forces the waiting service worker to become the active service worker.
+// This event is fired when the service worker is first installed.
 self.addEventListener('install', (event) => {
+  // skipWaiting() forces the waiting service worker to become the
+  // active service worker.
   event.waitUntil(self.skipWaiting());
+  console.log('Service Worker: Installed');
 });
 
-// This claims control over all clients (tabs) as soon as the service worker activates.
+// This event is fired when the service worker is activated.
 self.addEventListener('activate', (event) => {
+  // clients.claim() allows an active service worker to set itself as the
+  // controller for all clients within its scope.
   event.waitUntil(self.clients.claim());
+  console.log('Service Worker: Activated');
 });
 
-// Listener for push notifications from the server
+// This event is fired when a push message is received.
 self.addEventListener('push', (event) => {
-  let data;
-  try {
-    data = event.data ? event.data.json() : {};
-  } catch (e) {
-    console.error('Push event data is not valid JSON:', event.data?.text());
-    data = {};
+  console.log('Service Worker: Push Received.');
+  if (!event.data) {
+    console.error('Service Worker: Push event but no data');
+    return;
   }
 
-  const title = data.title || 'Msarch App';
-  const options = {
-    body: data.message || 'Anda memiliki pemberitahuan baru.',
-    icon: '/msarch-logo.png', // Main icon
-    badge: '/msarch-logo.png', // Small icon for notification bar on Android
-    data: {
-      url: data.url || '/',
-    },
-  };
+  try {
+    const data = event.data.json();
+    console.log('Service Worker: Push data parsed:', data);
 
-  event.waitUntil(self.registration.showNotification(title, options));
+    const title = data.title || 'Msarch App Notification';
+    const options = {
+      body: data.body || 'You have a new update.',
+      icon: '/msarch-logo.png', // Main icon for the notification
+      badge: '/msarch-logo-badge.png', // Small icon for status bar
+      data: {
+        url: data.data?.url || '/',
+      },
+    };
+
+    event.waitUntil(self.registration.showNotification(title, options));
+  } catch (e) {
+    console.error('Service Worker: Error processing push data', e);
+  }
 });
 
-
-// Listener for when a user clicks on a notification
+// This event is fired when a user clicks on a notification.
 self.addEventListener('notificationclick', (event) => {
-  // Close the notification
+  console.log('Service Worker: Notification click Received.');
   event.notification.close();
 
-  const urlToOpen = new URL(event.notification.data.url || '/', self.location.origin).href;
+  const urlToOpen = new URL(event.notification.data.url, self.location.origin).href;
 
-  event.waitUntil(
-    self.clients
-      .matchAll({
-        type: 'window',
-        includeUncontrolled: true,
-      })
-      .then((clientsArr) => {
-        // Check if there is already a window/tab open with the target URL
-        const hadWindowToFocus = clientsArr.some((windowClient) => {
-          if (windowClient.url === urlToOpen) {
-            windowClient.focus();
-            return true;
+  const promiseChain = self.clients
+    .matchAll({
+      type: 'window',
+      includeUncontrolled: true,
+    })
+    .then((clientList) => {
+      if (clientList.length > 0) {
+        let client = clientList[0];
+        for (let i = 0; i < clientList.length; i++) {
+          if (clientList[i].focused) {
+            client = clientList[i];
           }
-          return false;
-        });
-
-        // If not, then open a new window/tab
-        if (!hadWindowToFocus) {
-          self.clients
-            .openWindow(urlToOpen)
-            .then((windowClient) => (windowClient ? windowClient.focus() : null));
         }
-      })
-  );
+        console.log(`Service Worker: Found active client, focusing and navigating to ${urlToOpen}`);
+        return client.focus().then(c => c.navigate(urlToOpen));
+      }
+      console.log(`Service Worker: No active client found, opening new window to ${urlToOpen}`);
+      return self.clients.openWindow(urlToOpen);
+    });
+
+  event.waitUntil(promiseChain);
 });
