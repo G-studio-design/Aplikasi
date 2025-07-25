@@ -1,4 +1,3 @@
-
 // src/components/layout/DashboardLayoutWrapper.tsx
 'use client';
 
@@ -145,11 +144,7 @@ export default function DashboardLayoutWrapper({ children, attendanceEnabled }: 
             // Check if we already have a subscription
             registration.pushManager.getSubscription().then(subscription => {
                 if (subscription === null) {
-                    // No subscription, so subscribe
                     subscribeUser(registration);
-                } else {
-                    // We have a subscription, check if its associated user is the current user
-                    console.log('Existing subscription found.');
                 }
             });
         });
@@ -157,6 +152,16 @@ export default function DashboardLayoutWrapper({ children, attendanceEnabled }: 
   }, [isClient, currentUser]);
 
   const subscribeUser = async (registration: ServiceWorkerRegistration) => {
+    if (!('Notification' in window)) {
+        toast({ title: notificationsDict.notSupportedTitle, description: notificationsDict.notSupportedDesc, variant: 'destructive' });
+        return;
+    }
+    
+    if (Notification.permission === 'denied') {
+        toast({ title: notificationsDict.permissionDeniedTitle, description: notificationsDict.permissionDeniedDesc, variant: 'destructive', duration: 10000 });
+        return;
+    }
+
     try {
         const response = await fetch('/api/notifications/vapid-public-key');
         const vapidPublicKey = await response.text();
