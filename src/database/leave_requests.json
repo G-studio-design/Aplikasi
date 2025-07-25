@@ -55,5 +55,17 @@
     "approvedRejectedBy": "usr_owner_default",
     "approvedRejectedAt": "2025-07-22T10:02:40.943Z",
     "rejectionReason": "jangan dulu"
+  },
+  {
+    "id": "leave_1753421146249_msuo4",
+    "userId": "usr_1747799008584_4r22a",
+    "username": "komangmerta",
+    "displayName": "Komang Merta",
+    "requestDate": "2025-07-25T05:25:46.249Z",
+    "leaveType": "Sakit",
+    "startDate": "2025-07-25",
+    "endDate": "2025-07-26",
+    "reason": "sakit kepala",
+    "status": "Pending"
   }
 ]
