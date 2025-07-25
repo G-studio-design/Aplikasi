@@ -43,9 +43,9 @@ async function findUsersByRole(role: string): Promise<User[]> {
     return allUsers.filter(user => user.role === role);
 }
 
-async function sendPushNotification(subscription: PushSubscription, payload: object) {
+async function sendPushNotification(subscription: PushSubscription, payload: string) {
     try {
-        await webPush.sendNotification(subscription, JSON.stringify(payload));
+        await webPush.sendNotification(subscription, payload);
     } catch (error: any) {
         console.error(`Failed to send push notification to ${subscription.endpoint}. Error: ${error.message}`);
         // If subscription is expired or invalid, we should remove it
@@ -79,14 +79,8 @@ async function notifyUser(user: User, message: string, projectId?: string): Prom
     const subscriptions = await readDb<SubscriptionRecord[]>(SUBSCRIPTION_DB_PATH, []);
     const userSubscriptions = subscriptions.filter(sub => sub.userId === user.id);
     
-    // Standardized payload for the service worker
-    const pushPayload = {
-        title: "Pembaruan Proyek Msarch",
-        body: message, // Use 'body' instead of 'message'
-        data: {
-          url: projectId ? `/dashboard/projects?projectId=${projectId}` : '/dashboard'
-        }
-    };
+    // The payload is now just the message string, which is more robust.
+    const pushPayload = message;
     
     for (const subRecord of userSubscriptions) {
         await sendPushNotification(subRecord.subscription, pushPayload);
