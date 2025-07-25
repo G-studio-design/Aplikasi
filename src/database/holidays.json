@@ -1,0 +1,17 @@
+
+[
+  {
+    "id": "holiday_20241225",
+    "date": "2024-12-25",
+    "name": "Hari Raya Natal",
+    "type": "National Holiday",
+    "description": "Hari libur nasional untuk memperingati Natal."
+  },
+  {
+    "id": "holiday_20250101",
+    "date": "2025-01-01",
+    "name": "Tahun Baru Masehi",
+    "type": "National Holiday",
+    "description": "Perayaan Tahun Baru."
+  }
+]

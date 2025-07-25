@@ -1,0 +1,66 @@
+[
+  {
+    "id": "usr_dev_iwg",
+    "username": "I.wayan_govina",
+    "password": "Govina110900",
+    "role": "Admin Developer",
+    "email": "i.wayan_govina@example.dev",
+    "displayName": "I Wayan Govina (Dev)",
+    "createdAt": "2025-05-14T00:00:00.000Z",
+    "whatsappNumber": ""
+  },
+  {
+    "id": "usr_owner_default",
+    "username": "sudina",
+    "password": "admin123",
+    "role": "Owner",
+    "email": "owner@example.com",
+    "displayName": "Sudina (Owner)",
+    "createdAt": "2025-05-18T00:00:00.000Z"
+  },
+  {
+    "id": "usr_1747633709593_uxubw",
+    "username": "arsitek",
+    "password": "admin123",
+    "role": "Arsitek",
+    "email": "arsitek@example.com",
+    "displayName": "Arsitek Default",
+    "createdAt": "2025-05-19T05:48:29.593Z"
+  },
+  {
+    "id": "usr_1747633745993_u8h9d",
+    "username": "struktur",
+    "password": "admin123",
+    "role": "Struktur",
+    "email": "struktur@example.com",
+    "displayName": "Struktur Default",
+    "createdAt": "2025-05-19T05:49:05.993Z"
+  },
+  {
+    "id": "usr_1747799008584_4r22a",
+    "username": "komangmerta",
+    "password": "admin123",
+    "role": "Admin Proyek",
+    "email": "komangmerta@example.com",
+    "displayName": "Komang Merta",
+    "createdAt": "2025-05-21T03:43:28.584Z"
+  },
+  {
+    "id": "usr_1747925369552_66ue2",
+    "username": "oksi",
+    "password": "admin123",
+    "role": "Akuntan",
+    "email": "oksi@example.com",
+    "displayName": "oksi",
+    "createdAt": "2025-05-22T14:49:29.552Z"
+  },
+  {
+    "id": "usr_1748081668166_rkls1",
+    "username": "agung",
+    "password": "admin123",
+    "role": "MEP",
+    "email": "agung@example.com",
+    "displayName": "agung",
+    "createdAt": "2025-05-24T10:14:28.166Z"
+  }
+]

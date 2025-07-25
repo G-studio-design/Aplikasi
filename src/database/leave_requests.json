@@ -1,0 +1,59 @@
+[
+  {
+    "id": "leave_1750951294436_oucav",
+    "userId": "usr_1747799008584_4r22a",
+    "username": "komangmerta",
+    "displayName": "Komang Merta",
+    "requestDate": "2025-06-26T15:21:34.436Z",
+    "leaveType": "Sakit",
+    "startDate": "2025-06-27",
+    "endDate": "2025-06-28",
+    "reason": "sakit panas demam",
+    "status": "Approved",
+    "approvedRejectedBy": "usr_owner_default",
+    "approvedRejectedAt": "2025-06-26T15:31:50.012Z"
+  },
+  {
+    "id": "leave_1750952234224_vfws2",
+    "userId": "usr_1747799008584_4r22a",
+    "username": "komangmerta",
+    "displayName": "Komang Merta",
+    "requestDate": "2025-06-26T15:37:14.224Z",
+    "leaveType": "Keperluan Pribadi",
+    "startDate": "2025-06-30",
+    "endDate": "2025-06-30",
+    "reason": "acara keluarga ",
+    "status": "Approved",
+    "approvedRejectedBy": "usr_owner_default",
+    "approvedRejectedAt": "2025-06-26T15:51:52.375Z"
+  },
+  {
+    "id": "leave_1750953612439_383af",
+    "userId": "usr_1747633745993_u8h9d",
+    "username": "struktur",
+    "displayName": "Struktur Default",
+    "requestDate": "2025-06-26T16:00:12.439Z",
+    "leaveType": "Keperluan Pribadi",
+    "startDate": "2025-06-27",
+    "endDate": "2025-06-27",
+    "reason": "mau potong rambut",
+    "status": "Approved",
+    "approvedRejectedBy": "usr_owner_default",
+    "approvedRejectedAt": "2025-06-26T16:11:03.899Z"
+  },
+  {
+    "id": "leave_1753176295341_mxqig",
+    "userId": "usr_1747799008584_4r22a",
+    "username": "komangmerta",
+    "displayName": "Komang Merta",
+    "requestDate": "2025-07-22T09:24:55.341Z",
+    "leaveType": "Cuti Tahunan",
+    "startDate": "2025-07-23",
+    "endDate": "2025-07-24",
+    "reason": "sibuk ada acara",
+    "status": "Rejected",
+    "approvedRejectedBy": "usr_owner_default",
+    "approvedRejectedAt": "2025-07-22T10:02:40.943Z",
+    "rejectionReason": "jangan dulu"
+  }
+]
