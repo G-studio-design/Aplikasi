@@ -414,8 +414,7 @@ export default function DashboardLayoutWrapper({ children, attendanceEnabled }: 
                        <div className="flex items-center gap-3 rounded-md p-2">
                          <Avatar className="h-10 w-10 border-2 border-primary-foreground/30">
                            <AvatarImage
-                                src={currentUser.profilePictureUrl || `https://placehold.co/100x100.png`}
-                                data-ai-hint="user avatar placeholder"
+                                src={currentUser.profilePictureUrl || undefined}
                                 alt={currentUser.displayName || currentUser.username}
                             />
                            <AvatarFallback className="bg-primary-foreground/20 text-primary-foreground">

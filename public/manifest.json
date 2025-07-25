@@ -1,10 +1,11 @@
 {
   "name": "Msarch App",
   "short_name": "Msarch",
+  "description": "Aplikasi manajemen proyek dan tugas karyawan.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#0ea5e9",
+  "theme_color": "#0c4a6e",
   "icons": [
     {
       "src": "/msarch-logo.png",
@@ -12,7 +13,7 @@
       "type": "image/png"
     },
     {
-      "src": "/msarch-logo-512.png",
+      "src": "/msarch-logo.png",
       "sizes": "512x512",
       "type": "image/png"
     }

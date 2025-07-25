@@ -1,10 +1,17 @@
 [
   {
+    "id": "notif_1753421454168_qzp8o",
+    "userId": "usr_1747799008584_4r22a",
+    "message": "Permintaan izin Anda (Sakit) dari 2025-07-25 hingga 2025-07-26 telah ditolak oleh sudina. Alasan: jgn dulu\n",
+    "timestamp": "2025-07-25T05:30:54.168Z",
+    "isRead": true
+  },
+  {
     "id": "notif_1753421146279_774sq_ult",
     "userId": "usr_owner_default",
     "message": "Permintaan izin baru dari Komang Merta (Sakit) dari tanggal 2025-07-25 hingga 2025-07-26.",
     "timestamp": "2025-07-25T05:25:46.276Z",
-    "isRead": false
+    "isRead": true
   },
   {
     "id": "notif_1753178560977_avvw9",
