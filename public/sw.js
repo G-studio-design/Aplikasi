@@ -1,60 +1,81 @@
-'use strict';
+// public/sw.js
 
-self.addEventListener('install', event => {
+// Listener untuk instalasi service worker
+self.addEventListener('install', (event) => {
+  console.log('Service Worker: Menginstall...');
+  // Perintahkan service worker yang baru untuk segera aktif
   event.waitUntil(self.skipWaiting());
 });
 
-self.addEventListener('activate', event => {
+// Listener untuk aktivasi service worker
+self.addEventListener('activate', (event) => {
+  console.log('Service Worker: Mengaktifkan...');
+  // Ambil alih kontrol dari service worker lama
   event.waitUntil(self.clients.claim());
 });
 
-self.addEventListener('push', function(event) {
-  let data = {};
-  if (event.data) {
-    try {
-      data = event.data.json();
-    } catch (e) {
-      console.error('Push event data is not JSON, treating as text.', e);
-      data = { body: event.data.text() };
-    }
-  }
+// Listener utama untuk menangani push notification yang masuk
+self.addEventListener('push', (event) => {
+  console.log('Service Worker: Menerima Push Event.');
 
-  const title = data.title || 'Msarch App';
+  let data;
+  try {
+    // Kunci utama: Mengurai data yang masuk sebagai JSON
+    data = event.data.json();
+    console.log('Service Worker: Data push berhasil di-parse:', data);
+  } catch (e) {
+    console.error('Service Worker: Gagal mengurai data push, menggunakan teks mentah.', e);
+    // Fallback jika data bukan JSON
+    data = {
+      title: 'Pemberitahuan Baru',
+      body: event.data.text(),
+      url: '/dashboard',
+    };
+  }
+  
+  const title = data.title || 'Pemberitahuan Msarch App';
   const options = {
-    body: data.body || 'Anda memiliki pemberitahuan baru.',
-    icon: '/msarch-logo.png',
-    badge: '/msarch-logo-badge.png',
+    body: data.body || 'Anda memiliki pembaruan baru.',
+    icon: '/msarch-logo.png', // Ikon utama notifikasi
+    badge: '/msarch-logo-badge.png', // Ikon kecil untuk status bar Android
     data: {
-      url: data.url || '/'
+      url: data.url || '/dashboard' // Simpan URL untuk digunakan saat di-klik
     }
   };
 
-  event.waitUntil(
-    self.registration.showNotification(title, options)
-  );
+  // Tampilkan notifikasi
+  event.waitUntil(self.registration.showNotification(title, options));
 });
 
-self.addEventListener('notificationclick', function(event) {
+
+// Listener untuk saat notifikasi di-klik
+self.addEventListener('notificationclick', (event) => {
+  console.log('Service Worker: Notifikasi di-klik.');
+
+  // Tutup notifikasi yang di-klik
   event.notification.close();
 
-  const urlToOpen = new URL(event.notification.data.url || '/', self.location.origin).href;
+  const notificationData = event.notification.data;
+  const urlToOpen = new URL(notificationData.url || '/', self.location.origin).href;
 
+  // Cek apakah ada tab yang sudah membuka URL tujuan
   event.waitUntil(
-    clients.matchAll({
+    self.clients.matchAll({
       type: 'window',
       includeUncontrolled: true
-    }).then(function(clientList) {
-      if (clientList.length > 0) {
-        let client = clientList[0];
-        for (let i = 0; i < clientList.length; i++) {
-          if (clientList[i].focused) {
-            client = clientList[i];
-          }
+    }).then((clientList) => {
+      // Jika ada tab yang cocok, fokus ke tab itu
+      for (const client of clientList) {
+        if (client.url === urlToOpen && 'focus' in client) {
+          console.log('Service Worker: Menemukan tab yang cocok, fokus ke sana.');
+          return client.focus();
         }
-        client.navigate(urlToOpen);
-        return client.focus();
       }
-      return clients.openWindow(urlToOpen);
+      // Jika tidak ada tab yang cocok, buka tab baru
+      if (self.clients.openWindow) {
+        console.log('Service Worker: Tidak ada tab yang cocok, membuka tab baru.');
+        return self.clients.openWindow(urlToOpen);
+      }
     })
   );
 });
