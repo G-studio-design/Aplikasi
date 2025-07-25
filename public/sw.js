@@ -1,43 +1,68 @@
-self.addEventListener('push', function (event) {
-  const data = event.data.json();
+// public/sw.js
+
+// This forces the waiting service worker to become the active service worker.
+self.addEventListener('install', (event) => {
+  event.waitUntil(self.skipWaiting());
+});
+
+// This claims control over all clients (tabs) as soon as the service worker activates.
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim());
+});
+
+// Listener for push notifications from the server
+self.addEventListener('push', (event) => {
+  let data;
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch (e) {
+    console.error('Push event data is not valid JSON:', event.data?.text());
+    data = {};
+  }
+
   const title = data.title || 'Msarch App';
   const options = {
-    body: data.message,
-    icon: '/msarch-logo.png',
-    badge: '/msarch-logo.png',
+    body: data.message || 'Anda memiliki pemberitahuan baru.',
+    icon: '/msarch-logo.png', // Main icon
+    badge: '/msarch-logo.png', // Small icon for notification bar on Android
     data: {
-      url: data.url || '/dashboard' 
-    }
+      url: data.url || '/',
+    },
   };
+
   event.waitUntil(self.registration.showNotification(title, options));
 });
 
-self.addEventListener('notificationclick', function (event) {
-  event.notification.close(); // Tutup notifikasi
 
-  const targetUrl = event.notification.data.url;
+// Listener for when a user clicks on a notification
+self.addEventListener('notificationclick', (event) => {
+  // Close the notification
+  event.notification.close();
+
+  const urlToOpen = new URL(event.notification.data.url || '/', self.location.origin).href;
 
   event.waitUntil(
-    clients.matchAll({
-      type: 'window',
-      includeUncontrolled: true
-    }).then(function (clientList) {
-      // Cek apakah ada tab yang sudah membuka URL target
-      for (let i = 0; i < clientList.length; i++) {
-        let client = clientList[i];
-        let clientUrl = new URL(client.url);
-        let targetUrlObj = new URL(targetUrl, self.location.origin);
+    self.clients
+      .matchAll({
+        type: 'window',
+        includeUncontrolled: true,
+      })
+      .then((clientsArr) => {
+        // Check if there is already a window/tab open with the target URL
+        const hadWindowToFocus = clientsArr.some((windowClient) => {
+          if (windowClient.url === urlToOpen) {
+            windowClient.focus();
+            return true;
+          }
+          return false;
+        });
 
-        // Jika path-nya sama, fokus ke tab tersebut
-        if (clientUrl.pathname === targetUrlObj.pathname && 'focus' in client) {
-          return client.focus();
+        // If not, then open a new window/tab
+        if (!hadWindowToFocus) {
+          self.clients
+            .openWindow(urlToOpen)
+            .then((windowClient) => (windowClient ? windowClient.focus() : null));
         }
-      }
-
-      // Jika tidak ada tab yang cocok, buka tab baru
-      if (clients.openWindow) {
-        return clients.openWindow(targetUrl);
-      }
-    })
+      })
   );
 });

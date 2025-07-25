@@ -174,5 +174,35 @@
     "approvedRejectedBy": "usr_owner_default",
     "approvedRejectedAt": "2025-07-25T11:35:32.642Z",
     "rejectionReason": "jangan dulu\n"
+  },
+  {
+    "id": "leave_1753443588292_hhgpn",
+    "userId": "usr_1747799008584_4r22a",
+    "username": "komangmerta",
+    "displayName": "Komang Merta",
+    "requestDate": "2025-07-25T11:39:48.292Z",
+    "leaveType": "Cuti Tahunan",
+    "startDate": "2025-07-26",
+    "endDate": "2025-07-26",
+    "reason": "ijin sehari hari ",
+    "status": "Rejected",
+    "approvedRejectedBy": "usr_owner_default",
+    "approvedRejectedAt": "2025-07-25T11:42:00.616Z",
+    "rejectionReason": "jangan dulu"
+  },
+  {
+    "id": "leave_1753443919592_idz20",
+    "userId": "usr_1747799008584_4r22a",
+    "username": "komangmerta",
+    "displayName": "Komang Merta",
+    "requestDate": "2025-07-25T11:45:19.592Z",
+    "leaveType": "Cuti Tahunan",
+    "startDate": "2025-07-25",
+    "endDate": "2025-07-26",
+    "reason": "ijin 2 hari dong ",
+    "status": "Rejected",
+    "approvedRejectedBy": "usr_owner_default",
+    "approvedRejectedAt": "2025-07-25T11:45:32.046Z",
+    "rejectionReason": "jangan\n"
   }
 ]

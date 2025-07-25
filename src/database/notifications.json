@@ -1,5 +1,33 @@
 [
   {
+    "id": "notif_1753443932087_b4r8f",
+    "userId": "usr_1747799008584_4r22a",
+    "message": "Permintaan izin Anda (Cuti Tahunan) dari 2025-07-25 hingga 2025-07-26 telah ditolak oleh sudina. Alasan: jangan\n",
+    "timestamp": "2025-07-25T11:45:32.087Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1753443919707_kv3i4",
+    "userId": "usr_owner_default",
+    "message": "Permintaan izin baru dari Komang Merta (Cuti Tahunan) dari tanggal 2025-07-25 hingga 2025-07-26.",
+    "timestamp": "2025-07-25T11:45:19.707Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1753443720683_iahtc",
+    "userId": "usr_1747799008584_4r22a",
+    "message": "Permintaan izin Anda (Cuti Tahunan) dari 2025-07-26 hingga 2025-07-26 telah ditolak oleh sudina. Alasan: jangan dulu",
+    "timestamp": "2025-07-25T11:42:00.683Z",
+    "isRead": true
+  },
+  {
+    "id": "notif_1753443588327_gnzhw",
+    "userId": "usr_owner_default",
+    "message": "Permintaan izin baru dari Komang Merta (Cuti Tahunan) dari tanggal 2025-07-26 hingga 2025-07-26.",
+    "timestamp": "2025-07-25T11:39:48.327Z",
+    "isRead": false
+  },
+  {
     "id": "notif_1753443332696_11pdn",
     "userId": "usr_1747799008584_4r22a",
     "message": "Permintaan izin Anda (Cuti Tahunan) dari 2025-07-26 hingga 2025-07-27 telah ditolak oleh sudina. Alasan: jangan dulu\n",
