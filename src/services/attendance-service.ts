@@ -150,8 +150,12 @@ export async function checkOut(userId: string, reason: 'Normal' | 'Survei' | 'Si
     await writeDb(DB_PATH, attendanceRecords);
     
     if (reason === 'Survei' || reason === 'Sidang') {
-        const message = `${record.displayName} telah check-out lebih awal untuk keperluan ${reason}.`;
-        await notifyUsersByRole(['Owner', 'Admin Proyek'], message);
+        const payload = {
+          title: "Notifikasi Absensi",
+          body: `${record.displayName} telah check-out lebih awal untuk keperluan ${reason}.`,
+          url: '/dashboard/attendance'
+        };
+        await notifyUsersByRole(['Owner', 'Admin Proyek'], payload);
         console.log(`[AttendanceService] Notified Owner and Admin Proyek about early checkout for ${reason} by ${record.displayName}`);
     }
 

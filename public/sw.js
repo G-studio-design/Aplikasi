@@ -1,46 +1,63 @@
 // public/sw.js
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(self.skipWaiting());
+  event.waitUntil(self.skipWaiting()); // Activate new service worker as soon as it's installed
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(self.clients.claim());
+  event.waitUntil(self.clients.claim()); // Become available to all pages
 });
+
 
 self.addEventListener('push', (event) => {
-  // Keep it simple and robust. The entire payload is the message string.
-  const message = event.data ? event.data.text() : 'Tidak ada pesan.';
+  let data;
+  try {
+    data = event.data.json();
+  } catch (e) {
+    console.warn('Push event without JSON data, falling back to text.');
+    data = { body: event.data.text() };
+  }
 
+  const title = data.title || 'Msarch App Notification';
   const options = {
-    body: message,
-    icon: '/msarch-logo.png', // Main icon
-    badge: '/msarch-logo-badge.png', // Badge for mobile status bar
+    body: data.body || 'You have a new update.',
+    icon: '/msarch-logo.png',
+    badge: '/msarch-logo-badge.png',
+    data: {
+      url: data.url || '/',
+    },
   };
 
-  event.waitUntil(
-    self.registration.showNotification('Pembaruan Proyek Msarch', options)
-  );
+  event.waitUntil(self.registration.showNotification(title, options));
 });
+
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
-  // For now, simply focus or open the main dashboard.
-  // More complex URL routing can be added later if needed.
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      const dashboardUrl = self.registration.scope;
+  const targetUrl = event.notification.data.url || '/';
 
-      for (let i = 0; i < clientList.length; i++) {
-        const client = clientList[i];
-        if (client.url === dashboardUrl && 'focus' in client) {
-          return client.focus();
+  event.waitUntil(
+    clients
+      .matchAll({
+        type: 'window',
+        includeUncontrolled: true,
+      })
+      .then((clientList) => {
+        // Check if there's already a window open with the same URL.
+        for (const client of clientList) {
+          // Use URL objects to compare paths without getting confused by query params or hash.
+          const clientUrl = new URL(client.url);
+          const targetUrlObj = new URL(targetUrl, self.location.origin);
+
+          if (clientUrl.pathname === targetUrlObj.pathname && 'focus' in client) {
+            return client.focus();
+          }
         }
-      }
-      if (clients.openWindow) {
-        return clients.openWindow(dashboardUrl);
-      }
-    })
+        // If no window is found, open a new one.
+        if (clients.openWindow) {
+          return clients.openWindow(targetUrl);
+        }
+      })
   );
 });

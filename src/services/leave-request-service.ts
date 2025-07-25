@@ -28,8 +28,12 @@ export async function addLeaveRequest(data: AddLeaveRequestData): Promise<LeaveR
   leaveRequests.push(newRequest);
   await writeDb(DB_PATH, leaveRequests);
 
-  const notificationMessage = `Permintaan izin baru dari ${newRequest.displayName} (${newRequest.leaveType}) dari tanggal ${newRequest.startDate} hingga ${newRequest.endDate}.`;
-  await notifyUsersByRole('Owner', notificationMessage);
+  const payload = {
+    title: "Permintaan Izin Baru",
+    body: `Permintaan izin baru dari ${newRequest.displayName} (${newRequest.leaveType}) dari tanggal ${newRequest.startDate} hingga ${newRequest.endDate}.`,
+    url: '/dashboard/admin-actions/leave-approvals'
+  };
+  await notifyUsersByRole('Owner', payload);
 
   console.log(`[LeaveRequestService] Leave request added for ${data.username}. Owners notified.`);
   return newRequest;
@@ -66,8 +70,12 @@ export async function approveLeaveRequest(requestId: string, approverUserId: str
   await writeDb(DB_PATH, leaveRequests);
   const updatedRequest = leaveRequests[requestIndex];
 
-  const employeeNotificationMessage = `Permintaan izin Anda (${updatedRequest.leaveType}) dari ${updatedRequest.startDate} hingga ${updatedRequest.endDate} telah disetujui oleh ${approverUsername}.`;
-  await notifyUserById(updatedRequest.userId, employeeNotificationMessage);
+  const payload = {
+    title: "Status Permintaan Izin",
+    body: `Permintaan izin Anda (${updatedRequest.leaveType}) dari ${updatedRequest.startDate} hingga ${updatedRequest.endDate} telah disetujui oleh ${approverUsername}.`,
+    url: `/dashboard/leave-request/history` 
+  };
+  await notifyUserById(updatedRequest.userId, payload);
   console.log(`[LeaveRequestService] User ${updatedRequest.userId} notified of leave approval.`);
 
   return updatedRequest;
@@ -95,8 +103,12 @@ export async function rejectLeaveRequest(requestId: string, rejectorUserId: stri
   await writeDb(DB_PATH, leaveRequests);
   const updatedRequest = leaveRequests[requestIndex];
   
-  const employeeNotificationMessage = `Permintaan izin Anda (${updatedRequest.leaveType}) dari ${updatedRequest.startDate} hingga ${updatedRequest.endDate} telah ditolak oleh ${rejectorUsername}. Alasan: ${rejectionReason}`;
-  await notifyUserById(updatedRequest.userId, employeeNotificationMessage);
+  const payload = {
+    title: "Status Permintaan Izin",
+    body: `Permintaan izin Anda (${updatedRequest.leaveType}) dari ${updatedRequest.startDate} hingga ${updatedRequest.endDate} telah ditolak oleh ${rejectorUsername}. Alasan: ${rejectionReason}`,
+    url: `/dashboard/leave-request/history`
+  };
+  await notifyUserById(updatedRequest.userId, payload);
   console.log(`[LeaveRequestService] User ${updatedRequest.userId} notified of leave rejection.`);
 
   return updatedRequest;

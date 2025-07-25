@@ -22,6 +22,13 @@ interface SubscriptionRecord {
     subscription: PushSubscription;
 }
 
+export interface NotificationPayload {
+  title: string;
+  body: string;
+  url?: string;
+}
+
+
 const NOTIFICATION_DB_PATH = path.resolve(process.cwd(), 'src', 'database', 'notifications.json');
 const SUBSCRIPTION_DB_PATH = path.resolve(process.cwd(), 'src', 'database', 'subscriptions.json');
 const NOTIFICATION_LIMIT = 300; 
@@ -56,7 +63,7 @@ async function sendPushNotification(subscription: PushSubscription, payload: str
     }
 }
 
-async function notifyUser(user: User, message: string, projectId?: string): Promise<void> {
+async function notifyUser(user: User, payload: NotificationPayload, projectId?: string): Promise<void> {
     const notifications = await readDb<Notification[]>(NOTIFICATION_DB_PATH, []);
     const now = new Date().toISOString();
     
@@ -64,7 +71,7 @@ async function notifyUser(user: User, message: string, projectId?: string): Prom
         id: `notif_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
         userId: user.id,
         projectId: projectId,
-        message: message,
+        message: payload.body, // The main message is stored in `body`
         timestamp: now,
         isRead: false,
     };
@@ -79,15 +86,15 @@ async function notifyUser(user: User, message: string, projectId?: string): Prom
     const subscriptions = await readDb<SubscriptionRecord[]>(SUBSCRIPTION_DB_PATH, []);
     const userSubscriptions = subscriptions.filter(sub => sub.userId === user.id);
     
-    // The payload is now just the message string, which is more robust.
-    const pushPayload = message;
+    // The payload is now a JSON string
+    const pushPayload = JSON.stringify(payload);
     
     for (const subRecord of userSubscriptions) {
         await sendPushNotification(subRecord.subscription, pushPayload);
     }
 }
 
-export async function notifyUsersByRole(roleOrRoles: string | string[], message: string, projectId?: string): Promise<void> {
+export async function notifyUsersByRole(roleOrRoles: string | string[], payload: NotificationPayload, projectId?: string): Promise<void> {
     const rolesToNotify = Array.isArray(roleOrRoles) ? roleOrRoles : [roleOrRoles];
     if (rolesToNotify.length === 0 || rolesToNotify.every(r => !r)) return;
 
@@ -99,16 +106,16 @@ export async function notifyUsersByRole(roleOrRoles: string | string[], message:
     }
     
     for (const user of usersToNotify.values()) {
-        await notifyUser(user, message, projectId);
+        await notifyUser(user, payload, projectId);
     }
 }
 
-export async function notifyUserById(userId: string, message: string, projectId?: string): Promise<void> {
+export async function notifyUserById(userId: string, payload: NotificationPayload, projectId?: string): Promise<void> {
     if (!userId) return;
     const allUsers = await getAllUsers();
     const user = allUsers.find(u => u.id === userId);
     if (user) {
-        await notifyUser(user, message, projectId);
+        await notifyUser(user, payload, projectId);
     }
 }
 
