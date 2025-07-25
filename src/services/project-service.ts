@@ -1,10 +1,11 @@
+
 // src/services/project-service.ts
 'use server';
 
 import * as path from 'path';
 import { format, parseISO } from 'date-fns';
 import { id as IndonesianLocale } from 'date-fns/locale';
-import { notifyUsersByRole, deleteNotificationsByProjectId } from './notification-service';
+import { notifyUsersByRole, deleteNotificationsByProjectId, type NotificationPayload } from './notification-service';
 import { getWorkflowById, getFirstStep, getTransitionInfo } from './workflow-service';
 import { DEFAULT_WORKFLOW_ID } from '@/config/workflow-constants';
 import type { Project, AddProjectData, UpdateProjectParams, FileEntry, ScheduleDetails, SurveyDetails, WorkflowHistoryEntry } from '@/types/project-types';
@@ -45,8 +46,12 @@ export async function addProject(projectData: Omit<AddProjectData, 'initialFiles
     await writeDb(DB_PATH, projects);
     
     if (firstStep.assignedDivision) {
-        const message = `Proyek baru "${newProject.title}" telah dibuat oleh ${projectData.createdBy} dan memerlukan tindakan: ${firstStep.nextActionDescription || 'Langkah awal'}.`;
-        await notifyUsersByRole(firstStep.assignedDivision, message, newProject.id);
+        const payload: NotificationPayload = {
+            title: `Proyek Baru: ${newProject.title}`,
+            body: `Proyek baru "${newProject.title}" telah dibuat oleh ${projectData.createdBy} dan memerlukan tindakan: ${firstStep.nextActionDescription || 'Langkah awal'}.`,
+            url: `/dashboard/projects?projectId=${newProject.id}`
+        };
+        await notifyUsersByRole(firstStep.assignedDivision, payload, newProject.id);
     }
 
     return newProject;
@@ -147,16 +152,21 @@ export async function updateProject(params: UpdateProjectParams): Promise<Projec
         currentProject.progress = transitionInfo.targetProgress;
         
         if (transitionInfo.notification?.division) {
-            let message = (transitionInfo.notification.message || "Project '{projectName}' updated to: {newStatus}.")
+            let body = (transitionInfo.notification.message || "Proyek '{projectName}' diperbarui ke status: {newStatus}.")
                 .replace('{projectName}', currentProject.title)
                 .replace('{newStatus}', currentProject.status)
                 .replace('{actorUsername}', updaterUsername)
                 .replace('{reasonNote}', note || '');
-            if (message.includes('{surveyDate}') && surveyDetails?.date) {
+            if (body.includes('{surveyDate}') && surveyDetails?.date) {
                 const formattedDate = format(parseISO(`${surveyDetails.date}T${surveyDetails.time || '00:00'}`), "EEEE, d MMMM yyyy 'pukul' HH:mm", { locale: IndonesianLocale });
-                message = message.replace('{surveyDate}', formattedDate);
+                body = body.replace('{surveyDate}', formattedDate);
             }
-            await notifyUsersByRole(transitionInfo.notification.division, message, projectId);
+            const payload: NotificationPayload = {
+                title: `Proyek: ${currentProject.title}`,
+                body: body,
+                url: `/dashboard/projects?projectId=${projectId}`
+            };
+            await notifyUsersByRole(transitionInfo.notification.division, payload, projectId);
         }
     } else {
         console.warn(`[ProjectService] No transition found for action '${actionTaken}' from status '${currentProject.status}'. Only updating history and files.`);
@@ -253,8 +263,12 @@ export async function manuallyUpdateProjectStatusAndAssignment(
     await writeDb(DB_PATH, projects);
     
     if (newAssignedDivision && newStatus !== 'Completed' && newStatus !== 'Canceled') {
-        const notificationMessage = `Proyek "${currentProject.title}" telah diperbarui oleh ${adminUsername}. Status baru: "${newStatus}", Ditugaskan ke: "${newAssignedDivision}".`;
-        await notifyUsersByRole(newAssignedDivision, notificationMessage, projectId);
+        const payload: NotificationPayload = {
+            title: `Proyek: ${currentProject.title}`,
+            body: `Proyek "${currentProject.title}" telah diperbarui oleh ${adminUsername}. Status baru: "${newStatus}", Ditugaskan ke: "${newAssignedDivision}".`,
+            url: `/dashboard/projects?projectId=${projectId}`
+        };
+        await notifyUsersByRole(newAssignedDivision, payload, projectId);
     }
 
     return currentProject;
@@ -292,11 +306,17 @@ export async function reviseProject(
     await writeDb(DB_PATH, projects);
 
     if (revisionTransition.notification?.division) {
-        const message = (revisionTransition.notification.message || "Proyek '{projectName}' memerlukan revisi dari Anda.")
+        const body = (revisionTransition.notification.message || "Proyek '{projectName}' memerlukan revisi dari Anda.")
             .replace('{projectName}', currentProject.title)
             .replace('{actorUsername}', reviserUsername)
             .replace('{reasonNote}', revisionNote || 'N/A');
-        await notifyUsersByRole(revisionTransition.notification.division, message, projectId);
+        
+        const payload: NotificationPayload = {
+            title: `Revisi Proyek: ${currentProject.title}`,
+            body: body,
+            url: `/dashboard/projects?projectId=${projectId}`
+        };
+        await notifyUsersByRole(revisionTransition.notification.division, payload, projectId);
     }
 
     return currentProject;
@@ -329,8 +349,12 @@ export async function markParallelUploadsAsCompleteByDivision(
 
         await writeDb(DB_PATH, projects);
 
-        const notificationMessage = `Divisi ${division} telah menyelesaikan unggahan mereka untuk proyek "${project.title}".`;
-        await notifyUsersByRole('Admin Proyek', notificationMessage, projectId);
+        const payload: NotificationPayload = {
+            title: `Progres Proyek: ${project.title}`,
+            body: `Divisi ${division} telah menyelesaikan unggahan mereka untuk proyek "${project.title}".`,
+            url: `/dashboard/projects?projectId=${projectId}`
+        };
+        await notifyUsersByRole('Admin Proyek', payload, projectId);
         return project;
     }
     

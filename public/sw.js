@@ -1,81 +1,61 @@
-// public/sw.js
 
-// Listener untuk instalasi service worker
-self.addEventListener('install', (event) => {
-  console.log('Service Worker: Menginstall...');
-  // Perintahkan service worker yang baru untuk segera aktif
-  event.waitUntil(self.skipWaiting());
-});
-
-// Listener untuk aktivasi service worker
-self.addEventListener('activate', (event) => {
-  console.log('Service Worker: Mengaktifkan...');
-  // Ambil alih kontrol dari service worker lama
-  event.waitUntil(self.clients.claim());
-});
-
-// Listener utama untuk menangani push notification yang masuk
-self.addEventListener('push', (event) => {
-  console.log('Service Worker: Menerima Push Event.');
-
+self.addEventListener('push', event => {
   let data;
   try {
-    // Kunci utama: Mengurai data yang masuk sebagai JSON
+    // Attempt to parse the data as JSON
     data = event.data.json();
-    console.log('Service Worker: Data push berhasil di-parse:', data);
   } catch (e) {
-    console.error('Service Worker: Gagal mengurai data push, menggunakan teks mentah.', e);
-    // Fallback jika data bukan JSON
-    data = {
-      title: 'Pemberitahuan Baru',
-      body: event.data.text(),
-      url: '/dashboard',
-    };
+    // If it fails, treat it as plain text
+    console.warn('Push event data is not valid JSON. Treating as text.', event.data.text());
+    data = { body: event.data.text() };
   }
-  
-  const title = data.title || 'Pemberitahuan Msarch App';
+
+  const title = data.title || 'Pembaruan Msarch App';
   const options = {
-    body: data.body || 'Anda memiliki pembaruan baru.',
-    icon: '/msarch-logo.png', // Ikon utama notifikasi
-    badge: '/msarch-logo-badge.png', // Ikon kecil untuk status bar Android
+    body: data.body,
+    icon: '/msarch-logo.png', // Main icon for the notification body
+    badge: '/msarch-logo-badge.png', // Smaller icon for the status bar
     data: {
-      url: data.url || '/dashboard' // Simpan URL untuk digunakan saat di-klik
+      url: data.url || '/' // Default URL if none is provided
     }
   };
 
-  // Tampilkan notifikasi
-  event.waitUntil(self.registration.showNotification(title, options));
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
 });
 
-
-// Listener untuk saat notifikasi di-klik
-self.addEventListener('notificationclick', (event) => {
-  console.log('Service Worker: Notifikasi di-klik.');
-
-  // Tutup notifikasi yang di-klik
+self.addEventListener('notificationclick', event => {
   event.notification.close();
 
-  const notificationData = event.notification.data;
-  const urlToOpen = new URL(notificationData.url || '/', self.location.origin).href;
+  const urlToOpen = new URL(event.notification.data.url, self.location.origin).href;
 
-  // Cek apakah ada tab yang sudah membuka URL tujuan
   event.waitUntil(
-    self.clients.matchAll({
+    clients.matchAll({
       type: 'window',
       includeUncontrolled: true
-    }).then((clientList) => {
-      // Jika ada tab yang cocok, fokus ke tab itu
-      for (const client of clientList) {
+    }).then(clientList => {
+      // Check if there's already a window open with the same URL
+      for (let i = 0; i < clientList.length; i++) {
+        const client = clientList[i];
         if (client.url === urlToOpen && 'focus' in client) {
-          console.log('Service Worker: Menemukan tab yang cocok, fokus ke sana.');
           return client.focus();
         }
       }
-      // Jika tidak ada tab yang cocok, buka tab baru
-      if (self.clients.openWindow) {
-        console.log('Service Worker: Tidak ada tab yang cocok, membuka tab baru.');
-        return self.clients.openWindow(urlToOpen);
+      // If not, open a new window
+      if (clients.openWindow) {
+        return clients.openWindow(urlToOpen);
       }
     })
   );
+});
+
+self.addEventListener('install', event => {
+  console.log('Service Worker: Install');
+  event.waitUntil(self.skipWaiting());
+});
+
+self.addEventListener('activate', event => {
+  console.log('Service Worker: Activate');
+  event.waitUntil(self.clients.claim());
 });

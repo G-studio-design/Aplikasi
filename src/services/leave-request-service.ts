@@ -1,3 +1,4 @@
+
 // src/services/leave-request-service.ts
 'use server';
 
@@ -73,7 +74,7 @@ export async function approveLeaveRequest(requestId: string, approverUserId: str
   const payload = {
     title: "Status Permintaan Izin",
     body: `Permintaan izin Anda (${updatedRequest.leaveType}) dari ${updatedRequest.startDate} hingga ${updatedRequest.endDate} telah disetujui oleh ${approverUsername}.`,
-    url: `/dashboard/leave-request/history` 
+    url: `/dashboard/leave-request/new` 
   };
   await notifyUserById(updatedRequest.userId, payload);
   console.log(`[LeaveRequestService] User ${updatedRequest.userId} notified of leave approval.`);
@@ -106,7 +107,7 @@ export async function rejectLeaveRequest(requestId: string, rejectorUserId: stri
   const payload = {
     title: "Status Permintaan Izin",
     body: `Permintaan izin Anda (${updatedRequest.leaveType}) dari ${updatedRequest.startDate} hingga ${updatedRequest.endDate} telah ditolak oleh ${rejectorUsername}. Alasan: ${rejectionReason}`,
-    url: `/dashboard/leave-request/history`
+    url: `/dashboard/leave-request/new`
   };
   await notifyUserById(updatedRequest.userId, payload);
   console.log(`[LeaveRequestService] User ${updatedRequest.userId} notified of leave rejection.`);

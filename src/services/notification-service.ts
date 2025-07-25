@@ -67,11 +67,12 @@ async function notifyUser(user: User, payload: NotificationPayload, projectId?: 
     const notifications = await readDb<Notification[]>(NOTIFICATION_DB_PATH, []);
     const now = new Date().toISOString();
     
+    // The notification stored in the DB uses the 'body' from the payload.
     const newNotification: Notification = {
         id: `notif_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
         userId: user.id,
         projectId: projectId,
-        message: payload.body, // The main message is stored in `body`
+        message: payload.body, 
         timestamp: now,
         isRead: false,
     };
@@ -86,7 +87,7 @@ async function notifyUser(user: User, payload: NotificationPayload, projectId?: 
     const subscriptions = await readDb<SubscriptionRecord[]>(SUBSCRIPTION_DB_PATH, []);
     const userSubscriptions = subscriptions.filter(sub => sub.userId === user.id);
     
-    // The payload is now a JSON string
+    // The payload sent to the push service is the structured JSON object.
     const pushPayload = JSON.stringify(payload);
     
     for (const subRecord of userSubscriptions) {
@@ -94,8 +95,8 @@ async function notifyUser(user: User, payload: NotificationPayload, projectId?: 
     }
 }
 
-export async function notifyUsersByRole(roleOrRoles: string | string[], payload: NotificationPayload, projectId?: string): Promise<void> {
-    const rolesToNotify = Array.isArray(roleOrRoles) ? roleOrRoles : [roleOrRoles];
+export async function notifyUsersByRole(roles: string | string[], payload: NotificationPayload, projectId?: string): Promise<void> {
+    const rolesToNotify = Array.isArray(roles) ? roles : [roles];
     if (rolesToNotify.length === 0 || rolesToNotify.every(r => !r)) return;
 
     const usersToNotify = new Map<string, User>();
