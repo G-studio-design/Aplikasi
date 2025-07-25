@@ -22,8 +22,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/msarch-logo.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/msarch-logo.png"></link>
+        <link rel="icon" href="/msarch-logo.png?v=2" type="image/png" />
+        <link rel="apple-touch-icon" href="/msarch-logo.png?v=2"></link>
         <meta name="theme-color" content="#1A237E" />
       </head>
       <body className={inter.className}>
