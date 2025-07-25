@@ -2,7 +2,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -126,23 +126,34 @@ export default function DashboardLayoutWrapper({ children, attendanceEnabled }: 
 
   // Effect for registering the service worker & handling notifications
   useEffect(() => {
-    if (isClient && 'serviceWorker' in navigator && currentUser) {
-        navigator.serviceWorker.register('/sw.js')
-            .then((registration) => {
-                console.log('Service Worker registration successful with scope: ', registration.scope);
-                // Send user ID to service worker so it can fetch notifications
-                if (registration.active) {
-                    registration.active.postMessage({
+    if ('serviceWorker' in navigator && currentUser) {
+      navigator.serviceWorker.register('/sw.js')
+        .then((registration) => {
+          console.log('Service Worker registration successful, scope:', registration.scope);
+          // Ensure the service worker is active before sending a message
+          if (registration.active) {
+            registration.active.postMessage({
+              type: 'SET_USER_ID',
+              userId: currentUser.id,
+            });
+            console.log('User ID sent to active Service Worker.');
+          } else {
+             // If not active, listen for controller change
+             navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.controller.postMessage({
                         type: 'SET_USER_ID',
                         userId: currentUser.id,
                     });
+                    console.log('User ID sent to newly activated Service Worker.');
                 }
-            })
-            .catch((err) => {
-                console.log('Service Worker registration failed: ', err);
-            });
+             });
+          }
+        }).catch((err) => {
+          console.error('Service Worker registration failed:', err);
+        });
     }
-  }, [isClient, currentUser]);
+  }, [currentUser]);
 
 
   const fetchNotifications = useCallback(async () => {

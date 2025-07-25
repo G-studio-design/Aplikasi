@@ -70,5 +70,17 @@
     "approvedRejectedBy": "usr_owner_default",
     "approvedRejectedAt": "2025-07-25T05:30:54.118Z",
     "rejectionReason": "jgn dulu\n"
+  },
+  {
+    "id": "leave_1753421752063_ivi5g",
+    "userId": "usr_1747799008584_4r22a",
+    "username": "komangmerta",
+    "displayName": "Komang Merta",
+    "requestDate": "2025-07-25T05:35:52.063Z",
+    "leaveType": "Cuti Tahunan",
+    "startDate": "2025-07-25",
+    "endDate": "2025-07-26",
+    "reason": "acara keluarga\n",
+    "status": "Pending"
   }
 ]
