@@ -23,53 +23,5 @@
     "files": [],
     "createdAt": "2025-07-11T06:38:10.355Z",
     "createdBy": "sudina"
-  },
-  {
-    "id": "project_1753502649928_ztxeb",
-    "title": "proyek kesambi ",
-    "status": "Pending Approval",
-    "progress": 20,
-    "assignedDivision": "Owner",
-    "nextAction": "Setujui Dokumen Penawaran",
-    "workflowId": "msa_workflow",
-    "workflowHistory": [
-      {
-        "division": "sudina",
-        "action": "Created Project with workflow: msa_workflow",
-        "timestamp": "2025-07-26T04:04:09.928Z",
-        "note": "Project entry created."
-      },
-      {
-        "division": "System",
-        "action": "Assigned to Admin Proyek for Unggah Dokumen Penawaran",
-        "timestamp": "2025-07-26T04:04:09.928Z"
-      },
-      {
-        "division": "komangmerta",
-        "action": "Uploaded initial file(s): GNU General Public License.txt",
-        "timestamp": "2025-07-26T04:04:46.067Z"
-      },
-      {
-        "division": "Admin Proyek",
-        "action": "komangmerta (Admin Proyek) submitted for \"Unggah Dokumen Penawaran\"",
-        "timestamp": "2025-07-26T04:04:47.841Z"
-      }
-    ],
-    "files": [
-      {
-        "name": "GNU General Public License.txt",
-        "path": "project_1753502649928_ztxeb/gnu_general_public_license.txt",
-        "timestamp": "2025-07-26T04:04:46.059Z",
-        "uploadedBy": "Admin Proyek"
-      },
-      {
-        "name": "GNU General Public License.txt",
-        "uploadedBy": "Admin Proyek",
-        "path": "project_1753502649928_ztxeb/gnu_general_public_license.txt",
-        "timestamp": "2025-07-26T04:04:47.841Z"
-      }
-    ],
-    "createdAt": "2025-07-26T04:04:09.928Z",
-    "createdBy": "sudina"
   }
 ]

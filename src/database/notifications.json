@@ -1,19 +1,31 @@
 [
   {
-    "id": "notif_1753502687868_2ux4v",
-    "userId": "usr_owner_default",
-    "projectId": "project_1753502649928_ztxeb",
-    "message": "Penawaran untuk proyek 'proyek kesambi ' telah diajukan oleh komangmerta dan menunggu persetujuan Anda.",
-    "timestamp": "2025-07-26T04:04:47.868Z",
+    "id": "notif_1753503161079_xv5x1",
+    "userId": "usr_1747799008584_4r22a",
+    "message": "Izin Anda (Cuti Tahunan) untuk 2025-07-26 ditolak oleh sudina. Alasan: jangan well",
+    "timestamp": "2025-07-26T04:12:41.079Z",
     "isRead": false
   },
   {
-    "id": "notif_1753502649961_jh1jw",
+    "id": "notif_1753503152602_ypzdy",
     "userId": "usr_1747799008584_4r22a",
-    "projectId": "project_1753502649928_ztxeb",
-    "message": "Proyek \"proyek kesambi \" telah dibuat dan memerlukan tindakan awal dari Anda: Unggah Dokumen Penawaran.",
-    "timestamp": "2025-07-26T04:04:09.961Z",
+    "message": "Izin Anda (Cuti Tahunan) untuk 2025-07-26 ditolak oleh sudina. Alasan: jangan well",
+    "timestamp": "2025-07-26T04:12:32.602Z",
     "isRead": false
+  },
+  {
+    "id": "notif_1753503126899_dukuv",
+    "userId": "usr_1747799008584_4r22a",
+    "message": "Izin Anda (Cuti Tahunan) untuk 2025-07-26 ditolak oleh sudina. Alasan: jangan well",
+    "timestamp": "2025-07-26T04:12:06.899Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1753502951360_6euwb",
+    "userId": "usr_owner_default",
+    "message": "Permintaan izin baru dari Komang Merta (Cuti Tahunan) untuk tanggal 2025-07-26 hingga 2025-07-26.",
+    "timestamp": "2025-07-26T04:09:11.360Z",
+    "isRead": true
   },
   {
     "id": "notif_1753502586364_gfxks",

@@ -47,8 +47,8 @@ export async function addProject(projectData: Omit<AddProjectData, 'initialFiles
     
     if (firstStep.assignedDivision) {
         const payload: NotificationPayload = {
-            title: `Proyek Baru Ditugaskan`,
-            body: `Proyek "${newProject.title}" telah dibuat dan memerlukan tindakan awal dari Anda: ${firstStep.nextActionDescription || 'Langkah awal'}.`,
+            title: `Proyek Baru Ditugaskan: ${newProject.title}`,
+            body: `Anda ditugaskan untuk langkah awal pada proyek baru "${newProject.title}". Tugas: ${firstStep.nextActionDescription || 'Langkah awal'}.`,
             url: `/dashboard/projects?projectId=${newProject.id}`
         };
         await notifyUsersByRole(firstStep.assignedDivision, payload, newProject.id);
@@ -152,10 +152,11 @@ export async function updateProject(params: UpdateProjectParams): Promise<Projec
         currentProject.progress = transitionInfo.targetProgress;
         
         if (transitionInfo.notification?.division) {
-            let body = (transitionInfo.notification.message || "Proyek '{projectName}' diperbarui ke status: {newStatus}.")
+            let body = (transitionInfo.notification.message || "Proyek '{projectName}' diperbarui. Tugas baru Anda: {nextAction}.")
                 .replace('{projectName}', currentProject.title)
                 .replace('{newStatus}', currentProject.status)
                 .replace('{actorUsername}', updaterUsername)
+                .replace('{nextAction}', currentProject.nextAction || 'Tinjau proyek')
                 .replace('{reasonNote}', note || '');
             if (body.includes('{surveyDate}') && surveyDetails?.date) {
                 const formattedDate = format(parseISO(`${surveyDetails.date}T${surveyDetails.time || '00:00'}`), "EEEE, d MMMM yyyy 'pukul' HH:mm", { locale: IndonesianLocale });

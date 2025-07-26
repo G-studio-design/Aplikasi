@@ -152,7 +152,7 @@ export async function checkOut(userId: string, reason: 'Normal' | 'Survei' | 'Si
     
     if (reason === 'Survei' || reason === 'Sidang') {
         const payload: NotificationPayload = {
-          title: "Notifikasi Absensi",
+          title: `Notifikasi Absensi: ${reason}`,
           body: `${record.displayName} telah check-out lebih awal untuk keperluan ${reason}.`,
           url: '/dashboard/attendance'
         };

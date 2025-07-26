@@ -1,3 +1,4 @@
+
 // src/app/api/notify-division/route.ts
 import { NextResponse } from 'next/server';
 import { notifyUsersByRole, type NotificationPayload } from '@/services/notification-service';
@@ -24,7 +25,7 @@ export async function POST(request: Request) {
 
         const payload: NotificationPayload = {
             title: `Revisi Diperlukan: ${projectName}`,
-            body: `Divisi ${divisionToNotify} telah dinotifikasi untuk berkontribusi pada revisi proyek "${projectName}" oleh ${actor.username}.`,
+            body: `Divisi ${divisionToNotify} telah dinotifikasi oleh ${actor.username} untuk berkontribusi pada revisi proyek "${projectName}".`,
             url: `/dashboard/projects?projectId=${projectId}`
         };
 
