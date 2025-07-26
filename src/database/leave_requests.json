@@ -384,5 +384,17 @@
     "approvedRejectedBy": "usr_owner_default",
     "approvedRejectedAt": "2025-07-26T02:45:11.658Z",
     "rejectionReason": "jangan"
+  },
+  {
+    "id": "leave_1753500070710_3m1ay",
+    "userId": "usr_1747799008584_4r22a",
+    "username": "komangmerta",
+    "displayName": "Komang Merta",
+    "requestDate": "2025-07-26T03:21:10.710Z",
+    "leaveType": "Keperluan Pribadi",
+    "startDate": "2025-07-26",
+    "endDate": "2025-07-26",
+    "reason": "libur welll",
+    "status": "Pending"
   }
 ]
