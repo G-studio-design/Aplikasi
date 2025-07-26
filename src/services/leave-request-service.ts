@@ -29,9 +29,10 @@ export async function addLeaveRequest(data: AddLeaveRequestData): Promise<LeaveR
   leaveRequests.push(newRequest);
   await writeDb(DB_PATH, leaveRequests);
 
+  // Corrected and improved notification payload
   const payload: NotificationPayload = {
     title: "Permintaan Izin Baru",
-    body: `Permintaan izin dari ${newRequest.displayName} (${newRequest.leaveType}) untuk ${newRequest.startDate} hingga ${newRequest.endDate} menunggu persetujuan Anda.`,
+    body: `Karyawan "${data.displayName || data.username}" mengajukan izin (${data.leaveType}) dari ${data.startDate} hingga ${data.endDate}.`,
     url: '/dashboard/admin-actions/leave-approvals'
   };
   await notifyUsersByRole('Owner', payload);
@@ -71,9 +72,10 @@ export async function approveLeaveRequest(requestId: string, approverUserId: str
   await writeDb(DB_PATH, leaveRequests);
   const updatedRequest = leaveRequests[requestIndex];
 
+  // Corrected and improved notification payload
   const payload: NotificationPayload = {
     title: "Status Permintaan Izin: Disetujui",
-    body: `Permintaan izin Anda (${updatedRequest.leaveType}) untuk ${updatedRequest.startDate} telah disetujui oleh ${approverUsername}.`,
+    body: `Permintaan izin Anda (${updatedRequest.leaveType}) untuk tanggal ${updatedRequest.startDate} telah disetujui oleh ${approverUsername}.`,
     url: `/dashboard/leave-request/new` 
   };
   await notifyUserById(updatedRequest.userId, payload);
@@ -104,9 +106,10 @@ export async function rejectLeaveRequest(requestId: string, rejectorUserId: stri
   await writeDb(DB_PATH, leaveRequests);
   const updatedRequest = leaveRequests[requestIndex];
   
+  // Corrected and improved notification payload
   const payload: NotificationPayload = {
     title: "Status Permintaan Izin: Ditolak",
-    body: `Izin Anda (${updatedRequest.leaveType}) untuk ${updatedRequest.startDate} ditolak oleh ${rejectorUsername}. Alasan: ${rejectionReason}`,
+    body: `Permintaan izin Anda (${updatedRequest.leaveType}) untuk tanggal ${updatedRequest.startDate} ditolak oleh ${rejectorUsername}. Alasan: ${rejectionReason}`,
     url: `/dashboard/leave-request/new`
   };
   await notifyUserById(updatedRequest.userId, payload);

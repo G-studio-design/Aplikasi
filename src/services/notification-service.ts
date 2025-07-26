@@ -90,7 +90,7 @@ async function notifyUser(user: User, payload: NotificationPayload, projectId?: 
     const subscriptions = await readDb<SubscriptionRecord[]>(SUBSCRIPTION_DB_PATH, []);
     const userSubscriptions = subscriptions.filter(sub => sub.userId === user.id);
     
-    // The payload for web-push MUST be a string. We serialize our object to a JSON string.
+    // **CRITICAL FIX**: The payload for web-push MUST be a string. We serialize our object to a JSON string.
     const pushPayloadString = JSON.stringify(payload);
     
     for (const subRecord of userSubscriptions) {

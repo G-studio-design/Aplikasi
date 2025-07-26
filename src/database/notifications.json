@@ -1,5 +1,12 @@
 [
   {
+    "id": "notif_1753504204292_dui56",
+    "userId": "usr_owner_default",
+    "message": "Permintaan izin dari Komang Merta (Cuti Tahunan) untuk 2025-07-26 hingga 2025-07-26 menunggu persetujuan Anda.",
+    "timestamp": "2025-07-26T04:30:04.292Z",
+    "isRead": false
+  },
+  {
     "id": "notif_1753503967593_nl4kl",
     "userId": "usr_1747799008584_4r22a",
     "message": "Izin Anda (Cuti Tahunan) untuk 2025-07-26 ditolak oleh sudina. Alasan: Janjanfa",
@@ -46,7 +53,7 @@
     "userId": "usr_owner_default",
     "message": "Permintaan izin baru dari Komang Merta (Cuti Tahunan) untuk tanggal 2025-07-26 hingga 2025-07-26.",
     "timestamp": "2025-07-26T04:03:06.364Z",
-    "isRead": false
+    "isRead": true
   },
   {
     "id": "notif_1753502021194_duond",
