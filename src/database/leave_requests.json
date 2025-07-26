@@ -369,5 +369,20 @@
     "approvedRejectedBy": "usr_owner_default",
     "approvedRejectedAt": "2025-07-25T13:15:14.609Z",
     "rejectionReason": "jangan"
+  },
+  {
+    "id": "leave_1753497883174_uu6mf",
+    "userId": "usr_1747799008584_4r22a",
+    "username": "komangmerta",
+    "displayName": "Komang Merta",
+    "requestDate": "2025-07-26T02:44:43.174Z",
+    "leaveType": "Cuti Tahunan",
+    "startDate": "2025-07-26",
+    "endDate": "2025-07-27",
+    "reason": "ijin dong sehari ",
+    "status": "Rejected",
+    "approvedRejectedBy": "usr_owner_default",
+    "approvedRejectedAt": "2025-07-26T02:45:11.658Z",
+    "rejectionReason": "jangan"
   }
 ]
