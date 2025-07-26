@@ -1,6 +1,6 @@
 // src/app/api/notify-division/route.ts
 import { NextResponse } from 'next/server';
-import { notifyUsersByRole } from '@/services/notification-service';
+import { notifyUsersByRole, type NotificationPayload } from '@/services/notification-service';
 import { findUserById } from '@/services/user-service';
 
 export async function POST(request: Request) {
@@ -22,8 +22,13 @@ export async function POST(request: Request) {
              return NextResponse.json({ error: 'Unauthorized to send revision notifications.' }, { status: 403 });
         }
 
-        const message = `Divisi ${divisionToNotify} telah dinotifikasi untuk berkontribusi pada revisi proyek "${projectName}" oleh ${actor.username}.`;
-        await notifyUsersByRole(divisionToNotify, message, projectId);
+        const payload: NotificationPayload = {
+            title: `Revisi Diperlukan: ${projectName}`,
+            body: `Divisi ${divisionToNotify} telah dinotifikasi untuk berkontribusi pada revisi proyek "${projectName}" oleh ${actor.username}.`,
+            url: `/dashboard/projects?projectId=${projectId}`
+        };
+
+        await notifyUsersByRole(divisionToNotify, payload, projectId);
         
         console.log(`[API/NotifyDivision] Notification sent to role ${divisionToNotify} for project ${projectId}.`);
 
