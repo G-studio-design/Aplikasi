@@ -5,7 +5,7 @@
 import * as path from 'path';
 import { format } from 'date-fns';
 import { getAppSettings } from './settings-service';
-import { notifyUsersByRole } from './notification-service';
+import { notifyUsersByRole, type NotificationPayload } from './notification-service';
 import { readDb, writeDb } from '@/lib/database-utils';
 
 export interface AttendanceRecord {
@@ -151,7 +151,7 @@ export async function checkOut(userId: string, reason: 'Normal' | 'Survei' | 'Si
     await writeDb(DB_PATH, attendanceRecords);
     
     if (reason === 'Survei' || reason === 'Sidang') {
-        const payload = {
+        const payload: NotificationPayload = {
           title: "Notifikasi Absensi",
           body: `${record.displayName} telah check-out lebih awal untuk keperluan ${reason}.`,
           url: '/dashboard/attendance'

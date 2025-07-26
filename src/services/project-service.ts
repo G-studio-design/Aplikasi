@@ -47,8 +47,8 @@ export async function addProject(projectData: Omit<AddProjectData, 'initialFiles
     
     if (firstStep.assignedDivision) {
         const payload: NotificationPayload = {
-            title: `Proyek Baru: ${newProject.title}`,
-            body: `Proyek baru "${newProject.title}" telah dibuat oleh ${projectData.createdBy} dan memerlukan tindakan: ${firstStep.nextActionDescription || 'Langkah awal'}.`,
+            title: `Proyek Baru Ditugaskan`,
+            body: `Proyek "${newProject.title}" telah dibuat dan memerlukan tindakan awal dari Anda: ${firstStep.nextActionDescription || 'Langkah awal'}.`,
             url: `/dashboard/projects?projectId=${newProject.id}`
         };
         await notifyUsersByRole(firstStep.assignedDivision, payload, newProject.id);
@@ -162,7 +162,7 @@ export async function updateProject(params: UpdateProjectParams): Promise<Projec
                 body = body.replace('{surveyDate}', formattedDate);
             }
             const payload: NotificationPayload = {
-                title: `Proyek: ${currentProject.title}`,
+                title: `Proyek Diperbarui: ${currentProject.title}`,
                 body: body,
                 url: `/dashboard/projects?projectId=${projectId}`
             };
@@ -264,8 +264,8 @@ export async function manuallyUpdateProjectStatusAndAssignment(
     
     if (newAssignedDivision && newStatus !== 'Completed' && newStatus !== 'Canceled') {
         const payload: NotificationPayload = {
-            title: `Proyek: ${currentProject.title}`,
-            body: `Proyek "${currentProject.title}" telah diperbarui oleh ${adminUsername}. Status baru: "${newStatus}", Ditugaskan ke: "${newAssignedDivision}".`,
+            title: `Tugas Proyek: ${currentProject.title}`,
+            body: `Status proyek "${currentProject.title}" telah diubah secara manual oleh ${adminUsername}. Tugas baru Anda: ${newNextAction || 'Tinjau proyek'}.`,
             url: `/dashboard/projects?projectId=${projectId}`
         };
         await notifyUsersByRole(newAssignedDivision, payload, projectId);
@@ -312,7 +312,7 @@ export async function reviseProject(
             .replace('{reasonNote}', revisionNote || 'N/A');
         
         const payload: NotificationPayload = {
-            title: `Revisi Proyek: ${currentProject.title}`,
+            title: `Revisi Diperlukan: ${currentProject.title}`,
             body: body,
             url: `/dashboard/projects?projectId=${projectId}`
         };
