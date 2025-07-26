@@ -1,5 +1,28 @@
 [
   {
+    "id": "notif_1753502687868_2ux4v",
+    "userId": "usr_owner_default",
+    "projectId": "project_1753502649928_ztxeb",
+    "message": "Penawaran untuk proyek 'proyek kesambi ' telah diajukan oleh komangmerta dan menunggu persetujuan Anda.",
+    "timestamp": "2025-07-26T04:04:47.868Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1753502649961_jh1jw",
+    "userId": "usr_1747799008584_4r22a",
+    "projectId": "project_1753502649928_ztxeb",
+    "message": "Proyek \"proyek kesambi \" telah dibuat dan memerlukan tindakan awal dari Anda: Unggah Dokumen Penawaran.",
+    "timestamp": "2025-07-26T04:04:09.961Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1753502586364_gfxks",
+    "userId": "usr_owner_default",
+    "message": "Permintaan izin baru dari Komang Merta (Cuti Tahunan) untuk tanggal 2025-07-26 hingga 2025-07-26.",
+    "timestamp": "2025-07-26T04:03:06.364Z",
+    "isRead": false
+  },
+  {
     "id": "notif_1753502021194_duond",
     "userId": "usr_owner_default",
     "message": "Permintaan izin baru dari Komang Merta (Cuti Tahunan) dari tanggal 2025-07-26 hingga 2025-07-26.",

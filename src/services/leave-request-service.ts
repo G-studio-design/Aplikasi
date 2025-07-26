@@ -106,7 +106,7 @@ export async function rejectLeaveRequest(requestId: string, rejectorUserId: stri
   
   const payload: NotificationPayload = {
     title: "Status Permintaan Izin: Ditolak",
-    body: `Izin Anda (${updatedRequest.leaveType}) untuk ${updatedRequest.startDate} ditolak. Alasan: ${rejectionReason}`,
+    body: `Izin Anda (${updatedRequest.leaveType}) untuk ${updatedRequest.startDate} ditolak oleh ${rejectorUsername}. Alasan: ${rejectionReason}`,
     url: `/dashboard/leave-request/new`
   };
   await notifyUserById(updatedRequest.userId, payload);
