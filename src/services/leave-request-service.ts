@@ -31,7 +31,7 @@ export async function addLeaveRequest(data: AddLeaveRequestData): Promise<LeaveR
 
   const payload: NotificationPayload = {
     title: "Permintaan Izin Baru",
-    body: `Permintaan izin baru dari ${newRequest.displayName} (${newRequest.leaveType}) untuk tanggal ${newRequest.startDate} hingga ${newRequest.endDate}.`,
+    body: `Permintaan izin dari ${newRequest.displayName} (${newRequest.leaveType}) untuk ${newRequest.startDate} hingga ${newRequest.endDate} menunggu persetujuan Anda.`,
     url: '/dashboard/admin-actions/leave-approvals'
   };
   await notifyUsersByRole('Owner', payload);

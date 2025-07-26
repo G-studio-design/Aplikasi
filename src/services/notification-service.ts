@@ -47,11 +47,14 @@ if (process.env.VAPID_PRIVATE_KEY && process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
 
 async function findUsersByRole(role: string): Promise<User[]> {
     const allUsers = await getAllUsers();
-    return allUsers.filter(user => user.role === role);
+    // Make comparison robust by ignoring case and extra spaces
+    const normalizedRole = role.trim().toLowerCase();
+    return allUsers.filter(user => user.role.trim().toLowerCase() === normalizedRole);
 }
 
 async function sendPushNotification(subscription: PushSubscription, payload: string) {
     try {
+        // The payload for web-push MUST be a string.
         await webPush.sendNotification(subscription, payload);
     } catch (error: any) {
         console.error(`Failed to send push notification to ${subscription.endpoint}. Error: ${error.message}`);
