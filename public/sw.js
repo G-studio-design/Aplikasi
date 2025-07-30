@@ -1,77 +1,79 @@
-
 // public/sw.js
 
-// Listener untuk instalasi service worker
-// Ini memastikan service worker baru segera aktif.
-self.addEventListener('install', (event) => {
-  console.log('[Service Worker] Install');
-  event.waitUntil(self.skipWaiting());
-});
-
-self.addEventListener('activate', (event) => {
-  console.log('[Service Worker] Activate');
-  event.waitUntil(self.clients.claim());
-});
-
-// Listener utama untuk notifikasi push yang datang
 self.addEventListener('push', (event) => {
   console.log('[Service Worker] Push Received.');
 
-  // Jika tidak ada data, tampilkan notifikasi default.
   if (!event.data) {
-    console.warn('[Service Worker] Push event but no data');
-    const defaultNotification = self.registration.showNotification('Pemberitahuan', {
-        body: 'Anda memiliki pembaruan baru.',
-        icon: '/msarch-logo.png',
-        badge: '/msarch-logo-badge.png',
-    });
-    event.waitUntil(defaultNotification);
+    console.error('[Service Worker] Push event but no data');
     return;
   }
   
-  // Ambil data payload dari notifikasi.
-  // event.data.json() akan mengurai string JSON yang dikirim dari server.
-  const data = event.data.json();
-  
-  console.log('[Service Worker] Push data:', data);
+  try {
+    const data = event.data.json();
+    
+    console.log('[Service Worker] Push data:', data);
 
-  const title = data.title || 'Pemberitahuan Baru';
-  const options = {
-    body: data.body || 'Anda memiliki pesan baru.',
-    icon: '/msarch-logo.png',
-    badge: '/msarch-logo-badge.png',
-    data: {
-      url: data.url || '/', // Menyimpan URL untuk digunakan saat notifikasi diklik
-    },
-  };
+    const title = data.title || 'Msarch App Notification';
+    const options = {
+      body: data.body || 'You have a new update.',
+      icon: '/msarch-logo-192.png',
+      badge: '/msarch-logo-72.png',
+      data: {
+        url: data.url || '/dashboard'
+      }
+    };
 
-  // event.waitUntil() memberitahu browser untuk tidak mematikan
-  // service worker sampai notifikasi selesai ditampilkan. Ini sangat penting.
-  event.waitUntil(self.registration.showNotification(title, options));
+    const notificationPromise = self.registration.showNotification(title, options);
+    event.waitUntil(notificationPromise);
+
+  } catch (e) {
+    console.error('[Service Worker] Error parsing push data:', e);
+    // Fallback for plain text notifications if JSON parsing fails
+    const title = 'Msarch App Notification';
+    const options = {
+      body: event.data.text(),
+      icon: '/msarch-logo-192.png',
+      badge: '/msarch-logo-72.png',
+      data: {
+        url: '/dashboard'
+      }
+    };
+    event.waitUntil(self.registration.showNotification(title, options));
+  }
 });
 
-// Listener untuk saat pengguna mengklik notifikasi
 self.addEventListener('notificationclick', (event) => {
   console.log('[Service Worker] Notification click Received.');
   
-  event.notification.close(); // Tutup notifikasi
+  event.notification.close();
 
-  const urlToOpen = event.notification.data.url || '/';
+  const urlToOpen = event.notification.data.url || '/dashboard';
 
-  // event.waitUntil() memastikan browser menunggu sampai tab baru terbuka
-  // sebelum mematikan service worker.
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      // Jika tab dengan URL yang sama sudah terbuka, fokus ke tab itu.
+    clients.matchAll({
+      type: 'window',
+      includeUncontrolled: true
+    }).then((clientList) => {
+      // Check if a window is already open.
       for (const client of clientList) {
         if (client.url === urlToOpen && 'focus' in client) {
           return client.focus();
         }
       }
-      // Jika tidak ada tab yang cocok, buka tab baru.
+      // If not, open a new window.
       if (clients.openWindow) {
         return clients.openWindow(urlToOpen);
       }
     })
   );
+});
+
+self.addEventListener('install', (event) => {
+  console.log('[Service Worker] Install');
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  console.log('[Service Worker] Activate');
+  event.waitUntil(clients.claim());
 });

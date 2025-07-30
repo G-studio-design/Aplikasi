@@ -156,6 +156,7 @@ export async function checkOut(userId: string, reason: 'Normal' | 'Survei' | 'Si
           body: `${record.displayName} telah check-out lebih awal untuk keperluan ${reason}.`,
           url: '/dashboard/attendance'
         };
+        // Notify both Owner and Admin Proyek
         await notifyUsersByRole(['Owner', 'Admin Proyek'], payload);
         console.log(`[AttendanceService] Notified Owner and Admin Proyek about early checkout for ${reason} by ${record.displayName}`);
     }

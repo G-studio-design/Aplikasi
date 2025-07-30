@@ -624,5 +624,17 @@
     "endDate": "2025-07-30",
     "reason": "swdewfrgrtgrt",
     "status": "Pending"
+  },
+  {
+    "id": "leave_1753869678828_as915",
+    "userId": "usr_1747799008584_4r22a",
+    "username": "komangmerta",
+    "displayName": "Komang Merta",
+    "requestDate": "2025-07-30T10:01:18.828Z",
+    "leaveType": "Cuti Tahunan",
+    "startDate": "2025-07-30",
+    "endDate": "2025-07-30",
+    "reason": "liburr well\n",
+    "status": "Pending"
   }
 ]

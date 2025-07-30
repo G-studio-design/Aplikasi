@@ -6,7 +6,6 @@ import * as path from 'path';
 import { notifyUsersByRole, notifyUserById, type NotificationPayload } from './notification-service';
 import type { LeaveRequest, AddLeaveRequestData } from '@/types/leave-request-types';
 import { readDb, writeDb } from '@/lib/database-utils';
-import { getAllUsersForDisplay } from './user-service';
 
 const DB_PATH = path.resolve(process.cwd(), 'src', 'database', 'leave_requests.json');
 
@@ -30,14 +29,15 @@ export async function addLeaveRequest(data: AddLeaveRequestData): Promise<LeaveR
   leaveRequests.push(newRequest);
   await writeDb(DB_PATH, leaveRequests);
 
+  // Send notification to the "Owner" role
   const payload: NotificationPayload = {
     title: "Permintaan Izin Baru",
-    body: `${data.displayName || data.username} mengajukan izin (${data.leaveType}) dari ${data.startDate} hingga ${data.endDate}.`,
+    body: `Karyawan "${data.displayName || data.username}" mengajukan ${data.leaveType} dari ${data.startDate} s/d ${data.endDate}.`,
     url: '/dashboard/admin-actions/leave-approvals'
   };
   await notifyUsersByRole('Owner', payload);
 
-  console.log(`[LeaveRequestService] Leave request added for ${data.username}. Owners notified.`);
+  console.log(`[LeaveRequestService] Leave request added for ${data.username}. Notifying Owner.`);
   return newRequest;
 }
 
@@ -72,6 +72,7 @@ export async function approveLeaveRequest(requestId: string, approverUserId: str
   await writeDb(DB_PATH, leaveRequests);
   const updatedRequest = leaveRequests[requestIndex];
 
+  // Notify the employee that their request was approved
   const payload: NotificationPayload = {
     title: "Permintaan Izin Disetujui",
     body: `Permintaan izin Anda (${updatedRequest.leaveType}) untuk tanggal ${updatedRequest.startDate} telah disetujui oleh ${approverUsername}.`,
@@ -105,6 +106,7 @@ export async function rejectLeaveRequest(requestId: string, rejectorUserId: stri
   await writeDb(DB_PATH, leaveRequests);
   const updatedRequest = leaveRequests[requestIndex];
 
+  // Notify the employee that their request was rejected
   const payload: NotificationPayload = {
     title: "Permintaan Izin Ditolak",
     body: `Izin Anda (${updatedRequest.leaveType}) untuk ${updatedRequest.startDate} ditolak oleh ${rejectorUsername}. Alasan: ${rejectionReason}`,
