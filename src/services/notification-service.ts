@@ -79,6 +79,7 @@ async function notifyUser(user: Omit<User, 'password'>, payload: NotificationPay
     const subscriptions = await readDb<SubscriptionRecord[]>(SUBSCRIPTION_DB_PATH, []);
     const userSubscriptions = subscriptions.filter(sub => sub.userId === user.id);
 
+    // Ensure payload is a string before sending
     const pushPayloadString = JSON.stringify(payload);
 
     for (const subRecord of userSubscriptions) {
@@ -87,13 +88,13 @@ async function notifyUser(user: Omit<User, 'password'>, payload: NotificationPay
 }
 
 export async function notifyUsersByRole(roles: string | string[], payload: NotificationPayload, projectId?: string): Promise<void> {
-    const rolesToNotify = Array.isArray(roles) ? roles : [roles];
-    if (rolesToNotify.length === 0 || rolesToNotify.every(r => !r)) return;
+    const rolesToNotifyArray = Array.isArray(roles) ? roles : [roles];
+    if (rolesToNotifyArray.length === 0 || rolesToNotifyArray.every(r => !r)) return;
 
     const allUsers = await getAllUsersForDisplay();
     const usersToNotify = new Map<string, Omit<User, 'password'>>();
 
-    for (const role of rolesToNotify) {
+    for (const role of rolesToNotifyArray) {
         if (!role) continue;
         const normalizedRole = role.trim().toLowerCase();
         const targetUsers = allUsers.filter(user => user.role.trim().toLowerCase() === normalizedRole);
@@ -101,7 +102,7 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
     }
 
     if (usersToNotify.size === 0) {
-        console.warn(`[NotificationService] No users found for role(s): ${rolesToNotify.join(', ')}`);
+        console.warn(`[NotificationService] No users found for role(s): ${rolesToNotifyArray.join(', ')}`);
         return;
     }
 
