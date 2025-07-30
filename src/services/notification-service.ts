@@ -79,7 +79,6 @@ async function notifyUser(user: Omit<User, 'password'>, payload: NotificationPay
     const subscriptions = await readDb<SubscriptionRecord[]>(SUBSCRIPTION_DB_PATH, []);
     const userSubscriptions = subscriptions.filter(sub => sub.userId === user.id);
 
-    // Ensure payload is a string before sending
     const pushPayloadString = JSON.stringify(payload);
 
     for (const subRecord of userSubscriptions) {
@@ -93,11 +92,10 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
 
     const allUsers = await getAllUsersForDisplay();
     const usersToNotify = new Map<string, Omit<User, 'password'>>();
-    
-    // Corrected logic to iterate through all roles provided
-    for (const roleToNotify of rolesToNotify) {
-        if (!roleToNotify) continue;
-        const normalizedRole = roleToNotify.trim().toLowerCase();
+
+    for (const role of rolesToNotify) {
+        if (!role) continue;
+        const normalizedRole = role.trim().toLowerCase();
         const targetUsers = allUsers.filter(user => user.role.trim().toLowerCase() === normalizedRole);
         targetUsers.forEach(user => usersToNotify.set(user.id, user));
     }
