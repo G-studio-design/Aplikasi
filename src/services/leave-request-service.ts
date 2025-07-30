@@ -1,3 +1,4 @@
+
 // src/services/leave-request-service.ts
 'use server';
 
@@ -20,7 +21,7 @@ export async function addLeaveRequest(data: AddLeaveRequestData): Promise<LeaveR
     requestDate: now.toISOString(),
     leaveType: data.leaveType,
     startDate: data.startDate,
-    endDate: data.endDate,    
+    endDate: data.endDate,
     reason: data.reason,
     status: 'Pending',
   };
@@ -60,7 +61,7 @@ export async function approveLeaveRequest(requestId: string, approverUserId: str
 
   if (leaveRequests[requestIndex].status !== 'Pending') {
     console.warn(`[LeaveRequestService] Leave request ${requestId} is not in Pending state, cannot approve.`);
-    return null; 
+    return null;
   }
 
   leaveRequests[requestIndex].status = 'Approved';
@@ -73,7 +74,7 @@ export async function approveLeaveRequest(requestId: string, approverUserId: str
   const payload: NotificationPayload = {
     title: "Permintaan Izin Disetujui",
     body: `Permintaan izin Anda (${updatedRequest.leaveType}) untuk tanggal ${updatedRequest.startDate} telah disetujui oleh ${approverUsername}.`,
-    url: `/dashboard/leave-request/new` 
+    url: `/dashboard/leave-request/new`
   };
   await notifyUserById(updatedRequest.userId, payload);
   console.log(`[LeaveRequestService] User ${updatedRequest.userId} notified of leave approval.`);
@@ -92,7 +93,7 @@ export async function rejectLeaveRequest(requestId: string, rejectorUserId: stri
 
   if (leaveRequests[requestIndex].status !== 'Pending') {
     console.warn(`[LeaveRequestService] Leave request ${requestId} is not in Pending state, cannot reject.`);
-    return null; 
+    return null;
   }
 
   leaveRequests[requestIndex].status = 'Rejected';
@@ -102,7 +103,7 @@ export async function rejectLeaveRequest(requestId: string, rejectorUserId: stri
 
   await writeDb(DB_PATH, leaveRequests);
   const updatedRequest = leaveRequests[requestIndex];
-  
+
   const payload: NotificationPayload = {
     title: "Permintaan Izin Ditolak",
     body: `Izin Anda (${updatedRequest.leaveType}) untuk ${updatedRequest.startDate} ditolak oleh ${rejectorUsername}. Alasan: ${rejectionReason}`,

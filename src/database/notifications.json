@@ -1,5 +1,19 @@
 [
   {
+    "id": "notif_1753864743950_hfygy",
+    "userId": "usr_owner_default",
+    "message": "Komang Merta mengajukan izin (Cuti Tidak Dibayar) dari 2025-07-30 hingga 2025-07-31.",
+    "timestamp": "2025-07-30T08:39:03.950Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1753864729818_0k3xp",
+    "userId": "usr_1747799008584_4r22a",
+    "message": "Izin Anda (Cuti Tahunan) untuk 2025-07-30 ditolak oleh sudina. Alasan: jangan",
+    "timestamp": "2025-07-30T08:38:49.818Z",
+    "isRead": false
+  },
+  {
     "id": "notif_1753861739567_gz1bx",
     "userId": "usr_owner_default",
     "message": "Komang Merta mengajukan izin (Cuti Tahunan) dari 2025-07-30 hingga 2025-07-30.",
