@@ -6,6 +6,7 @@ import * as path from 'path';
 import { notifyUsersByRole, notifyUserById, type NotificationPayload } from './notification-service';
 import type { LeaveRequest, AddLeaveRequestData } from '@/types/leave-request-types';
 import { readDb, writeDb } from '@/lib/database-utils';
+import { getAllUsersForDisplay } from './user-service';
 
 const DB_PATH = path.resolve(process.cwd(), 'src', 'database', 'leave_requests.json');
 

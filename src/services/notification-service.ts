@@ -4,7 +4,7 @@
 
 import * as path from 'path';
 import type { User } from '@/types/user-types';
-import { findUserById, getAllUsersForDisplay } from './user-service';
+import { getAllUsersForDisplay } from './user-service';
 import { readDb, writeDb } from '@/lib/database-utils';
 import webPush, { type PushSubscription } from 'web-push';
 
@@ -79,6 +79,7 @@ async function notifyUser(user: Omit<User, 'password'>, payload: NotificationPay
     const subscriptions = await readDb<SubscriptionRecord[]>(SUBSCRIPTION_DB_PATH, []);
     const userSubscriptions = subscriptions.filter(sub => sub.userId === user.id);
 
+    // Ensure payload is a string before sending
     const pushPayloadString = JSON.stringify(payload);
 
     for (const subRecord of userSubscriptions) {
@@ -92,7 +93,8 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
 
     const allUsers = await getAllUsersForDisplay();
     const usersToNotify = new Map<string, Omit<User, 'password'>>();
-
+    
+    // Corrected logic to iterate through all roles provided
     for (const roleToNotify of rolesToNotify) {
         if (!roleToNotify) continue;
         const normalizedRole = roleToNotify.trim().toLowerCase();
@@ -113,7 +115,8 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
 
 export async function notifyUserById(userId: string, payload: NotificationPayload, projectId?: string): Promise<void> {
     if (!userId) return;
-    const user = await findUserById(userId);
+    const allUsers = await getAllUsersForDisplay();
+    const user = allUsers.find(u => u.id === userId);
     if (user) {
         await notifyUser(user, payload, projectId);
     } else {
