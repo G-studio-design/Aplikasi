@@ -76,6 +76,7 @@ async function notifyUser(user: Omit<User, 'password'>, payload: NotificationPay
     const userSubscriptions = subscriptions.filter(sub => sub.userId === user.id);
 
     if (userSubscriptions.length > 0) {
+        // Correctly stringify the payload object for web-push library
         const pushPayloadString = JSON.stringify(payload);
         for (const subRecord of userSubscriptions) {
             await sendPushNotification(subRecord.subscription, pushPayloadString);
@@ -83,24 +84,18 @@ async function notifyUser(user: Omit<User, 'password'>, payload: NotificationPay
     }
 }
 
-async function findUsersByRole(role: string): Promise<Omit<User, 'password'>[]> {
-    const allUsers = await getAllUsersForDisplay();
-    const normalizedRole = role.trim().toLowerCase();
-    // CRITICAL FIX: Ensure both sides of the comparison are lowercased.
-    return allUsers.filter(user => user.role.trim().toLowerCase() === normalizedRole);
-}
-
 export async function notifyUsersByRole(roles: string | string[], payload: NotificationPayload, projectId?: string): Promise<void> {
+    const allUsers = await getAllUsersForDisplay();
+    // Simplified and robust logic to handle both string and array of strings
     const rolesToNotifyArray = Array.isArray(roles) ? roles : [roles];
-    if (rolesToNotifyArray.length === 0) return;
-
-    const uniqueUsersToNotify = new Map<string, Omit<User, 'password'>>();
+    const normalizedRoles = rolesToNotifyArray.map(r => r.trim().toLowerCase());
     
-    for (const role of rolesToNotifyArray) {
-        const foundUsers = await findUsersByRole(role);
-        foundUsers.forEach(user => uniqueUsersToNotify.set(user.id, user));
-    }
+    const uniqueUsersToNotify = new Map<string, Omit<User, 'password'>>();
 
+    const usersToNotify = allUsers.filter(user => normalizedRoles.includes(user.role.trim().toLowerCase()));
+
+    usersToNotify.forEach(user => uniqueUsersToNotify.set(user.id, user));
+    
     if (uniqueUsersToNotify.size === 0) {
         console.warn(`[NotificationService] No users found for role(s): ${rolesToNotifyArray.join(', ')}`);
         return;
