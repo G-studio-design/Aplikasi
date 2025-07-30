@@ -1,4 +1,3 @@
-
 // src/services/notification-service.ts
 'use server';
 
@@ -32,7 +31,6 @@ const NOTIFICATION_DB_PATH = path.resolve(process.cwd(), 'src', 'database', 'not
 const SUBSCRIPTION_DB_PATH = path.resolve(process.cwd(), 'src', 'database', 'subscriptions.json');
 const NOTIFICATION_LIMIT = 300;
 
-// Configure web-push with VAPID details from environment variables
 if (process.env.VAPID_PRIVATE_KEY && process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
     webPush.setVapidDetails(
         process.env.VAPID_SUBJECT || 'mailto:admin@example.com',
@@ -48,7 +46,6 @@ async function sendPushNotification(subscription: PushSubscription, payload: str
         await webPush.sendNotification(subscription, payload);
     } catch (error: any) {
         console.error(`[PushService] Failed to send push notification. Error: ${error.message}`);
-        // Handle expired or invalid subscriptions
         if (error.statusCode === 410 || error.statusCode === 404) {
             console.log('[PushService] Subscription expired or invalid. Removing...');
             await removeSubscription(subscription);
@@ -60,7 +57,6 @@ async function notifyUser(user: Omit<User, 'password'>, payload: NotificationPay
     const notifications = await readDb<Notification[]>(NOTIFICATION_DB_PATH, []);
     const now = new Date().toISOString();
 
-    // 1. Create the in-app notification record
     const newNotification: Notification = {
         id: `notif_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
         userId: user.id,
@@ -72,11 +68,10 @@ async function notifyUser(user: Omit<User, 'password'>, payload: NotificationPay
 
     notifications.unshift(newNotification);
     if (notifications.length > NOTIFICATION_LIMIT) {
-        notifications.pop(); // Keep the list trimmed
+        notifications.pop(); 
     }
     await writeDb(NOTIFICATION_DB_PATH, notifications);
 
-    // 2. Send the push notification
     const subscriptions = await readDb<SubscriptionRecord[]>(SUBSCRIPTION_DB_PATH, []);
     const userSubscriptions = subscriptions.filter(sub => sub.userId === user.id);
 
@@ -88,30 +83,34 @@ async function notifyUser(user: Omit<User, 'password'>, payload: NotificationPay
     }
 }
 
+async function findUsersByRole(role: string): Promise<Omit<User, 'password'>[]> {
+    const allUsers = await getAllUsersForDisplay();
+    const normalizedRole = role.trim().toLowerCase();
+    // CRITICAL FIX: Ensure both sides of the comparison are lowercased.
+    return allUsers.filter(user => user.role.trim().toLowerCase() === normalizedRole);
+}
+
 export async function notifyUsersByRole(roles: string | string[], payload: NotificationPayload, projectId?: string): Promise<void> {
     const rolesToNotifyArray = Array.isArray(roles) ? roles : [roles];
     if (rolesToNotifyArray.length === 0) return;
 
-    const allUsers = await getAllUsersForDisplay();
     const uniqueUsersToNotify = new Map<string, Omit<User, 'password'>>();
-
-    rolesToNotifyArray.forEach(roleToNotify => {
-        const normalizedRole = roleToNotify.trim().toLowerCase();
-        const foundUsers = allUsers.filter(user => user.role.trim().toLowerCase() === normalizedRole);
+    
+    for (const role of rolesToNotifyArray) {
+        const foundUsers = await findUsersByRole(role);
         foundUsers.forEach(user => uniqueUsersToNotify.set(user.id, user));
-    });
+    }
 
     if (uniqueUsersToNotify.size === 0) {
         console.warn(`[NotificationService] No users found for role(s): ${rolesToNotifyArray.join(', ')}`);
         return;
     }
-
+    
     console.log(`[NotificationService] Notifying ${uniqueUsersToNotify.size} user(s) for role(s): ${rolesToNotifyArray.join(', ')}`);
     for (const user of uniqueUsersToNotify.values()) {
         await notifyUser(user, payload, projectId);
     }
 }
-
 
 export async function notifyUserById(userId: string, payload: NotificationPayload, projectId?: string): Promise<void> {
     if (!userId) return;
@@ -160,9 +159,9 @@ export async function saveSubscription(userId: string, subscription: PushSubscri
     const newRecord: SubscriptionRecord = { userId, subscription };
 
     if (existingIndex > -1) {
-        subscriptions[existingIndex] = newRecord; // Update if exists
+        subscriptions[existingIndex] = newRecord;
     } else {
-        subscriptions.push(newRecord); // Add if new
+        subscriptions.push(newRecord);
     }
 
     await writeDb(SUBSCRIPTION_DB_PATH, subscriptions);

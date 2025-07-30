@@ -45,6 +45,22 @@
         "division": "Admin Proyek",
         "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
         "timestamp": "2025-07-30T10:19:37.277Z"
+      },
+      {
+        "division": "Owner",
+        "action": "sudina (Owner) requested revision.",
+        "timestamp": "2025-07-30T10:25:44.998Z",
+        "note": "perbaiki lagi"
+      },
+      {
+        "division": "komangmerta",
+        "action": "Uploaded initial file(s): RAP MEp.pdf",
+        "timestamp": "2025-07-30T10:27:11.497Z"
+      },
+      {
+        "division": "Admin Proyek",
+        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
+        "timestamp": "2025-07-30T10:27:14.153Z"
       }
     ],
     "files": [
@@ -71,6 +87,18 @@
         "uploadedBy": "Admin Proyek",
         "path": "project_1752215890356_ujcbz/rap_mep.pdf",
         "timestamp": "2025-07-30T10:19:37.277Z"
+      },
+      {
+        "name": "RAP MEp.pdf",
+        "path": "project_1752215890356_ujcbz/rap_mep.pdf",
+        "timestamp": "2025-07-30T10:27:11.465Z",
+        "uploadedBy": "Admin Proyek"
+      },
+      {
+        "name": "RAP MEp.pdf",
+        "uploadedBy": "Admin Proyek",
+        "path": "project_1752215890356_ujcbz/rap_mep.pdf",
+        "timestamp": "2025-07-30T10:27:14.153Z"
       }
     ],
     "createdAt": "2025-07-11T06:38:10.355Z",

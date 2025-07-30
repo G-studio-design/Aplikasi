@@ -1,79 +1,52 @@
 // public/sw.js
 
-self.addEventListener('push', (event) => {
+self.addEventListener('push', event => {
   console.log('[Service Worker] Push Received.');
-
-  if (!event.data) {
-    console.error('[Service Worker] Push event but no data');
-    return;
-  }
-  
+  let data;
   try {
-    const data = event.data.json();
-    
-    console.log('[Service Worker] Push data:', data);
-
-    const title = data.title || 'Msarch App Notification';
-    const options = {
-      body: data.body || 'You have a new update.',
-      icon: '/msarch-logo-192.png',
-      badge: '/msarch-logo-72.png',
-      data: {
-        url: data.url || '/dashboard'
-      }
-    };
-
-    const notificationPromise = self.registration.showNotification(title, options);
-    event.waitUntil(notificationPromise);
-
+    data = event.data.json();
   } catch (e) {
-    console.error('[Service Worker] Error parsing push data:', e);
-    // Fallback for plain text notifications if JSON parsing fails
-    const title = 'Msarch App Notification';
-    const options = {
-      body: event.data.text(),
-      icon: '/msarch-logo-192.png',
-      badge: '/msarch-logo-72.png',
-      data: {
-        url: '/dashboard'
-      }
-    };
-    event.waitUntil(self.registration.showNotification(title, options));
+    data = { title: 'New Notification', body: event.data.text() };
   }
+
+  const title = data.title || 'Msarch App Notification';
+  const options = {
+    body: data.body || 'You have a new update.',
+    icon: '/msarch-logo.png', 
+    badge: '/msarch-logo-badge.png',
+    data: {
+      url: data.url || '/' 
+    }
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
 });
 
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener('notificationclick', event => {
   console.log('[Service Worker] Notification click Received.');
-  
   event.notification.close();
 
-  const urlToOpen = event.notification.data.url || '/dashboard';
+  const urlToOpen = new URL(event.notification.data.url, self.location.origin).href;
 
-  event.waitUntil(
-    clients.matchAll({
-      type: 'window',
-      includeUncontrolled: true
-    }).then((clientList) => {
-      // Check if a window is already open.
-      for (const client of clientList) {
-        if (client.url === urlToOpen && 'focus' in client) {
-          return client.focus();
-        }
+  const promiseChain = clients.matchAll({
+    type: 'window',
+    includeUncontrolled: true
+  }).then(windowClients => {
+    let matchingClient = null;
+    for (let i = 0; i < windowClients.length; i++) {
+      const windowClient = windowClients[i];
+      if (windowClient.url === urlToOpen) {
+        matchingClient = windowClient;
+        break;
       }
-      // If not, open a new window.
-      if (clients.openWindow) {
-        return clients.openWindow(urlToOpen);
-      }
-    })
-  );
-});
+    }
 
-self.addEventListener('install', (event) => {
-  console.log('[Service Worker] Install');
-  self.skipWaiting();
-});
+    if (matchingClient) {
+      return matchingClient.focus();
+    } else {
+      return clients.openWindow(urlToOpen);
+    }
+  });
 
-self.addEventListener('activate', (event) => {
-  console.log('[Service Worker] Activate');
-  event.waitUntil(clients.claim());
+  event.waitUntil(promiseChain);
 });
