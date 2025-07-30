@@ -515,6 +515,21 @@
     "startDate": "2025-07-30",
     "endDate": "2025-07-30",
     "reason": "libur well",
+    "status": "Rejected",
+    "approvedRejectedBy": "usr_owner_default",
+    "approvedRejectedAt": "2025-07-30T07:39:22.392Z",
+    "rejectionReason": "jangan"
+  },
+  {
+    "id": "leave_1753861182180_3lmxh",
+    "userId": "usr_1747799008584_4r22a",
+    "username": "komangmerta",
+    "displayName": "Komang Merta",
+    "requestDate": "2025-07-30T07:39:42.180Z",
+    "leaveType": "Cuti Tahunan",
+    "startDate": "2025-07-30",
+    "endDate": "2025-07-30",
+    "reason": "libur well",
     "status": "Pending"
   }
 ]

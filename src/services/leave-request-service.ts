@@ -31,7 +31,7 @@ export async function addLeaveRequest(data: AddLeaveRequestData): Promise<LeaveR
 
   const payload: NotificationPayload = {
     title: "Permintaan Izin Baru",
-    body: `Karyawan "${data.displayName || data.username}" mengajukan izin (${data.leaveType}) dari ${data.startDate} hingga ${data.endDate}.`,
+    body: `${data.displayName || data.username} mengajukan izin (${data.leaveType}) dari ${data.startDate} hingga ${data.endDate}.`,
     url: '/dashboard/admin-actions/leave-approvals'
   };
   await notifyUsersByRole('Owner', payload);
@@ -72,7 +72,7 @@ export async function approveLeaveRequest(requestId: string, approverUserId: str
   const updatedRequest = leaveRequests[requestIndex];
 
   const payload: NotificationPayload = {
-    title: "Status Permintaan Izin: Disetujui",
+    title: "Permintaan Izin Disetujui",
     body: `Permintaan izin Anda (${updatedRequest.leaveType}) untuk tanggal ${updatedRequest.startDate} telah disetujui oleh ${approverUsername}.`,
     url: `/dashboard/leave-request/new` 
   };
@@ -105,7 +105,7 @@ export async function rejectLeaveRequest(requestId: string, rejectorUserId: stri
   const updatedRequest = leaveRequests[requestIndex];
   
   const payload: NotificationPayload = {
-    title: "Status Permintaan Izin: Ditolak",
+    title: "Permintaan Izin Ditolak",
     body: `Izin Anda (${updatedRequest.leaveType}) untuk ${updatedRequest.startDate} ditolak oleh ${rejectorUsername}. Alasan: ${rejectionReason}`,
     url: `/dashboard/leave-request/new`
   };
