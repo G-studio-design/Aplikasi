@@ -1,5 +1,28 @@
 [
   {
+    "id": "notif_1753870223423_e3wp8",
+    "userId": "usr_1747799008584_4r22a",
+    "projectId": "project_1752215890356_ujcbz",
+    "message": "Penawaran untuk proyek 'proyek hotel kuta' perlu direvisi oleh Anda berdasarkan masukan dari sudina.",
+    "timestamp": "2025-07-30T10:10:23.423Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1753870162169_ahqxl",
+    "userId": "usr_owner_default",
+    "projectId": "project_1752215890356_ujcbz",
+    "message": "Penawaran untuk proyek 'proyek hotel kuta' telah diajukan oleh komangmerta dan menunggu persetujuan Anda.",
+    "timestamp": "2025-07-30T10:09:22.169Z",
+    "isRead": true
+  },
+  {
+    "id": "notif_1753870103229_73bxe",
+    "userId": "usr_owner_default",
+    "message": "Karyawan \"Komang Merta\" mengajukan Cuti Tahunan dari 2025-07-31 s/d 2025-07-31.",
+    "timestamp": "2025-07-30T10:08:23.229Z",
+    "isRead": false
+  },
+  {
     "id": "notif_1753869678836_szcdd",
     "userId": "usr_owner_default",
     "message": "Komang Merta mengajukan izin (Cuti Tahunan) dari 2025-07-30 hingga 2025-07-30.",

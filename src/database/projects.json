@@ -5,7 +5,7 @@
     "status": "Pending Offer",
     "progress": 10,
     "assignedDivision": "Admin Proyek",
-    "nextAction": "Unggah Dokumen Penawaran",
+    "nextAction": "Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.",
     "workflowId": "msa_workflow",
     "workflowHistory": [
       {
@@ -18,9 +18,39 @@
         "division": "System",
         "action": "Assigned to Admin Proyek for Unggah Dokumen Penawaran",
         "timestamp": "2025-07-11T06:38:10.355Z"
+      },
+      {
+        "division": "komangmerta",
+        "action": "Uploaded initial file(s): RAP MEp.pdf",
+        "timestamp": "2025-07-30T10:09:19.594Z"
+      },
+      {
+        "division": "Admin Proyek",
+        "action": "komangmerta (Admin Proyek) submitted for \"Unggah Dokumen Penawaran\"",
+        "timestamp": "2025-07-30T10:09:22.157Z",
+        "note": "dokumen penawaran"
+      },
+      {
+        "division": "Owner",
+        "action": "sudina (Owner) requested revision.",
+        "timestamp": "2025-07-30T10:10:23.418Z",
+        "note": "kurang ini"
       }
     ],
-    "files": [],
+    "files": [
+      {
+        "name": "RAP MEp.pdf",
+        "path": "project_1752215890356_ujcbz/rap_mep.pdf",
+        "timestamp": "2025-07-30T10:09:19.577Z",
+        "uploadedBy": "Admin Proyek"
+      },
+      {
+        "name": "RAP MEp.pdf",
+        "uploadedBy": "Admin Proyek",
+        "path": "project_1752215890356_ujcbz/rap_mep.pdf",
+        "timestamp": "2025-07-30T10:09:22.157Z"
+      }
+    ],
     "createdAt": "2025-07-11T06:38:10.355Z",
     "createdBy": "sudina"
   }
