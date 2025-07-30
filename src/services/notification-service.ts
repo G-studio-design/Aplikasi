@@ -47,18 +47,15 @@ if (process.env.VAPID_PRIVATE_KEY && process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
 
 async function findUsersByRole(role: string): Promise<User[]> {
     const allUsers = await getAllUsers();
-    // Make comparison robust by ignoring case and extra spaces
     const normalizedRole = role.trim().toLowerCase();
     return allUsers.filter(user => user.role.trim().toLowerCase() === normalizedRole);
 }
 
 async function sendPushNotification(subscription: PushSubscription, payload: string) {
     try {
-        // The payload for web-push MUST be a string.
         await webPush.sendNotification(subscription, payload);
     } catch (error: any) {
         console.error(`Failed to send push notification to ${subscription.endpoint}. Error: ${error.message}`);
-        // If subscription is expired or invalid, we should remove it
         if (error.statusCode === 410 || error.statusCode === 404) {
             console.log('Subscription expired or invalid. Removing...');
             await removeSubscription(subscription);
@@ -70,7 +67,6 @@ async function notifyUser(user: User, payload: NotificationPayload, projectId?: 
     const notifications = await readDb<Notification[]>(NOTIFICATION_DB_PATH, []);
     const now = new Date().toISOString();
     
-    // The notification stored in the DB uses the 'body' from the payload.
     const newNotification: Notification = {
         id: `notif_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
         userId: user.id,
@@ -80,17 +76,15 @@ async function notifyUser(user: User, payload: NotificationPayload, projectId?: 
         isRead: false,
     };
 
-    notifications.unshift(newNotification); // Add to the top
+    notifications.unshift(newNotification);
     if (notifications.length > NOTIFICATION_LIMIT) {
-        notifications.pop(); // Remove the oldest
+        notifications.pop();
     }
     await writeDb(NOTIFICATION_DB_PATH, notifications);
 
-    // Send web push notification
     const subscriptions = await readDb<SubscriptionRecord[]>(SUBSCRIPTION_DB_PATH, []);
     const userSubscriptions = subscriptions.filter(sub => sub.userId === user.id);
     
-    // **CRITICAL FIX**: The payload for web-push MUST be a string. We serialize our object to a JSON string.
     const pushPayloadString = JSON.stringify(payload);
     
     for (const subRecord of userSubscriptions) {
