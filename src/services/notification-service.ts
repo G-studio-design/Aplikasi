@@ -94,12 +94,12 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
     const allUsers = await getAllUsersForDisplay();
     const usersToNotify = new Map<string, Omit<User, 'password'>>();
 
-    for (const role of rolesToNotifyArray) {
-        if (!role) continue;
-        const normalizedRole = role.trim().toLowerCase();
+    rolesToNotifyArray.forEach(roleToNotify => {
+        if (!roleToNotify) return;
+        const normalizedRole = roleToNotify.trim().toLowerCase();
         const targetUsers = allUsers.filter(user => user.role.trim().toLowerCase() === normalizedRole);
         targetUsers.forEach(user => usersToNotify.set(user.id, user));
-    }
+    });
 
     if (usersToNotify.size === 0) {
         console.warn(`[NotificationService] No users found for role(s): ${rolesToNotifyArray.join(', ')}`);
