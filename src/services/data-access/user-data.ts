@@ -30,14 +30,12 @@ const DEFAULT_USERS: User[] = [
 ];
 
 /**
- * Reads the entire user database, including developers.
- * Initializes with default users if the database is empty or doesn't exist.
+ * Reads the entire user database.
  * This is a low-level data access function.
  * @returns A promise that resolves to an array of all User objects.
  */
 export async function getAllUsers(): Promise<User[]> {
-    const users = await readDb<User[]>(DB_PATH, DEFAULT_USERS);
-    // If the read operation returns an empty array (e.g., file was empty),
-    // ensure the default users are still returned.
-    return users.length > 0 ? users : DEFAULT_USERS;
+    // This now correctly returns the contents of the DB file, even if empty.
+    // The previous logic incorrectly returned default data if the file was empty.
+    return await readDb<User[]>(DB_PATH, []);
 }
