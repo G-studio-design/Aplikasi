@@ -2,10 +2,10 @@
   {
     "id": "project_1752215890356_ujcbz",
     "title": "proyek hotel kuta",
-    "status": "Pending Offer",
-    "progress": 10,
-    "assignedDivision": "Admin Proyek",
-    "nextAction": "Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.",
+    "status": "Pending Approval",
+    "progress": 20,
+    "assignedDivision": "Owner",
+    "nextAction": "Setujui Dokumen Penawaran",
     "workflowId": "msa_workflow",
     "workflowHistory": [
       {
@@ -35,6 +35,16 @@
         "action": "sudina (Owner) requested revision.",
         "timestamp": "2025-07-30T10:10:23.418Z",
         "note": "kurang ini"
+      },
+      {
+        "division": "komangmerta",
+        "action": "Uploaded initial file(s): RAP MEp.pdf",
+        "timestamp": "2025-07-30T10:19:35.941Z"
+      },
+      {
+        "division": "Admin Proyek",
+        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
+        "timestamp": "2025-07-30T10:19:37.277Z"
       }
     ],
     "files": [
@@ -49,6 +59,18 @@
         "uploadedBy": "Admin Proyek",
         "path": "project_1752215890356_ujcbz/rap_mep.pdf",
         "timestamp": "2025-07-30T10:09:22.157Z"
+      },
+      {
+        "name": "RAP MEp.pdf",
+        "path": "project_1752215890356_ujcbz/rap_mep.pdf",
+        "timestamp": "2025-07-30T10:19:35.929Z",
+        "uploadedBy": "Admin Proyek"
+      },
+      {
+        "name": "RAP MEp.pdf",
+        "uploadedBy": "Admin Proyek",
+        "path": "project_1752215890356_ujcbz/rap_mep.pdf",
+        "timestamp": "2025-07-30T10:19:37.277Z"
       }
     ],
     "createdAt": "2025-07-11T06:38:10.355Z",

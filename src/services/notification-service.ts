@@ -89,7 +89,6 @@ async function notifyUser(user: Omit<User, 'password'>, payload: NotificationPay
 }
 
 export async function notifyUsersByRole(roles: string | string[], payload: NotificationPayload, projectId?: string): Promise<void> {
-    // Simplified and robust logic for handling single or multiple roles.
     const rolesToNotifyArray = Array.isArray(roles) ? roles : [roles];
     if (rolesToNotifyArray.length === 0) return;
 
@@ -97,8 +96,8 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
     const uniqueUsersToNotify = new Map<string, Omit<User, 'password'>>();
 
     rolesToNotifyArray.forEach(roleToNotify => {
-        const normalizedRoleToFind = roleToNotify.trim().toLowerCase();
-        const foundUsers = allUsers.filter(user => user.role.trim().toLowerCase() === normalizedRoleToFind);
+        const normalizedRole = roleToNotify.trim().toLowerCase();
+        const foundUsers = allUsers.filter(user => user.role.trim().toLowerCase() === normalizedRole);
         foundUsers.forEach(user => uniqueUsersToNotify.set(user.id, user));
     });
 
