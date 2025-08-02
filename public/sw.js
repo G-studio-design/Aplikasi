@@ -1,45 +1,43 @@
-
 // public/sw.js
 
 self.addEventListener('push', event => {
-  console.log('[Service Worker] Push Received.');
-  let data;
+  let payload;
   try {
-    data = event.data.json();
+    payload = event.data.json();
   } catch (e) {
-    console.error('[Service Worker] Push event data is not valid JSON.', e);
-    // Fallback for plain text notifications if needed
-    data = {
-      title: 'Pemberitahuan Baru',
-      body: event.data.text(),
-      data: { url: '/' }
+    payload = {
+      title: 'Msarch App',
+      body: 'You have a new update.',
+      data: { url: '/' },
     };
   }
-  
-  console.log('[Service Worker] Notification data:', data);
 
-  const title = data.title || 'Msarch App';
   const options = {
-    body: data.body || 'Anda memiliki pembaruan baru.',
-    icon: '/msarch-logo.png', // Main app icon
-    badge: '/msarch-logo-badge.png', // A smaller badge icon
-    vibrate: [200, 100, 200],
+    body: payload.body,
+    icon: '/msarch-logo.png',
+    badge: '/msarch-logo.png',
+    vibrate: [100, 50, 100],
     data: {
-      url: data.data?.url || '/',
+      url: payload.url || '/',
     },
   };
 
-  event.waitUntil(self.registration.showNotification(title, options));
+  event.waitUntil(
+    self.registration.showNotification(payload.title, options)
+  );
 });
 
 self.addEventListener('notificationclick', event => {
-  console.log('[Service Worker] Notification click Received.');
-  event.notification.close();
+  const notification = event.notification;
+  notification.close();
 
-  const urlToOpen = new URL(event.notification.data.url, self.location.origin).href;
+  const urlToOpen = new URL(notification.data.url, self.location.origin).href;
 
-  console.log(`[Service Worker] Attempting to open window for: ${urlToOpen}`);
+  event.waitUntil(
+    clients.openWindow(urlToOpen)
+  );
+});
 
-  const promiseChain = clients.openWindow(urlToOpen);
-  event.waitUntil(promiseChain);
+self.addEventListener('install', event => {
+  self.skipWaiting();
 });
