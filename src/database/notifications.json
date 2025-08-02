@@ -1,11 +1,59 @@
 [
   {
+    "id": "notif_1754119334967_8f7e1",
+    "userId": "usr_owner_default",
+    "projectId": "project_1754116377920_b67tf",
+    "message": "Penawaran untuk proyek 'proyek indonesia tanah ir siapa' telah diajukan oleh komangmerta dan menunggu persetujuan Anda.",
+    "timestamp": "2025-08-02T07:22:14.967Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1754119286490_ipcro",
+    "userId": "usr_1747799008584_4r22a",
+    "projectId": "project_1754116377920_b67tf",
+    "message": "Penawaran untuk proyek 'proyek indonesia tanah ir siapa' perlu direvisi oleh Anda berdasarkan masukan dari sudina.",
+    "timestamp": "2025-08-02T07:21:26.490Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1754118153812_8enmx",
+    "userId": "usr_owner_default",
+    "projectId": "project_1754114678978_bwy5o",
+    "message": "Penawaran untuk proyek 'proyek tol megamendung ' telah diajukan oleh komangmerta dan menunggu persetujuan Anda.",
+    "timestamp": "2025-08-02T07:02:33.812Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1754118112207_olv27",
+    "userId": "usr_1747799008584_4r22a",
+    "projectId": "project_1754114678978_bwy5o",
+    "message": "Penawaran untuk proyek 'proyek tol megamendung ' perlu direvisi oleh Anda berdasarkan masukan dari sudina.",
+    "timestamp": "2025-08-02T07:01:52.207Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1754118011720_zyl9e",
+    "userId": "usr_owner_default",
+    "projectId": "project_1754114678978_bwy5o",
+    "message": "Penawaran untuk proyek 'proyek tol megamendung ' telah diajukan oleh komangmerta dan menunggu persetujuan Anda.",
+    "timestamp": "2025-08-02T07:00:11.720Z",
+    "isRead": true
+  },
+  {
+    "id": "notif_1754117664766_eupq3",
+    "userId": "usr_owner_default",
+    "projectId": "project_1752215890356_ujcbz",
+    "message": "Penawaran untuk proyek 'proyek hotel kuta' telah diajukan oleh komangmerta dan menunggu persetujuan Anda.",
+    "timestamp": "2025-08-02T06:54:24.766Z",
+    "isRead": false
+  },
+  {
     "id": "notif_1754117332226_4wwvj",
     "userId": "usr_1747799008584_4r22a",
     "projectId": "project_1752215890356_ujcbz",
     "message": "Penawaran untuk proyek 'proyek hotel kuta' perlu direvisi oleh Anda berdasarkan masukan dari sudina.",
     "timestamp": "2025-08-02T06:48:52.226Z",
-    "isRead": false
+    "isRead": true
   },
   {
     "id": "notif_1754117251477_52wsu",

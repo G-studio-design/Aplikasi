@@ -2,10 +2,10 @@
   {
     "id": "project_1752215890356_ujcbz",
     "title": "proyek hotel kuta",
-    "status": "Pending Offer",
-    "progress": 10,
-    "assignedDivision": "Admin Proyek",
-    "nextAction": "Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.",
+    "status": "Pending Approval",
+    "progress": 20,
+    "assignedDivision": "Owner",
+    "nextAction": "Setujui Dokumen Penawaran",
     "workflowId": "msa_workflow",
     "workflowHistory": [
       {
@@ -84,6 +84,16 @@
         "action": "sudina (Owner) requested revision.",
         "timestamp": "2025-08-02T06:48:52.218Z",
         "note": "revisi"
+      },
+      {
+        "division": "komangmerta",
+        "action": "Uploaded initial file(s): pemecahan nangka 2.pdf",
+        "timestamp": "2025-08-02T06:54:21.680Z"
+      },
+      {
+        "division": "Admin Proyek",
+        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
+        "timestamp": "2025-08-02T06:54:24.692Z"
       }
     ],
     "files": [
@@ -134,6 +144,18 @@
         "uploadedBy": "Admin Proyek",
         "path": "project_1752215890356_ujcbz/pemecahan_nangka_2.pdf",
         "timestamp": "2025-08-02T06:47:31.469Z"
+      },
+      {
+        "name": "pemecahan nangka 2.pdf",
+        "path": "project_1752215890356_ujcbz/pemecahan_nangka_2.pdf",
+        "timestamp": "2025-08-02T06:54:21.653Z",
+        "uploadedBy": "Admin Proyek"
+      },
+      {
+        "name": "pemecahan nangka 2.pdf",
+        "uploadedBy": "Admin Proyek",
+        "path": "project_1752215890356_ujcbz/pemecahan_nangka_2.pdf",
+        "timestamp": "2025-08-02T06:54:24.692Z"
       }
     ],
     "createdAt": "2025-07-11T06:38:10.355Z",
@@ -142,10 +164,10 @@
   {
     "id": "project_1754114678978_bwy5o",
     "title": "proyek tol megamendung ",
-    "status": "Pending Offer",
-    "progress": 10,
-    "assignedDivision": "Admin Proyek",
-    "nextAction": "Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.",
+    "status": "Pending Approval",
+    "progress": 20,
+    "assignedDivision": "Owner",
+    "nextAction": "Setujui Dokumen Penawaran",
     "workflowId": "msa_workflow",
     "workflowHistory": [
       {
@@ -175,6 +197,34 @@
         "action": "sudina (Owner) requested revision.",
         "timestamp": "2025-08-02T06:35:24.470Z",
         "note": "ulangi"
+      },
+      {
+        "division": "komangmerta",
+        "action": "Uploaded initial file(s): pool warung semana-1.pdf",
+        "timestamp": "2025-08-02T07:00:06.488Z"
+      },
+      {
+        "division": "Admin Proyek",
+        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
+        "timestamp": "2025-08-02T07:00:11.658Z",
+        "note": "done"
+      },
+      {
+        "division": "Owner",
+        "action": "sudina (Owner) requested revision.",
+        "timestamp": "2025-08-02T07:01:52.178Z",
+        "note": "revisi lagi dikit"
+      },
+      {
+        "division": "komangmerta",
+        "action": "Uploaded initial file(s): KUSEN gami 1.pdf",
+        "timestamp": "2025-08-02T07:02:32.932Z"
+      },
+      {
+        "division": "Admin Proyek",
+        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
+        "timestamp": "2025-08-02T07:02:33.590Z",
+        "note": "done"
       }
     ],
     "files": [
@@ -189,6 +239,30 @@
         "uploadedBy": "Admin Proyek",
         "path": "project_1754114678978_bwy5o/rap_mep.pdf",
         "timestamp": "2025-08-02T06:22:50.164Z"
+      },
+      {
+        "name": "pool warung semana-1.pdf",
+        "path": "project_1754114678978_bwy5o/pool_warung_semana-1.pdf",
+        "timestamp": "2025-08-02T07:00:06.483Z",
+        "uploadedBy": "Admin Proyek"
+      },
+      {
+        "name": "pool warung semana-1.pdf",
+        "uploadedBy": "Admin Proyek",
+        "path": "project_1754114678978_bwy5o/pool_warung_semana-1.pdf",
+        "timestamp": "2025-08-02T07:00:11.658Z"
+      },
+      {
+        "name": "KUSEN gami 1.pdf",
+        "path": "project_1754114678978_bwy5o/kusen_gami_1.pdf",
+        "timestamp": "2025-08-02T07:02:32.930Z",
+        "uploadedBy": "Admin Proyek"
+      },
+      {
+        "name": "KUSEN gami 1.pdf",
+        "uploadedBy": "Admin Proyek",
+        "path": "project_1754114678978_bwy5o/kusen_gami_1.pdf",
+        "timestamp": "2025-08-02T07:02:33.590Z"
       }
     ],
     "createdAt": "2025-08-02T06:04:38.978Z",
@@ -224,6 +298,23 @@
         "action": "komangmerta (Admin Proyek) submitted for \"Unggah Dokumen Penawaran\"",
         "timestamp": "2025-08-02T06:33:53.506Z",
         "note": "done"
+      },
+      {
+        "division": "Owner",
+        "action": "sudina (Owner) requested revision.",
+        "timestamp": "2025-08-02T07:21:26.446Z",
+        "note": "Revisi Dikit"
+      },
+      {
+        "division": "komangmerta",
+        "action": "Uploaded initial file(s): RAP MEp.pdf",
+        "timestamp": "2025-08-02T07:22:13.951Z"
+      },
+      {
+        "division": "Admin Proyek",
+        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
+        "timestamp": "2025-08-02T07:22:14.681Z",
+        "note": "done"
       }
     ],
     "files": [
@@ -238,6 +329,18 @@
         "uploadedBy": "Admin Proyek",
         "path": "project_1754116377920_b67tf/rap_mep.pdf",
         "timestamp": "2025-08-02T06:33:53.506Z"
+      },
+      {
+        "name": "RAP MEp.pdf",
+        "path": "project_1754116377920_b67tf/rap_mep.pdf",
+        "timestamp": "2025-08-02T07:22:13.948Z",
+        "uploadedBy": "Admin Proyek"
+      },
+      {
+        "name": "RAP MEp.pdf",
+        "uploadedBy": "Admin Proyek",
+        "path": "project_1754116377920_b67tf/rap_mep.pdf",
+        "timestamp": "2025-08-02T07:22:14.681Z"
       }
     ],
     "createdAt": "2025-08-02T06:32:57.920Z",

@@ -25,7 +25,6 @@ const NOTIFICATION_DB_PATH = path.resolve(process.cwd(), 'src', 'database', 'not
 const SUBSCRIPTION_DB_PATH = path.resolve(process.cwd(), 'src', 'database', 'subscriptions.json');
 const NOTIFICATION_LIMIT = 300;
 
-// Initialize VAPID keys once when the module is loaded.
 if (process.env.VAPID_PRIVATE_KEY && process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
     try {
         webPush.setVapidDetails(
@@ -33,22 +32,23 @@ if (process.env.VAPID_PRIVATE_KEY && process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
             process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
             process.env.VAPID_PRIVATE_KEY
         );
+        console.log("[NotificationService] VAPID keys loaded successfully.");
     } catch (error) {
-        console.error("[NotificationService] CRITICAL: Failed to load VAPID keys. Push notifications will fail.", error);
+        console.error("[NotificationService] CRITICAL: Failed to load VAPID keys.", error);
     }
 } else {
     console.warn("[NotificationService] VAPID keys are not configured. Push notifications will be disabled.");
 }
+
 
 async function sendPushNotification(subscription: PushSubscription, payloadString: string) {
     try {
         await webPush.sendNotification(subscription, payloadString);
         console.log(`[NotificationService] Push notification sent successfully to endpoint: ${subscription.endpoint.slice(0, 50)}...`);
     } catch (error: any) {
-        console.error(`[NotificationService] Failed to send push. Status: ${error.statusCode}, Message: ${error.message}`);
+        console.error(`[NotificationService] Failed to send push notification. Status: ${error.statusCode}, Message: ${error.body || error.message}`);
         if (error.statusCode === 410 || error.statusCode === 404) {
             console.log('[NotificationService] Subscription expired or invalid. It should be removed.');
-            // Here you would typically remove the subscription from your database.
         }
     }
 }
@@ -69,7 +69,6 @@ async function addInAppNotifications(userIds: string[], payload: NotificationPay
         notifications.unshift(newNotification);
     }
     
-    // Trim old notifications if the list exceeds the limit
     if (notifications.length > NOTIFICATION_LIMIT) {
         notifications.splice(NOTIFICATION_LIMIT);
     }
@@ -77,10 +76,8 @@ async function addInAppNotifications(userIds: string[], payload: NotificationPay
     await writeDb(NOTIFICATION_DB_PATH, notifications);
 }
 
-// A more robust way to find users by one or more roles
 async function findUsersByRole(roles: string[]): Promise<string[]> {
     const allUsers = await getAllUsers();
-    // Normalize all input roles to lowercase
     const normalizedRoles = roles.map(r => r.trim().toLowerCase());
     
     const userIds = allUsers
@@ -118,12 +115,10 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
     }
     
     const pushPayload = JSON.stringify({
-      notification: {
-        title: payload.title,
-        body: payload.body,
-        data: {
-          url: payload.url || '/'
-        }
+      title: payload.title,
+      body: payload.body,
+      data: {
+        url: payload.url || '/'
       }
     });
 
@@ -135,15 +130,10 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
     );
 }
 
-
-// A simplified alias to notify a single user
 export async function notifyUserById(userId: string, payload: NotificationPayload, projectId?: string): Promise<void> {
     if (!userId) return;
     await notifyUsersByRole([userId], payload, projectId);
 }
-
-
-// --- Functions for managing notification history ---
 
 export async function getNotificationsForUser(userId: string): Promise<Notification[]> {
     const allNotifications = await readDb<Notification[]>(NOTIFICATION_DB_PATH, []);
