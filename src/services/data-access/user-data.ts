@@ -14,6 +14,10 @@ const DB_PATH = path.resolve(process.cwd(), 'src', 'database', 'users.json');
  * @returns A promise that resolves to an array of all User objects.
  */
 export async function getAllUsers(): Promise<User[]> {
-    // This now correctly returns the contents of the DB file, even if empty.
     return await readDb<User[]>(DB_PATH, []);
+}
+
+export async function getSubscriptionsForUserIds(userIds: string[]): Promise<{userId: string, subscription: any}[]> {
+    const allSubscriptions = await readDb<{userId: string, subscription: any}[]>(path.resolve(process.cwd(), 'src', 'database', 'subscriptions.json'), []);
+    return allSubscriptions.filter(sub => userIds.includes(sub.userId));
 }

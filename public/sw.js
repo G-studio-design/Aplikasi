@@ -1,77 +1,80 @@
-// public/sw.js
-self.addEventListener('push', function(event) {
+'use strict';
+
+self.addEventListener('push', function (event) {
   console.log('[Service Worker] Push Received.');
 
-  if (!event.data) {
-    console.error('[Service Worker] Push event but no data');
-    return;
-  }
-
+  let data;
   try {
-    const dataText = event.data.text();
-    const data = JSON.parse(dataText);
-
-    // Modern standardized payload structure
-    const notificationData = data.notification || data;
-
-    const title = notificationData.title || 'Msarch App';
-    const options = {
-      body: notificationData.body || 'You have a new message.',
-      icon: '/msarch-logo.png',
-      badge: '/msarch-logo-badge.png', // Optional: a monochrome icon
-      data: {
-        url: notificationData.data?.url || notificationData.url || '/'
-      }
-    };
-    
-    console.log('[Service Worker] Showing notification:', options);
-    
-    event.waitUntil(
-      self.registration.showNotification(title, options)
-    );
-
+    // We need to handle the payload as text first, then parse it as JSON.
+    const VAPID_PAYLOAD_TEXT = event.data.text();
+    data = JSON.parse(VAPID_PAYLOAD_TEXT);
+    console.log('[Service Worker] Push data parsed:', data);
   } catch (e) {
-    console.error('[Service Worker] Error processing push event:', e);
-    // Fallback for simple string payloads
-    const title = 'Msarch App';
-    const options = {
-      body: event.data.text(),
-      icon: '/msarch-logo.png',
-      badge: '/msarch-logo-badge.png',
-      data: {
-        url: '/'
+    console.error('[Service Worker] Failed to parse push data:', e);
+    // Fallback notification if parsing fails
+    data = {
+      notification: {
+        title: 'New Notification',
+        body: 'You have a new update.',
+        data: {
+          url: '/'
+        }
       }
     };
-    event.waitUntil(
-      self.registration.showNotification(title, options)
-    );
   }
+  
+  const { notification: notificationData } = data;
+
+  if (!notificationData) {
+      console.error("[Service Worker] 'notification' object not found in push data.");
+      return;
+  }
+
+  const title = notificationData.title || 'Msarch App';
+  const options = {
+    body: notificationData.body || 'You have a new notification.',
+    icon: '/msarch-logo.png', // Main app icon
+    badge: '/msarch-logo-badge.png', // A smaller, monochrome icon for the status bar
+    vibrate: [200, 100, 200], // Vibration pattern
+    tag: 'msarch-notification', // Groups notifications
+    renotify: true, // Allows replacing old notifications
+    data: {
+      url: notificationData.data.url || '/' // The URL to open on click
+    }
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
 });
 
-
-self.addEventListener('notificationclick', function(event) {
+self.addEventListener('notificationclick', function (event) {
   console.log('[Service Worker] Notification click Received.');
 
   event.notification.close();
 
   const urlToOpen = new URL(event.notification.data.url, self.location.origin).href;
 
-  event.waitUntil(
-    clients.matchAll({
-      type: 'window',
-      includeUncontrolled: true
-    }).then(function(clientList) {
-      // Check if there's already a window open with the same URL.
-      for (let i = 0; i < clientList.length; i++) {
-        const client = clientList[i];
-        if (client.url === urlToOpen && 'focus' in client) {
-          return client.focus();
-        }
+  const promiseChain = clients.matchAll({
+    type: 'window',
+    includeUncontrolled: true
+  }).then(function (windowClients) {
+    let matchingClient = null;
+
+    for (let i = 0; i < windowClients.length; i++) {
+      const windowClient = windowClients[i];
+      if (windowClient.url === urlToOpen) {
+        matchingClient = windowClient;
+        break;
       }
-      // If not, open a new window.
-      if (clients.openWindow) {
-        return clients.openWindow(urlToOpen);
-      }
-    })
-  );
+    }
+
+    if (matchingClient) {
+      console.log('[Service Worker] Found an existing tab, focusing it.');
+      return matchingClient.focus();
+    } else {
+      console.log('[Service Worker] No existing tab found, opening a new one.');
+      return clients.openWindow(urlToOpen);
+    }
+  });
+
+  event.waitUntil(promiseChain);
 });

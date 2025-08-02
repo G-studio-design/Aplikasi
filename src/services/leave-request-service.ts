@@ -37,7 +37,7 @@ export async function addLeaveRequest(data: AddLeaveRequestData): Promise<LeaveR
   };
   await notifyUsersByRole('Owner', payload);
 
-  console.log(`[LeaveRequestService] Leave request added for ${data.username}. Notifying Owner.`);
+  console.log(`[LeaveRequestService] Leave request added for ${data.username}. Delegating Owner notification.`);
   return newRequest;
 }
 
