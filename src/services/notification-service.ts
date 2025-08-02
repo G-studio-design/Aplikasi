@@ -76,32 +76,43 @@ async function notifyUser(user: Omit<User, 'password'>, payload: NotificationPay
     const userSubscriptions = subscriptions.filter(sub => sub.userId === user.id);
 
     if (userSubscriptions.length > 0) {
-        // Correctly stringify the payload object for web-push library
         const pushPayloadString = JSON.stringify(payload);
+        console.log(`[NotificationService] Sending push notification to user ${user.username} (ID: ${user.id}).`);
         for (const subRecord of userSubscriptions) {
             await sendPushNotification(subRecord.subscription, pushPayloadString);
         }
+    } else {
+        console.log(`[NotificationService] User ${user.username} (ID: ${user.id}) has an in-app notification but no push subscription.`);
     }
 }
 
 export async function notifyUsersByRole(roles: string | string[], payload: NotificationPayload, projectId?: string): Promise<void> {
     const allUsers = await getAllUsersForDisplay();
-    // Simplified and robust logic to handle both string and array of strings
+    // Simplified, robust logic to handle both single string and array of strings
     const rolesToNotifyArray = Array.isArray(roles) ? roles : [roles];
-    const normalizedRoles = rolesToNotifyArray.map(r => r.trim().toLowerCase());
-    
     const uniqueUsersToNotify = new Map<string, Omit<User, 'password'>>();
 
-    const usersToNotify = allUsers.filter(user => normalizedRoles.includes(user.role.trim().toLowerCase()));
+    rolesToNotifyArray.forEach(roleToNotify => {
+        const normalizedRole = roleToNotify.trim().toLowerCase();
+        console.log(`[NotificationService Debug] Searching for role: "${normalizedRole}"`);
 
-    usersToNotify.forEach(user => uniqueUsersToNotify.set(user.id, user));
+        const targetUsers = allUsers.filter(user => user.role.trim().toLowerCase() === normalizedRole);
+        
+        console.log(`[NotificationService Debug] Found ${targetUsers.length} user(s) for role "${normalizedRole}".`);
+
+        targetUsers.forEach(user => {
+            if (!uniqueUsersToNotify.has(user.id)) {
+                uniqueUsersToNotify.set(user.id, user);
+            }
+        });
+    });
     
     if (uniqueUsersToNotify.size === 0) {
         console.warn(`[NotificationService] No users found for role(s): ${rolesToNotifyArray.join(', ')}`);
         return;
     }
     
-    console.log(`[NotificationService] Notifying ${uniqueUsersToNotify.size} user(s) for role(s): ${rolesToNotifyArray.join(', ')}`);
+    console.log(`[NotificationService] Total unique users to notify: ${uniqueUsersToNotify.size}. Notifying roles: ${rolesToNotifyArray.join(', ')}`);
     for (const user of uniqueUsersToNotify.values()) {
         await notifyUser(user, payload, projectId);
     }

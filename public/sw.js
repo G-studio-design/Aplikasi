@@ -1,57 +1,55 @@
-// public/sw.js
-self.addEventListener('push', function(event) {
-  let data = {};
-  if (event.data) {
+
+self.addEventListener('push', event => {
+    console.log('[Service Worker] Push Received.');
+    let data;
     try {
-      data = event.data.json();
+        data = event.data.json();
     } catch (e) {
-      console.error('Error parsing push data:', e);
-      // Fallback for plain text notifications
-      data = {
-        title: 'Notification',
-        body: event.data.text(),
-        url: '/'
-      };
+        console.error('[Service Worker] Push event but no data');
+        data = {
+            title: 'Notifikasi Baru',
+            body: 'Anda memiliki pembaruan baru.',
+            url: '/'
+        };
     }
-  }
 
-  const title = data.title || 'Msarch App Notification';
-  const options = {
-    body: data.body || 'You have a new update.',
-    icon: '/msarch-logo-192.png',
-    badge: '/msarch-logo-72.png',
-    data: {
-      url: data.url || '/dashboard', // Ensure there is always a URL
-    },
-  };
+    const title = data.title || 'Notifikasi Msarch';
+    const options = {
+        body: data.body || 'Ada pembaruan untuk Anda.',
+        icon: '/msarch-logo.png',
+        badge: '/msarch-logo.png',
+        data: {
+            url: data.url || '/dashboard'
+        }
+    };
 
-  event.waitUntil(self.registration.showNotification(title, options));
+    const notificationPromise = self.registration.showNotification(title, options);
+    event.waitUntil(notificationPromise);
 });
 
-self.addEventListener('notificationclick', function(event) {
-  event.notification.close();
+self.addEventListener('notificationclick', event => {
+    console.log('[Service Worker] Notification click Received.');
+    event.notification.close();
+    
+    const urlToOpen = new URL(event.notification.data.url, self.location.origin).href;
 
-  const targetUrl = event.notification.data.url;
-
-  event.waitUntil(
-    clients.matchAll({
-      type: 'window',
-      includeUncontrolled: true,
-    }).then(function(clientList) {
-      // Check if there's an already-open window/tab with the same origin
-      for (let i = 0; i < clientList.length; i++) {
-        const client = clientList[i];
-        // If a window is found, focus it and navigate to the target URL
-        if (client.url && 'focus' in client) {
-          client.navigate(targetUrl);
-          return client.focus();
+    const promiseChain = clients.matchAll({
+        type: 'window',
+        includeUncontrolled: true
+    }).then((clientList) => {
+        if (clientList.length > 0) {
+            let client = clientList[0];
+            for (let i = 0; i < clientList.length; i++) {
+                if (clientList[i].focused) {
+                    client = clientList[i];
+                }
+            }
+            console.log('[Service Worker] App window found, focusing and navigating.');
+            return client.focus().then(cli => cli.navigate(urlToOpen));
         }
-      }
+        console.log('[Service Worker] No app window found, opening new one.');
+        return clients.openWindow(urlToOpen);
+    });
 
-      // If no window was found, open a new one
-      if (clients.openWindow) {
-        return clients.openWindow(targetUrl);
-      }
-    })
-  );
+    event.waitUntil(promiseChain);
 });
