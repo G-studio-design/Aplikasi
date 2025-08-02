@@ -1,3 +1,4 @@
+
 // src/services/notification-service.ts
 'use server';
 
@@ -38,14 +39,14 @@ if (process.env.VAPID_PRIVATE_KEY && process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
         process.env.VAPID_PRIVATE_KEY
     );
 } else {
-    console.warn("VAPID keys not configured. Push notifications will not work.");
+    console.warn("[VAPID Keys] Not configured. Push notifications will not work.");
 }
 
-async function sendPushNotification(subscription: PushSubscription, payload: string) {
+async function sendPushNotification(subscription: PushSubscription, payloadString: string) {
     try {
-        await webPush.sendNotification(subscription, payload);
+        await webPush.sendNotification(subscription, payloadString);
     } catch (error: any) {
-        console.error(`[PushService] Failed to send push notification. Error: ${error.message}`);
+        console.error(`[PushService] Failed to send push. Error: ${error.message}`);
         if (error.statusCode === 410 || error.statusCode === 404) {
             console.log('[PushService] Subscription expired or invalid. Removing...');
             await removeSubscription(subscription);
@@ -68,7 +69,7 @@ async function notifyUser(user: Omit<User, 'password'>, payload: NotificationPay
 
     notifications.unshift(newNotification);
     if (notifications.length > NOTIFICATION_LIMIT) {
-        notifications.pop(); 
+        notifications.pop();
     }
     await writeDb(NOTIFICATION_DB_PATH, notifications);
 
@@ -76,7 +77,7 @@ async function notifyUser(user: Omit<User, 'password'>, payload: NotificationPay
     const userSubscriptions = subscriptions.filter(sub => sub.userId === user.id);
 
     if (userSubscriptions.length > 0) {
-        const pushPayloadString = JSON.stringify(payload);
+        const pushPayloadString = JSON.stringify(payload); // Ensure payload is a string for web-push
         console.log(`[NotificationService] Sending push notification to user ${user.username} (ID: ${user.id}).`);
         for (const subRecord of userSubscriptions) {
             await sendPushNotification(subRecord.subscription, pushPayloadString);
@@ -94,11 +95,11 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
 
     rolesToNotifyArray.forEach(roleToNotify => {
         const normalizedRole = roleToNotify.trim().toLowerCase();
-        console.log(`[NotificationService Debug] Searching for role: "${normalizedRole}"`);
+        console.log(`[NotificationService] Searching for users with role: '${normalizedRole}'`);
 
         const targetUsers = allUsers.filter(user => user.role.trim().toLowerCase() === normalizedRole);
         
-        console.log(`[NotificationService Debug] Found ${targetUsers.length} user(s) for role "${normalizedRole}".`);
+        console.log(`[NotificationService] Found ${targetUsers.length} user(s) for role '${normalizedRole}'.`);
 
         targetUsers.forEach(user => {
             if (!uniqueUsersToNotify.has(user.id)) {
@@ -118,6 +119,7 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
     }
 }
 
+
 export async function notifyUserById(userId: string, payload: NotificationPayload, projectId?: string): Promise<void> {
     if (!userId) return;
     const allUsers = await getAllUsersForDisplay();
@@ -132,7 +134,7 @@ export async function notifyUserById(userId: string, payload: NotificationPayloa
 
 export async function getNotificationsForUser(userId: string): Promise<Notification[]> {
     const allNotifications = await readDb<Notification[]>(NOTIFICATION_DB_PATH, []);
-    return allNotifications.filter(n => n.userId === userId);
+    return allNotifications.filter(n => n.userId === userId).sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 }
 
 export async function markNotificationAsRead(notificationId: string): Promise<void> {

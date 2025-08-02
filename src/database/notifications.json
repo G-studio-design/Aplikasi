@@ -1,5 +1,12 @@
 [
   {
+    "id": "notif_1754111096549_5uk6g",
+    "userId": "usr_owner_default",
+    "message": "Karyawan \"Komang Merta\" mengajukan Cuti Tahunan dari 2025-08-02 s/d 2025-08-02.",
+    "timestamp": "2025-08-02T05:04:56.549Z",
+    "isRead": false
+  },
+  {
     "id": "notif_1753871457936_btj9y",
     "userId": "usr_1747799008584_4r22a",
     "projectId": "project_1752215890356_ujcbz",
@@ -13,7 +20,7 @@
     "projectId": "project_1752215890356_ujcbz",
     "message": "Penawaran untuk proyek 'proyek hotel kuta' telah diajukan oleh komangmerta dan menunggu persetujuan Anda.",
     "timestamp": "2025-07-30T10:27:14.170Z",
-    "isRead": false
+    "isRead": true
   },
   {
     "id": "notif_1753871145031_234g2",
