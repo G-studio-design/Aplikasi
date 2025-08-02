@@ -1,4 +1,3 @@
-
 // src/services/notification-service.ts
 'use server';
 
@@ -22,6 +21,7 @@ interface SubscriptionRecord {
     subscription: PushSubscription;
 }
 
+// This is the data structure for the push payload
 export interface NotificationPayload {
   title: string;
   body: string;
@@ -45,6 +45,7 @@ if (process.env.VAPID_PRIVATE_KEY && process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
 async function sendPushNotification(subscription: PushSubscription, payloadString: string) {
     try {
         await webPush.sendNotification(subscription, payloadString);
+        console.log(`[PushService] Push notification sent successfully to endpoint.`);
     } catch (error: any) {
         console.error(`[PushService] Failed to send push. Error: ${error.message}`);
         if (error.statusCode === 410 || error.statusCode === 404) {
@@ -77,8 +78,19 @@ async function notifyUser(user: Omit<User, 'password'>, payload: NotificationPay
     const userSubscriptions = subscriptions.filter(sub => sub.userId === user.id);
 
     if (userSubscriptions.length > 0) {
-        const pushPayloadString = JSON.stringify(payload);
-        console.log(`[NotificationService] Sending push notification to user ${user.username} (ID: ${user.id}).`);
+        // Standardized payload structure for sw.js
+        const pushPayload = {
+            notification: {
+                title: payload.title,
+                body: payload.body,
+                data: {
+                    url: payload.url || '/'
+                }
+            }
+        };
+        const pushPayloadString = JSON.stringify(pushPayload);
+
+        console.log(`[NotificationService] Sending push notification to user ${user.username} (ID: ${user.id}). Payload: ${pushPayloadString}`);
         for (const subRecord of userSubscriptions) {
             await sendPushNotification(subRecord.subscription, pushPayloadString);
         }
@@ -93,10 +105,11 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
     const rolesToNotifyArray = Array.isArray(roles) ? roles : [roles];
     const uniqueUsersToNotify = new Map<string, Omit<User, 'password'>>();
 
+    console.log(`[NotificationService] Preparing to notify roles: ${rolesToNotifyArray.join(', ')}`);
+
     rolesToNotifyArray.forEach(roleToNotify => {
         const normalizedRole = roleToNotify.trim().toLowerCase();
-        console.log(`[NotificationService] Searching for users with role: '${normalizedRole}'`);
-
+        
         const targetUsers = allUsers.filter(user => user.role.trim().toLowerCase() === normalizedRole);
         
         console.log(`[NotificationService] Found ${targetUsers.length} user(s) for role '${normalizedRole}'.`);
@@ -113,12 +126,11 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
         return;
     }
     
-    console.log(`[NotificationService] Total unique users to notify: ${uniqueUsersToNotify.size}. Notifying roles: ${rolesToNotifyArray.join(', ')}`);
+    console.log(`[NotificationService] Total unique users to notify: ${uniqueUsersToNotify.size}.`);
     for (const user of uniqueUsersToNotify.values()) {
         await notifyUser(user, payload, projectId);
     }
 }
-
 
 export async function notifyUserById(userId: string, payload: NotificationPayload, projectId?: string): Promise<void> {
     if (!userId) return;
