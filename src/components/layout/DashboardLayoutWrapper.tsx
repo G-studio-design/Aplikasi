@@ -4,6 +4,7 @@
 import type { ReactNode } from 'react';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Sheet,
@@ -95,6 +96,7 @@ export default function DashboardLayoutWrapper({ children, attendanceEnabled }: 
   const { language } = useLanguage();
   const { currentUser, logout } = useAuth();
   const { toast } = useToast();
+  const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -102,6 +104,25 @@ export default function DashboardLayoutWrapper({ children, attendanceEnabled }: 
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // Listener untuk pesan dari Service Worker
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      const handleServiceWorkerMessage = (event: MessageEvent) => {
+        console.log("Message received from service worker:", event.data);
+        if (event.data && event.data.type === 'navigate' && event.data.url) {
+          router.push(event.data.url);
+        }
+      };
+
+      navigator.serviceWorker.addEventListener('message', handleServiceWorkerMessage);
+
+      // Cleanup listener saat komponen di-unmount
+      return () => {
+        navigator.serviceWorker.removeEventListener('message', handleServiceWorkerMessage);
+      };
+    }
+  }, [router]);
 
   const { layoutDict, notificationsDict, manageUsersDict } = useMemo(() => {
     const defaultDict = getDictionary('en'); 
@@ -256,12 +277,9 @@ export default function DashboardLayoutWrapper({ children, attendanceEnabled }: 
            }
        }
        
-       if (window.location.pathname === new URL(targetUrl, window.location.origin).pathname && window.location.search === new URL(targetUrl, window.location.origin).search) {
-           window.location.reload();
-       } else {
-           window.location.href = targetUrl;
-       }
-   }, [currentUser]);
+      router.push(targetUrl);
+
+   }, [currentUser, router]);
 
 
   return (
