@@ -1,5 +1,13 @@
 [
   {
+    "id": "notif_1754131698456_wpxoy",
+    "userId": "usr_owner_default",
+    "projectId": "project_1754116377920_b67tf",
+    "message": "Penawaran untuk proyek 'proyek indonesia tanah ir siapa' telah diajukan oleh komangmerta dan menunggu persetujuan Anda.",
+    "timestamp": "2025-08-02T10:48:18.456Z",
+    "isRead": false
+  },
+  {
     "id": "notif_1754130925270_aql9c",
     "userId": "usr_owner_default",
     "message": "Ini adalah notifikasi tes untuk memastikan peran Owner menerima pemberitahuan.",
