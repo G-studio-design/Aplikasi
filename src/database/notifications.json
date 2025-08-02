@@ -1,5 +1,12 @@
 [
   {
+    "id": "notif_1754122135424_msu35",
+    "userId": "usr_owner_default",
+    "message": "Ini adalah notifikasi tes untuk memastikan peran Owner menerima pemberitahuan.",
+    "timestamp": "2025-08-02T08:08:55.409Z",
+    "isRead": false
+  },
+  {
     "id": "notif_1754120860735_39zdx",
     "userId": "usr_owner_default",
     "projectId": "project_1754116377920_b67tf",

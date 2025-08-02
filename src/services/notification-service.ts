@@ -21,10 +21,16 @@ export interface NotificationPayload {
   url?: string;
 }
 
+interface StoredSubscriptions {
+  userId: string;
+  subscriptions: PushSubscription[];
+}
+
 const NOTIFICATION_DB_PATH = path.resolve(process.cwd(), 'src', 'database', 'notifications.json');
 const SUBSCRIPTION_DB_PATH = path.resolve(process.cwd(), 'src', 'database', 'subscriptions.json');
 const NOTIFICATION_LIMIT = 300;
 
+// Initialize VAPID details once
 if (process.env.VAPID_PRIVATE_KEY && process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
     try {
         webPush.setVapidDetails(
@@ -40,16 +46,13 @@ if (process.env.VAPID_PRIVATE_KEY && process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
     console.warn("[NotificationService] VAPID keys are not configured. Push notifications will be disabled.");
 }
 
-
 async function sendPushNotification(subscription: PushSubscription, payloadString: string) {
     try {
         await webPush.sendNotification(subscription, payloadString);
         console.log(`[NotificationService] Push notification sent successfully to endpoint: ${subscription.endpoint.slice(0, 50)}...`);
     } catch (error: any) {
         console.error(`[NotificationService] Failed to send push notification. Status: ${error.statusCode}, Message: ${error.body || error.message}`);
-        if (error.statusCode === 410 || error.statusCode === 404) {
-            console.log('[NotificationService] Subscription expired or invalid. It should be removed.');
-        }
+        // Optionally handle expired subscriptions by removing them, but this requires more complex logic
     }
 }
 
@@ -106,28 +109,22 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
         return;
     }
 
-    const allSubscriptions = await readDb<{ userId: string, subscription: PushSubscription }[]>(SUBSCRIPTION_DB_PATH, []);
-    const targetSubscriptions = allSubscriptions.filter(sub => userIdsToNotify.includes(sub.userId));
+    const allSubscriptions = await readDb<StoredSubscriptions[]>(SUBSCRIPTION_DB_PATH, []);
+    const pushPayload = JSON.stringify(payload);
 
-    if (targetSubscriptions.length === 0) {
-        console.log(`[NotificationService] No push subscriptions found for the target user(s).`);
-        return;
+    for (const userId of userIdsToNotify) {
+        const userSubscriptionRecord = allSubscriptions.find(sub => sub.userId === userId);
+        if (userSubscriptionRecord && userSubscriptionRecord.subscriptions.length > 0) {
+            console.log(`[NotificationService] Found ${userSubscriptionRecord.subscriptions.length} subscription(s) for user ${userId}.`);
+            await Promise.all(
+                userSubscriptionRecord.subscriptions.map(subscription => 
+                    sendPushNotification(subscription, pushPayload)
+                )
+            );
+        } else {
+             console.log(`[NotificationService] No push subscriptions found for user ${userId}.`);
+        }
     }
-    
-    const pushPayload = JSON.stringify({
-      title: payload.title,
-      body: payload.body,
-      data: {
-        url: payload.url || '/'
-      }
-    });
-
-    console.log(`[NotificationService] Sending push payload: ${pushPayload}`);
-    await Promise.all(
-        targetSubscriptions.map(subRecord => 
-            sendPushNotification(subRecord.subscription, pushPayload)
-        )
-    );
 }
 
 export async function notifyUserById(userId: string, payload: NotificationPayload, projectId?: string): Promise<void> {
@@ -163,9 +160,25 @@ export async function clearAllNotifications(): Promise<void> {
     await writeDb(NOTIFICATION_DB_PATH, []);
 }
 
-export async function saveSubscription(userId: string, subscription: PushSubscription): Promise<void> {
-    const allSubscriptions = await readDb<{userId: string, subscription: PushSubscription}[]>(SUBSCRIPTION_DB_PATH, []);
-    const filteredSubscriptions = allSubscriptions.filter(s => s.userId !== userId);
-    filteredSubscriptions.push({ userId, subscription });
-    await writeDb(SUBSCRIPTION_DB_PATH, filteredSubscriptions);
+export async function saveSubscription(userId: string, newSubscription: PushSubscription): Promise<void> {
+    const allStoredSubscriptions = await readDb<StoredSubscriptions[]>(SUBSCRIPTION_DB_PATH, []);
+    const userSubscriptionRecord = allStoredSubscriptions.find(s => s.userId === userId);
+
+    if (userSubscriptionRecord) {
+        // User exists, add new subscription if it's not a duplicate
+        const subscriptionExists = userSubscriptionRecord.subscriptions.some(
+            s => s.endpoint === newSubscription.endpoint
+        );
+        if (!subscriptionExists) {
+            userSubscriptionRecord.subscriptions.push(newSubscription);
+        } else {
+             console.log(`[NotificationService] Subscription with endpoint ${newSubscription.endpoint.slice(0,50)}... already exists for user ${userId}.`);
+        }
+    } else {
+        // New user, create a new record
+        allStoredSubscriptions.push({ userId, subscriptions: [newSubscription] });
+    }
+
+    await writeDb(SUBSCRIPTION_DB_PATH, allStoredSubscriptions);
+    console.log(`[NotificationService] Subscription saved for user ${userId}. User now has ${userSubscriptionRecord?.subscriptions.length || 1} subscription(s).`);
 }
