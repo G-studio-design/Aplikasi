@@ -1,81 +1,62 @@
 // public/sw.js
 
+// Listener untuk instalasi Service Worker
+self.addEventListener('install', (event) => {
+  console.log('[SW] Service Worker installing...');
+  // event.waitUntil(self.skipWaiting()); // Opsi: aktifkan worker baru segera
+});
+
+// Listener untuk aktivasi Service Worker
+self.addEventListener('activate', (event) => {
+  console.log('[SW] Service Worker activating...');
+  // event.waitUntil(self.clients.claim()); // Opsi: ambil kontrol atas klien yang ada
+});
+
 // Listener untuk menerima notifikasi push dari server
 self.addEventListener('push', (event) => {
-  if (!(self.Notification && self.Notification.permission === 'granted')) {
-    console.warn('[SW] Notification permission not granted.');
-    return;
-  }
+  console.log('[SW] Push notification received.');
 
-  let data = {};
-  if (event.data) {
-    try {
-      // Selalu baca sebagai teks, lalu parse. Ini lebih andal.
-      data = JSON.parse(event.data.text());
-    } catch (e) {
-      console.error('[SW] Error parsing push data:', e);
-      // Fallback jika data tidak bisa di-parse
-      data = { title: "Pemberitahuan Baru", body: "Anda memiliki pembaruan baru." };
+  let notificationData = {};
+  try {
+    // Selalu baca data sebagai teks dan parse secara manual untuk keandalan maksimum
+    const dataText = event.data.text();
+    if (dataText) {
+      notificationData = JSON.parse(dataText);
     }
+  } catch (e) {
+    console.error('[SW] Failed to parse push data:', e);
   }
-
-  const title = data.title || "Pemberitahuan Baru";
+  
+  const title = notificationData.title || 'Msarch App Notification';
   const options = {
-    body: data.body || "Anda memiliki pembaruan.",
-    icon: '/msarch-logo.png', // Ikon notifikasi
-    badge: '/msarch-logo.png', // Ikon kecil (biasanya untuk mobile)
-    vibrate: [200, 100, 200], // Pola getaran
+    body: notificationData.body || 'You have a new update.',
+    icon: '/msarch-logo.png', // Ikon utama
+    badge: '/msarch-logo.png', // Ikon kecil untuk status bar Android
+    vibrate: [200, 100, 200], // Pola getar
     data: {
-      url: data.data?.url || '/', // URL untuk dibuka saat diklik
+      url: notificationData.data?.url || '/', // URL tujuan saat notifikasi diklik
     },
   };
 
-  // Tunda eksekusi hingga notifikasi siap ditampilkan
-  event.waitUntil(self.registration.showNotification(title, options));
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
 });
-
 
 // Listener untuk menangani klik pada notifikasi
 self.addEventListener('notificationclick', (event) => {
   const notification = event.notification;
-  const urlToOpen = new URL(notification.data.url, self.location.origin).href;
+  const urlToOpen = notification.data?.url || '/';
 
-  // Tutup notifikasi saat diklik
+  console.log(`[SW] Notification clicked. URL to open: ${urlToOpen}`);
+
   notification.close();
 
-  // Fungsi untuk membuka URL
-  const openUrl = (url) => {
-    return self.clients.openWindow(url);
-  };
-
-  // Cari klien (tab) yang ada
-  const promiseChain = self.clients.matchAll({
-    type: 'window',
-    includeUncontrolled: true
-  }).then((windowClients) => {
-    let focusedClient = null;
-
-    // Cari tab yang sudah fokus atau yang terlihat
-    for (const client of windowClients) {
-      if (client.focused) {
-        focusedClient = client;
-        break;
-      }
-    }
-    
-    // Jika tidak ada yang fokus, ambil saja tab pertama yang terlihat
-    if (!focusedClient && windowClients.length > 0) {
-      focusedClient = windowClients[0];
-    }
-
-    // Jika ada klien yang ditemukan (fokus atau tidak), gunakan itu
-    if (focusedClient) {
-      return focusedClient.navigate(urlToOpen).then((client) => client.focus());
-    }
-
-    // Jika tidak ada klien sama sekali, buka jendela baru
-    return openUrl(urlToOpen);
-  });
-
+  // Ini adalah pendekatan yang paling andal untuk menangani klik notifikasi.
+  // Ia akan membuka tab baru ke URL yang dituju. Browser kemudian akan
+  // secara otomatis menangani pemfokusan tab jika URL tersebut sudah terbuka.
+  // Pendekatan ini menghindari masalah otentikasi yang kompleks yang terjadi
+  // saat mencoba menavigasi ulang tab yang ada secara manual dari Service Worker.
+  const promiseChain = clients.openWindow(urlToOpen);
   event.waitUntil(promiseChain);
 });

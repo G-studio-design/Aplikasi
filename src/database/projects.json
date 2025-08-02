@@ -192,10 +192,10 @@
   {
     "id": "project_1754114678978_bwy5o",
     "title": "proyek tol megamendung ",
-    "status": "Pending Approval",
-    "progress": 20,
-    "assignedDivision": "Owner",
-    "nextAction": "Setujui Dokumen Penawaran",
+    "status": "Pending Offer",
+    "progress": 10,
+    "assignedDivision": "Admin Proyek",
+    "nextAction": "Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.",
     "workflowId": "msa_workflow",
     "workflowHistory": [
       {
@@ -253,6 +253,12 @@
         "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
         "timestamp": "2025-08-02T07:02:33.590Z",
         "note": "done"
+      },
+      {
+        "division": "Owner",
+        "action": "sudina (Owner) requested revision.",
+        "timestamp": "2025-08-02T10:10:13.784Z",
+        "note": "revisi dikit joss\n"
       }
     ],
     "files": [
