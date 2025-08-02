@@ -84,8 +84,7 @@ async function findUsersByRole(roles: string[]): Promise<string[]> {
     const normalizedRoles = roles.map(r => r.trim().toLowerCase());
     
     const userIds = allUsers
-        // Normalize the user's role from DB before comparing
-        .filter(user => normalizedRoles.includes(user.role.trim().toLowerCase()))
+        .filter(user => user.role && normalizedRoles.includes(user.role.trim().toLowerCase()))
         .map(user => user.id);
 
     console.log(`[NotificationService] Roles to find: [${normalizedRoles.join(', ')}]. Found ${userIds.length} user(s).`);
@@ -93,8 +92,9 @@ async function findUsersByRole(roles: string[]): Promise<string[]> {
 }
 
 export async function notifyUsersByRole(roles: string | string[], payload: NotificationPayload, projectId?: string): Promise<void> {
-    // Ensure roles is always an array for consistent processing
     const rolesArray = Array.isArray(roles) ? roles : [roles];
+    console.log(`[NotificationService] Preparing to notify roles: ${JSON.stringify(rolesArray)}`);
+
     const userIdsToNotify = await findUsersByRole(rolesArray);
 
     if (userIdsToNotify.length === 0) {
@@ -104,7 +104,6 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
     
     await addInAppNotifications(userIdsToNotify, payload, projectId);
     
-    // Check if VAPID keys are configured before attempting to send push notifications
     if (!process.env.VAPID_PRIVATE_KEY || !process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
         console.log("[NotificationService] Skipping push notifications because VAPID keys are not set.");
         return;
@@ -118,15 +117,17 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
         return;
     }
     
-    // Create a simple, direct payload for the push service
     const pushPayload = JSON.stringify({
+      notification: {
         title: payload.title,
         body: payload.body,
-        data: { url: payload.url || '/' }
+        data: {
+          url: payload.url || '/'
+        }
+      }
     });
 
     console.log(`[NotificationService] Sending push payload: ${pushPayload}`);
-
     await Promise.all(
         targetSubscriptions.map(subRecord => 
             sendPushNotification(subRecord.subscription, pushPayload)
@@ -134,10 +135,10 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
     );
 }
 
+
 // A simplified alias to notify a single user
 export async function notifyUserById(userId: string, payload: NotificationPayload, projectId?: string): Promise<void> {
     if (!userId) return;
-    // Internally, it's just notifying a role list with one member
     await notifyUsersByRole([userId], payload, projectId);
 }
 

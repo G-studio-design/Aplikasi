@@ -67,6 +67,23 @@
         "action": "sudina (Owner) requested revision.",
         "timestamp": "2025-07-30T10:30:57.902Z",
         "note": "revisi"
+      },
+      {
+        "division": "komangmerta",
+        "action": "Uploaded initial file(s): pemecahan nangka 2.pdf",
+        "timestamp": "2025-08-02T06:47:27.324Z"
+      },
+      {
+        "division": "Admin Proyek",
+        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
+        "timestamp": "2025-08-02T06:47:31.469Z",
+        "note": "noh"
+      },
+      {
+        "division": "Owner",
+        "action": "sudina (Owner) requested revision.",
+        "timestamp": "2025-08-02T06:48:52.218Z",
+        "note": "revisi"
       }
     ],
     "files": [
@@ -105,6 +122,18 @@
         "uploadedBy": "Admin Proyek",
         "path": "project_1752215890356_ujcbz/rap_mep.pdf",
         "timestamp": "2025-07-30T10:27:14.153Z"
+      },
+      {
+        "name": "pemecahan nangka 2.pdf",
+        "path": "project_1752215890356_ujcbz/pemecahan_nangka_2.pdf",
+        "timestamp": "2025-08-02T06:47:27.313Z",
+        "uploadedBy": "Admin Proyek"
+      },
+      {
+        "name": "pemecahan nangka 2.pdf",
+        "uploadedBy": "Admin Proyek",
+        "path": "project_1752215890356_ujcbz/pemecahan_nangka_2.pdf",
+        "timestamp": "2025-08-02T06:47:31.469Z"
       }
     ],
     "createdAt": "2025-07-11T06:38:10.355Z",
