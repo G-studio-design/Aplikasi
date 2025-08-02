@@ -299,10 +299,10 @@
   {
     "id": "project_1754116377920_b67tf",
     "title": "proyek indonesia tanah ir siapa",
-    "status": "Pending Approval",
-    "progress": 20,
-    "assignedDivision": "Owner",
-    "nextAction": "Setujui Dokumen Penawaran",
+    "status": "Pending Offer",
+    "progress": 10,
+    "assignedDivision": "Admin Proyek",
+    "nextAction": "Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.",
     "workflowId": "msa_workflow",
     "workflowHistory": [
       {
@@ -359,6 +359,12 @@
         "division": "Admin Proyek",
         "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
         "timestamp": "2025-08-02T07:47:40.670Z"
+      },
+      {
+        "division": "Owner",
+        "action": "sudina (Owner) requested revision.",
+        "timestamp": "2025-08-02T08:48:44.262Z",
+        "note": "ulangi"
       }
     ],
     "files": [

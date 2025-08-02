@@ -1,5 +1,13 @@
 [
   {
+    "id": "notif_1754124524326_ahyn6",
+    "userId": "usr_1747799008584_4r22a",
+    "projectId": "project_1754116377920_b67tf",
+    "message": "Penawaran untuk proyek 'proyek indonesia tanah ir siapa' perlu direvisi oleh Anda berdasarkan masukan dari sudina.",
+    "timestamp": "2025-08-02T08:48:44.326Z",
+    "isRead": false
+  },
+  {
     "id": "notif_1754122135424_msu35",
     "userId": "usr_owner_default",
     "message": "Ini adalah notifikasi tes untuk memastikan peran Owner menerima pemberitahuan.",
