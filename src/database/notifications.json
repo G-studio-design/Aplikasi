@@ -1,5 +1,27 @@
 [
   {
+    "id": "notif_1754114678986_6ktg0",
+    "userId": "usr_1747799008584_4r22a",
+    "projectId": "project_1754114678978_bwy5o",
+    "message": "Anda ditugaskan untuk langkah awal pada proyek baru \"proyek tol megamendung \". Tugas: Unggah Dokumen Penawaran.",
+    "timestamp": "2025-08-02T06:04:38.986Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1754114558862_fgtg4",
+    "userId": "usr_owner_default",
+    "message": "Ini adalah notifikasi tes untuk memastikan peran Owner menerima pemberitahuan.",
+    "timestamp": "2025-08-02T06:02:38.862Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1754114500485_gaaqb",
+    "userId": "usr_owner_default",
+    "message": "Ini adalah notifikasi tes untuk memastikan peran Owner menerima pemberitahuan.",
+    "timestamp": "2025-08-02T06:01:40.485Z",
+    "isRead": false
+  },
+  {
     "id": "notif_1754114152692_urxpq",
     "userId": "usr_owner_default",
     "message": "Ini adalah notifikasi tes untuk memastikan peran Owner menerima pemberitahuan.",

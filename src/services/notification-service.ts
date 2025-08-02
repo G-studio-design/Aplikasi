@@ -2,7 +2,7 @@
 'use server';
 
 import * as path from 'path';
-import type { User } from '@/types/user-types';
+import webPush, { type PushSubscription } from 'web-push';
 import { getAllUsers } from './data-access/user-data';
 import { readDb, writeDb } from '@/lib/database-utils';
 
@@ -21,15 +21,39 @@ export interface NotificationPayload {
   url?: string;
 }
 
-// Data structure for the new API route
-interface SendNotificationApiPayload {
-    userIds: string[];
-    payload: NotificationPayload;
-}
-
 const NOTIFICATION_DB_PATH = path.resolve(process.cwd(), 'src', 'database', 'notifications.json');
+const SUBSCRIPTION_DB_PATH = path.resolve(process.cwd(), 'src', 'database', 'subscriptions.json');
 const NOTIFICATION_LIMIT = 300;
 
+// Initialize VAPID keys once when the module is loaded.
+// This is more reliable in a server environment.
+if (process.env.VAPID_PRIVATE_KEY && process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
+    try {
+        webPush.setVapidDetails(
+            process.env.VAPID_SUBJECT || 'mailto:admin@example.com',
+            process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+            process.env.VAPID_PRIVATE_KEY
+        );
+        console.log("[NotificationService] VAPID keys loaded successfully at module level.");
+    } catch (error) {
+        console.error("[NotificationService] CRITICAL: Failed to load VAPID keys. Push notifications will fail.", error);
+    }
+} else {
+    console.error("[NotificationService] CRITICAL: VAPID keys are not configured in environment variables. Push notifications will fail.");
+}
+
+async function sendPushNotification(subscription: PushSubscription, payloadString: string) {
+    try {
+        await webPush.sendNotification(subscription, payloadString);
+        console.log(`[NotificationService] Push notification sent successfully to endpoint: ${subscription.endpoint.slice(0, 50)}...`);
+    } catch (error: any) {
+        console.error(`[NotificationService] Failed to send push. Status: ${error.statusCode}, Message: ${error.message}`);
+        if (error.statusCode === 410 || error.statusCode === 404) {
+            console.log('[NotificationService] Subscription expired or invalid. It should be removed.');
+            // In a real app, you would have a mechanism to remove this subscription
+        }
+    }
+}
 
 async function addInAppNotifications(userIds: string[], payload: NotificationPayload, projectId?: string): Promise<void> {
     const notifications = await readDb<Notification[]>(NOTIFICATION_DB_PATH, []);
@@ -47,83 +71,75 @@ async function addInAppNotifications(userIds: string[], payload: NotificationPay
         notifications.unshift(newNotification);
     }
     
-    // Trim the notifications array to the limit
-    while (notifications.length > NOTIFICATION_LIMIT) {
-        notifications.pop();
+    if (notifications.length > NOTIFICATION_LIMIT) {
+        notifications.splice(NOTIFICATION_LIMIT);
     }
     
     await writeDb(NOTIFICATION_DB_PATH, notifications);
+    console.log(`[NotificationService] Added ${userIds.length} in-app notification(s).`);
 }
 
-/**
- * Delegates the actual push notification sending to a dedicated, isolated API route.
- * This approach is more reliable for loading environment variables like VAPID keys.
- */
-async function triggerSendNotification(userIds: string[], payload: NotificationPayload): Promise<void> {
-    if (userIds.length === 0) {
-      console.log("[NotificationService] No user IDs provided, skipping push notification dispatch.");
-      return;
-    }
-    const apiPayload: SendNotificationApiPayload = { userIds, payload };
-    try {
-        // We use an absolute URL here for fetch within Server Components/Actions
-        const host = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:4000';
-        const response = await fetch(`${host}/api/send-notification`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(apiPayload),
-            cache: 'no-store',
-        });
-
-        if (!response.ok) {
-            const errorResult = await response.json();
-            throw new Error(errorResult.error || `API returned status ${response.status}`);
-        }
-        
-        console.log(`[NotificationService] Successfully delegated notification sending to API route for ${userIds.length} user(s).`);
-
-    } catch (error) {
-        console.error('[NotificationService] Failed to trigger send-notification API:', error);
-    }
-}
-
-
-export async function notifyUsersByRole(roles: string | string[], payload: NotificationPayload, projectId?: string): Promise<void> {
+async function findUsersByRole(roles: string | string[]): Promise<string[]> {
     const allUsers = await getAllUsers();
-    const rolesToNotifyArray = Array.isArray(roles) ? roles : [roles];
-    const userIdsToNotify = new Set<string>();
+    // Ensure roles is always an array of lowercase, trimmed strings
+    const rolesToNotifyArray = (Array.isArray(roles) ? roles : [roles]).map(r => r.trim().toLowerCase());
+    
+    console.log(`[NotificationService] Searching for users with roles:`, rolesToNotifyArray);
 
-    rolesToNotifyArray.forEach(roleToNotify => {
-        const normalizedRole = roleToNotify.trim().toLowerCase();
-        allUsers.forEach(user => {
-            if (user.role.trim().toLowerCase() === normalizedRole) {
-                userIdsToNotify.add(user.id);
-            }
-        });
+    const userIds = new Set<string>();
+    allUsers.forEach(user => {
+        if (rolesToNotifyArray.includes(user.role.trim().toLowerCase())) {
+            userIds.add(user.id);
+        }
     });
 
-    const uniqueUserIds = Array.from(userIdsToNotify);
+    const uniqueUserIds = Array.from(userIds);
+    console.log(`[NotificationService] Found ${uniqueUserIds.length} user(s) for the specified roles.`);
+    return uniqueUserIds;
+}
 
-    if (uniqueUserIds.length === 0) {
-        console.warn(`[NotificationService] No users found for role(s): ${rolesToNotifyArray.join(', ')}`);
+export async function notifyUsersByRole(roles: string | string[], payload: NotificationPayload, projectId?: string): Promise<void> {
+    const userIdsToNotify = await findUsersByRole(roles);
+
+    if (userIdsToNotify.length === 0) {
+        console.warn(`[NotificationService] No users found for role(s): ${Array.isArray(roles) ? roles.join(', ') : roles}. Aborting notification.`);
         return;
     }
-
-    // Create in-app notifications first
-    await addInAppNotifications(uniqueUserIds, payload, projectId);
     
-    // Then, delegate the push notification sending
-    await triggerSendNotification(uniqueUserIds, payload);
+    await addInAppNotifications(userIdsToNotify, payload, projectId);
+    
+    const allSubscriptions = await readDb<{ userId: string, subscription: PushSubscription }[]>(SUBSCRIPTION_DB_PATH, []);
+    const targetSubscriptions = allSubscriptions.filter(sub => userIdsToNotify.includes(sub.userId));
+
+    if (targetSubscriptions.length === 0) {
+        console.log(`[NotificationService] No push subscriptions found for the target user(s).`);
+        return;
+    }
+    
+    console.log(`[NotificationService] Found ${targetSubscriptions.length} subscription(s) to send to.`);
+
+    const pushPayload = JSON.stringify({
+        notification: {
+            title: payload.title,
+            body: payload.body,
+            data: { url: payload.url || '/' }
+        }
+    });
+
+    await Promise.all(
+        targetSubscriptions.map(subRecord => 
+            sendPushNotification(subRecord.subscription, pushPayload)
+        )
+    );
 }
 
 export async function notifyUserById(userId: string, payload: NotificationPayload, projectId?: string): Promise<void> {
     if (!userId) return;
-    
-    await addInAppNotifications([userId], payload, projectId);
-    await triggerSendNotification([userId], payload);
+    await notifyUsersByRole([userId], payload, projectId);
 }
 
-// --- Functions for managing notification history and subscriptions ---
+
+// --- Functions for managing notification history ---
 
 export async function getNotificationsForUser(userId: string): Promise<Notification[]> {
     const allNotifications = await readDb<Notification[]>(NOTIFICATION_DB_PATH, []);
@@ -154,14 +170,8 @@ export async function clearAllNotifications(): Promise<void> {
 }
 
 export async function saveSubscription(userId: string, subscription: PushSubscription): Promise<void> {
-    const SUBSCRIPTION_DB_PATH = path.resolve(process.cwd(), 'src', 'database', 'subscriptions.json');
     const allSubscriptions = await readDb<{userId: string, subscription: PushSubscription}[]>(SUBSCRIPTION_DB_PATH, []);
-    
-    // Remove old subscription for the same user if it exists
     const filteredSubscriptions = allSubscriptions.filter(s => s.userId !== userId);
-    
-    // Add the new subscription
     filteredSubscriptions.push({ userId, subscription });
-    
     await writeDb(SUBSCRIPTION_DB_PATH, filteredSubscriptions);
 }

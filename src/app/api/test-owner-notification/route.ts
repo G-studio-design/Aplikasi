@@ -1,7 +1,6 @@
 // src/app/api/test-owner-notification/route.ts
 import { NextResponse } from 'next/server';
 import { notifyUsersByRole, type NotificationPayload } from '@/services/notification-service';
-import { findUserById } from '@/services/user-service';
 
 export async function GET(request: Request) {
     try {
