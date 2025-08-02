@@ -1,85 +1,67 @@
+
 // public/sw.js
 
 self.addEventListener('push', (event) => {
-  if (!event.data) {
-    console.error('[SW] Push event but no data');
-    return;
-  }
-
+  let payload;
   try {
-    // Always parse as text first, as this is the most reliable method
-    const data = JSON.parse(event.data.text());
-    console.log('[SW] Push received:', data);
-
-    const title = data.title || 'Msarch App';
-    const options = {
-      body: data.body || 'You have a new update.',
-      icon: '/msarch-logo.png?v=5',
-      badge: '/msarch-logo.png?v=5',
-      data: {
-        url: data.url || data.data?.url || '/', // Support both flat and nested data structures
-      },
+    payload = event.data.json();
+  } catch (e) {
+    // If parsing fails, try as text
+    const dataText = event.data.text();
+    console.warn('[SW] Push data was not JSON, received as text:', dataText);
+    payload = {
+      title: 'Msarch App Notification',
+      body: dataText || 'You have a new update.',
+      data: { url: '/dashboard' }
     };
-    
-    event.waitUntil(self.registration.showNotification(title, options));
-
-  } catch (error) {
-    console.error('[SW] Error parsing push data:', error);
-    // Fallback notification for robustness
-    const title = 'Msarch App';
-    const options = {
-      body: 'You have a new update.',
-      icon: '/msarch-logo.png?v=5',
-      badge: '/msarch-logo.png?v=5',
-      data: {
-        url: '/',
-      },
-    };
-    event.waitUntil(self.registration.showNotification(title, options));
   }
-});
 
+  const { title, body, data } = payload;
+  
+  const options = {
+    body: body,
+    icon: '/msarch-logo-192.png',
+    badge: '/msarch-logo-72.png',
+    data: {
+      url: data?.url || '/dashboard',
+    },
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
   const urlToOpen = new URL(event.notification.data.url, self.location.origin).href;
 
-  const promiseChain = clients
-    .matchAll({
-      type: "window",
-      includeUncontrolled: true,
-    })
-    .then((windowClients) => {
-      let clientIsFocused = false;
+  const promiseChain = clients.matchAll({
+    type: 'window',
+    includeUncontrolled: true
+  }).then((windowClients) => {
+    let matchingClient = null;
 
-      // Find a matching client and focus it
-      for (let i = 0; i < windowClients.length; i++) {
-        const client = windowClients[i];
-        if (client.url === urlToOpen && "focus" in client) {
-          client.focus();
-          clientIsFocused = true;
-          break;
-        }
-      }
+    // Check if any of the open clients are the same as the notification URL
+    for (let i = 0; i < windowClients.length; i++) {
+      const client = windowClients[i];
+      // Normalize URLs by removing trailing slashes before comparing
+      const clientUrl = client.url.endsWith('/') ? client.url.slice(0, -1) : client.url;
+      const notificationUrl = urlToOpen.endsWith('/') ? urlToOpen.slice(0, -1) : urlToOpen;
 
-      // If no exact match was found, try to find any app tab and navigate
-      if (!clientIsFocused && windowClients.length > 0) {
-        windowClients[0].navigate(urlToOpen).then((client) => {
-          if (client && "focus" in client) {
-            client.focus();
-          }
-        });
-        clientIsFocused = true;
+      if (clientUrl === notificationUrl) {
+        matchingClient = client;
+        break;
       }
-      
-      // If no client was focused (or found), open a new one
-      if (!clientIsFocused) {
-        clients
-          .openWindow(urlToOpen)
-          .then((client) => (client ? client.focus() : null));
-      }
-    });
+    }
+
+    // If we found a matching client, focus it
+    if (matchingClient) {
+      return matchingClient.focus();
+    } else {
+      // If no matching client was found, open a new one
+      return clients.openWindow(urlToOpen);
+    }
+  });
 
   event.waitUntil(promiseChain);
 });
