@@ -1,5 +1,19 @@
 [
   {
+    "id": "notif_1754114152692_urxpq",
+    "userId": "usr_owner_default",
+    "message": "Ini adalah notifikasi tes untuk memastikan peran Owner menerima pemberitahuan.",
+    "timestamp": "2025-08-02T05:55:52.692Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1754113688236_t1t9z",
+    "userId": "usr_owner_default",
+    "message": "Ini adalah notifikasi tes untuk memastikan peran Owner menerima pemberitahuan.",
+    "timestamp": "2025-08-02T05:48:08.236Z",
+    "isRead": false
+  },
+  {
     "id": "notif_1754113398562_8tjcs",
     "userId": "usr_owner_default",
     "message": "Ini adalah notifikasi tes untuk memastikan peran Owner menerima pemberitahuan.",
