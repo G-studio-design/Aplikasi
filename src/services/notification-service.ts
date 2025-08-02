@@ -26,7 +26,6 @@ const SUBSCRIPTION_DB_PATH = path.resolve(process.cwd(), 'src', 'database', 'sub
 const NOTIFICATION_LIMIT = 300;
 
 // Initialize VAPID keys once when the module is loaded.
-// This is more reliable in a server environment.
 if (process.env.VAPID_PRIVATE_KEY && process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
     try {
         webPush.setVapidDetails(
@@ -34,7 +33,6 @@ if (process.env.VAPID_PRIVATE_KEY && process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
             process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
             process.env.VAPID_PRIVATE_KEY
         );
-        console.log("[NotificationService] VAPID keys loaded successfully at module level.");
     } catch (error) {
         console.error("[NotificationService] CRITICAL: Failed to load VAPID keys. Push notifications will fail.", error);
     }
@@ -50,7 +48,6 @@ async function sendPushNotification(subscription: PushSubscription, payloadStrin
         console.error(`[NotificationService] Failed to send push. Status: ${error.statusCode}, Message: ${error.message}`);
         if (error.statusCode === 410 || error.statusCode === 404) {
             console.log('[NotificationService] Subscription expired or invalid. It should be removed.');
-            // In a real app, you would have a mechanism to remove this subscription
         }
     }
 }
@@ -76,33 +73,26 @@ async function addInAppNotifications(userIds: string[], payload: NotificationPay
     }
     
     await writeDb(NOTIFICATION_DB_PATH, notifications);
-    console.log(`[NotificationService] Added ${userIds.length} in-app notification(s).`);
 }
 
-async function findUsersByRole(roles: string | string[]): Promise<string[]> {
+async function findUsersByRole(roles: string[]): Promise<string[]> {
     const allUsers = await getAllUsers();
-    // Ensure roles is always an array of lowercase, trimmed strings
-    const rolesToNotifyArray = (Array.isArray(roles) ? roles : [roles]).map(r => r.trim().toLowerCase());
+    const normalizedRoles = roles.map(r => r.trim().toLowerCase());
     
-    console.log(`[NotificationService] Searching for users with roles:`, rolesToNotifyArray);
+    const userIds = allUsers
+        .filter(user => normalizedRoles.includes(user.role.trim().toLowerCase()))
+        .map(user => user.id);
 
-    const userIds = new Set<string>();
-    allUsers.forEach(user => {
-        if (rolesToNotifyArray.includes(user.role.trim().toLowerCase())) {
-            userIds.add(user.id);
-        }
-    });
-
-    const uniqueUserIds = Array.from(userIds);
-    console.log(`[NotificationService] Found ${uniqueUserIds.length} user(s) for the specified roles.`);
-    return uniqueUserIds;
+    console.log(`[NotificationService] Found ${userIds.length} user(s) for roles: ${roles.join(', ')}`);
+    return userIds;
 }
 
 export async function notifyUsersByRole(roles: string | string[], payload: NotificationPayload, projectId?: string): Promise<void> {
-    const userIdsToNotify = await findUsersByRole(roles);
+    const rolesArray = Array.isArray(roles) ? roles : [roles];
+    const userIdsToNotify = await findUsersByRole(rolesArray);
 
     if (userIdsToNotify.length === 0) {
-        console.warn(`[NotificationService] No users found for role(s): ${Array.isArray(roles) ? roles.join(', ') : roles}. Aborting notification.`);
+        console.warn(`[NotificationService] No users found for role(s): ${rolesArray.join(', ')}. Aborting notification.`);
         return;
     }
     
@@ -116,8 +106,6 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
         return;
     }
     
-    console.log(`[NotificationService] Found ${targetSubscriptions.length} subscription(s) to send to.`);
-
     const pushPayload = JSON.stringify({
         notification: {
             title: payload.title,

@@ -113,10 +113,10 @@
   {
     "id": "project_1754114678978_bwy5o",
     "title": "proyek tol megamendung ",
-    "status": "Pending Offer",
-    "progress": 10,
-    "assignedDivision": "Admin Proyek",
-    "nextAction": "Unggah Dokumen Penawaran",
+    "status": "Pending Approval",
+    "progress": 20,
+    "assignedDivision": "Owner",
+    "nextAction": "Setujui Dokumen Penawaran",
     "workflowId": "msa_workflow",
     "workflowHistory": [
       {
@@ -129,9 +129,33 @@
         "division": "System",
         "action": "Assigned to Admin Proyek for Unggah Dokumen Penawaran",
         "timestamp": "2025-08-02T06:04:38.978Z"
+      },
+      {
+        "division": "komangmerta",
+        "action": "Uploaded initial file(s): RAP MEp.pdf",
+        "timestamp": "2025-08-02T06:22:46.620Z"
+      },
+      {
+        "division": "Admin Proyek",
+        "action": "komangmerta (Admin Proyek) submitted for \"Unggah Dokumen Penawaran\"",
+        "timestamp": "2025-08-02T06:22:50.164Z",
+        "note": "done"
       }
     ],
-    "files": [],
+    "files": [
+      {
+        "name": "RAP MEp.pdf",
+        "path": "project_1754114678978_bwy5o/rap_mep.pdf",
+        "timestamp": "2025-08-02T06:22:46.618Z",
+        "uploadedBy": "Admin Proyek"
+      },
+      {
+        "name": "RAP MEp.pdf",
+        "uploadedBy": "Admin Proyek",
+        "path": "project_1754114678978_bwy5o/rap_mep.pdf",
+        "timestamp": "2025-08-02T06:22:50.164Z"
+      }
+    ],
     "createdAt": "2025-08-02T06:04:38.978Z",
     "createdBy": "sudina"
   }

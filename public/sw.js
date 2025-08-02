@@ -1,62 +1,46 @@
-'use strict';
+// public/sw.js
 
-self.addEventListener('push', function (event) {
-  console.log('[Service Worker] Push Received.');
-
-  let data;
-  try {
-    // We need to handle the payload as text first, then parse it as JSON.
-    const VAPID_PAYLOAD_TEXT = event.data.text();
-    data = JSON.parse(VAPID_PAYLOAD_TEXT);
-    console.log('[Service Worker] Push data parsed:', data);
-  } catch (e) {
-    console.error('[Service Worker] Failed to parse push data:', e);
-    // Fallback notification if parsing fails
-    data = {
-      notification: {
-        title: 'New Notification',
-        body: 'You have a new update.',
-        data: {
-          url: '/'
-        }
-      }
-    };
-  }
-  
-  const { notification: notificationData } = data;
-
-  if (!notificationData) {
-      console.error("[Service Worker] 'notification' object not found in push data.");
-      return;
+self.addEventListener('push', (event) => {
+  if (!(self.Notification && self.Notification.permission === 'granted')) {
+    return;
   }
 
-  const title = notificationData.title || 'Msarch App';
-  const options = {
-    body: notificationData.body || 'You have a new notification.',
-    icon: '/msarch-logo.png', // Main app icon
-    badge: '/msarch-logo-badge.png', // A smaller, monochrome icon for the status bar
-    vibrate: [200, 100, 200], // Vibration pattern
-    tag: 'msarch-notification', // Groups notifications
-    renotify: true, // Allows replacing old notifications
-    data: {
-      url: notificationData.data.url || '/' // The URL to open on click
+  let data = {};
+  if (event.data) {
+    try {
+      // Try parsing as JSON from a text string first
+      data = JSON.parse(event.data.text());
+    } catch (e) {
+      console.error('Failed to parse push data as JSON text:', e);
+      return; // Exit if data is not valid JSON
     }
+  }
+
+  const notification = data.notification || {};
+  const title = notification.title || 'Msarch App Notification';
+  const body = notification.body || 'You have a new update.';
+  const icon = notification.icon || '/msarch-logo.png?v=5';
+  const notificationData = notification.data || { url: '/' };
+
+  const options = {
+    body,
+    icon,
+    badge: '/msarch-logo.png?v=5',
+    data: notificationData,
   };
 
   event.waitUntil(self.registration.showNotification(title, options));
 });
 
-self.addEventListener('notificationclick', function (event) {
-  console.log('[Service Worker] Notification click Received.');
-
+self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
   const urlToOpen = new URL(event.notification.data.url, self.location.origin).href;
 
   const promiseChain = clients.matchAll({
     type: 'window',
-    includeUncontrolled: true
-  }).then(function (windowClients) {
+    includeUncontrolled: true,
+  }).then((windowClients) => {
     let matchingClient = null;
 
     for (let i = 0; i < windowClients.length; i++) {
@@ -68,10 +52,8 @@ self.addEventListener('notificationclick', function (event) {
     }
 
     if (matchingClient) {
-      console.log('[Service Worker] Found an existing tab, focusing it.');
       return matchingClient.focus();
     } else {
-      console.log('[Service Worker] No existing tab found, opening a new one.');
       return clients.openWindow(urlToOpen);
     }
   });

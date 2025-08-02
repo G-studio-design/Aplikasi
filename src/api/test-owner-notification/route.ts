@@ -12,10 +12,9 @@ export async function GET(request: Request) {
             url: '/dashboard/settings' // Arahkan ke halaman pengaturan sebagai contoh
         };
 
-        // This function now delegates sending to the new API route
         await notifyUsersByRole('Owner', payload);
 
-        const message = 'Test notification for Owner has been dispatched via the new API route. Check server logs and the device.';
+        const message = 'Test notification for Owner has been dispatched. Check server logs and the device.';
         console.log(`[Test API] ${message}`);
 
         return NextResponse.json({ 
