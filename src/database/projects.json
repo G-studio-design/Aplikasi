@@ -299,10 +299,10 @@
   {
     "id": "project_1754116377920_b67tf",
     "title": "proyek indonesia tanah ir siapa",
-    "status": "Pending Offer",
-    "progress": 10,
-    "assignedDivision": "Admin Proyek",
-    "nextAction": "Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.",
+    "status": "Pending Approval",
+    "progress": 20,
+    "assignedDivision": "Owner",
+    "nextAction": "Setujui Dokumen Penawaran",
     "workflowId": "msa_workflow",
     "workflowHistory": [
       {
@@ -365,6 +365,16 @@
         "action": "sudina (Owner) requested revision.",
         "timestamp": "2025-08-02T08:48:44.262Z",
         "note": "ulangi"
+      },
+      {
+        "division": "komangmerta",
+        "action": "Uploaded initial file(s): pemecahan nangka 2.pdf",
+        "timestamp": "2025-08-02T09:07:55.096Z"
+      },
+      {
+        "division": "Admin Proyek",
+        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
+        "timestamp": "2025-08-02T09:07:57.505Z"
       }
     ],
     "files": [
@@ -403,6 +413,18 @@
         "uploadedBy": "Admin Proyek",
         "path": "project_1754116377920_b67tf/pool_warung_semana-1.pdf",
         "timestamp": "2025-08-02T07:47:40.670Z"
+      },
+      {
+        "name": "pemecahan nangka 2.pdf",
+        "path": "project_1754116377920_b67tf/pemecahan_nangka_2.pdf",
+        "timestamp": "2025-08-02T09:07:55.093Z",
+        "uploadedBy": "Admin Proyek"
+      },
+      {
+        "name": "pemecahan nangka 2.pdf",
+        "uploadedBy": "Admin Proyek",
+        "path": "project_1754116377920_b67tf/pemecahan_nangka_2.pdf",
+        "timestamp": "2025-08-02T09:07:57.505Z"
       }
     ],
     "createdAt": "2025-08-02T06:32:57.920Z",

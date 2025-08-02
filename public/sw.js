@@ -1,79 +1,85 @@
-
 // public/sw.js
 
 self.addEventListener('push', (event) => {
-  if (!self.Notification || self.Notification.permission !== 'granted') {
-    console.warn('[SW] Notifications permission not granted.');
+  if (!event.data) {
+    console.error('[SW] Push event but no data');
     return;
   }
-  
-  let data = {};
-  if (event.data) {
-    try {
-      data = JSON.parse(event.data.text());
-    } catch (e) {
-      console.error('[SW] Error parsing push data:', e);
-      data = {
-        title: 'Msarch App',
-        body: 'Anda memiliki pembaruan baru. Klik untuk melihat.',
-        data: { url: '/dashboard' }
-      };
-    }
+
+  try {
+    // Always parse as text first, as this is the most reliable method
+    const data = JSON.parse(event.data.text());
+    console.log('[SW] Push received:', data);
+
+    const title = data.title || 'Msarch App';
+    const options = {
+      body: data.body || 'You have a new update.',
+      icon: '/msarch-logo.png?v=5',
+      badge: '/msarch-logo.png?v=5',
+      data: {
+        url: data.url || data.data?.url || '/', // Support both flat and nested data structures
+      },
+    };
+    
+    event.waitUntil(self.registration.showNotification(title, options));
+
+  } catch (error) {
+    console.error('[SW] Error parsing push data:', error);
+    // Fallback notification for robustness
+    const title = 'Msarch App';
+    const options = {
+      body: 'You have a new update.',
+      icon: '/msarch-logo.png?v=5',
+      badge: '/msarch-logo.png?v=5',
+      data: {
+        url: '/',
+      },
+    };
+    event.waitUntil(self.registration.showNotification(title, options));
   }
-
-  const title = data.title || 'Msarch App';
-  const options = {
-    body: data.body || 'Anda memiliki pembaruan baru. Klik untuk melihat.',
-    icon: '/msarch-logo.png',
-    badge: '/msarch-logo.png', // Badge sebaiknya gambar monokrom sederhana
-    data: {
-      url: data.url || '/dashboard' // Mengambil URL langsung dari data
-    }
-  };
-
-  event.waitUntil(self.registration.showNotification(title, options));
 });
 
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
-  const targetUrl = new URL(event.notification.data.url, self.location.origin).href;
+  const urlToOpen = new URL(event.notification.data.url, self.location.origin).href;
 
-  // Mencari klien/tab yang cocok atau yang terlihat
-  const promiseChain = clients.matchAll({
-    type: 'window',
-    includeUncontrolled: true
-  }).then((windowClients) => {
-    let clientIsFound = false;
+  const promiseChain = clients
+    .matchAll({
+      type: "window",
+      includeUncontrolled: true,
+    })
+    .then((windowClients) => {
+      let clientIsFocused = false;
 
-    // Cari tab yang sudah terbuka dengan URL yang sama
-    for (let i = 0; i < windowClients.length; i++) {
-      const client = windowClients[i];
-      if (client.url === targetUrl && 'focus' in client) {
-        client.focus();
-        clientIsFound = true;
-        break;
+      // Find a matching client and focus it
+      for (let i = 0; i < windowClients.length; i++) {
+        const client = windowClients[i];
+        if (client.url === urlToOpen && "focus" in client) {
+          client.focus();
+          clientIsFocused = true;
+          break;
+        }
       }
-    }
 
-    // Jika tidak ada yang sama persis, cari tab aplikasi mana saja yang visible
-    if (!clientIsFound && windowClients.length > 0) {
-      const visibleClient = windowClients.find(c => c.visibilityState === "visible");
-      if (visibleClient && 'focus' in visibleClient && 'navigate' in visibleClient) {
-        visibleClient.navigate(targetUrl);
-        visibleClient.focus();
-        clientIsFound = true;
+      // If no exact match was found, try to find any app tab and navigate
+      if (!clientIsFocused && windowClients.length > 0) {
+        windowClients[0].navigate(urlToOpen).then((client) => {
+          if (client && "focus" in client) {
+            client.focus();
+          }
+        });
+        clientIsFocused = true;
       }
-    }
-    
-    // Jika tidak ada tab yang ditemukan atau visible, buka tab baru
-    if (!clientIsFound) {
-      clients.openWindow(targetUrl).then((client) => {
-        if (client) client.focus();
-      });
-    }
-  });
+      
+      // If no client was focused (or found), open a new one
+      if (!clientIsFocused) {
+        clients
+          .openWindow(urlToOpen)
+          .then((client) => (client ? client.focus() : null));
+      }
+    });
 
   event.waitUntil(promiseChain);
 });
