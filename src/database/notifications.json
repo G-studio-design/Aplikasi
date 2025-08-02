@@ -1,10 +1,17 @@
 [
   {
+    "id": "notif_1754112393435_7acf8",
+    "userId": "usr_owner_default",
+    "message": "Ini adalah notifikasi tes untuk memastikan peran Owner menerima pemberitahuan.",
+    "timestamp": "2025-08-02T05:26:33.435Z",
+    "isRead": false
+  },
+  {
     "id": "notif_1754111096549_5uk6g",
     "userId": "usr_owner_default",
     "message": "Karyawan \"Komang Merta\" mengajukan Cuti Tahunan dari 2025-08-02 s/d 2025-08-02.",
     "timestamp": "2025-08-02T05:04:56.549Z",
-    "isRead": false
+    "isRead": true
   },
   {
     "id": "notif_1753871457936_btj9y",

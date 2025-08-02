@@ -77,7 +77,7 @@ async function notifyUser(user: Omit<User, 'password'>, payload: NotificationPay
     const userSubscriptions = subscriptions.filter(sub => sub.userId === user.id);
 
     if (userSubscriptions.length > 0) {
-        const pushPayloadString = JSON.stringify(payload); // Ensure payload is a string for web-push
+        const pushPayloadString = JSON.stringify(payload);
         console.log(`[NotificationService] Sending push notification to user ${user.username} (ID: ${user.id}).`);
         for (const subRecord of userSubscriptions) {
             await sendPushNotification(subRecord.subscription, pushPayloadString);
