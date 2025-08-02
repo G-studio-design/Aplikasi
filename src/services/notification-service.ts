@@ -37,7 +37,7 @@ if (process.env.VAPID_PRIVATE_KEY && process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
         console.error("[NotificationService] CRITICAL: Failed to load VAPID keys. Push notifications will fail.", error);
     }
 } else {
-    console.error("[NotificationService] CRITICAL: VAPID keys are not configured in environment variables. Push notifications will fail.");
+    console.warn("[NotificationService] VAPID keys are not configured. Push notifications will be disabled.");
 }
 
 async function sendPushNotification(subscription: PushSubscription, payloadString: string) {
@@ -48,6 +48,7 @@ async function sendPushNotification(subscription: PushSubscription, payloadStrin
         console.error(`[NotificationService] Failed to send push. Status: ${error.statusCode}, Message: ${error.message}`);
         if (error.statusCode === 410 || error.statusCode === 404) {
             console.log('[NotificationService] Subscription expired or invalid. It should be removed.');
+            // Here you would typically remove the subscription from your database.
         }
     }
 }
@@ -68,6 +69,7 @@ async function addInAppNotifications(userIds: string[], payload: NotificationPay
         notifications.unshift(newNotification);
     }
     
+    // Trim old notifications if the list exceeds the limit
     if (notifications.length > NOTIFICATION_LIMIT) {
         notifications.splice(NOTIFICATION_LIMIT);
     }
@@ -75,19 +77,23 @@ async function addInAppNotifications(userIds: string[], payload: NotificationPay
     await writeDb(NOTIFICATION_DB_PATH, notifications);
 }
 
+// A more robust way to find users by one or more roles
 async function findUsersByRole(roles: string[]): Promise<string[]> {
     const allUsers = await getAllUsers();
+    // Normalize all input roles to lowercase
     const normalizedRoles = roles.map(r => r.trim().toLowerCase());
     
     const userIds = allUsers
+        // Normalize the user's role from DB before comparing
         .filter(user => normalizedRoles.includes(user.role.trim().toLowerCase()))
         .map(user => user.id);
 
-    console.log(`[NotificationService] Found ${userIds.length} user(s) for roles: ${roles.join(', ')}`);
+    console.log(`[NotificationService] Roles to find: [${normalizedRoles.join(', ')}]. Found ${userIds.length} user(s).`);
     return userIds;
 }
 
 export async function notifyUsersByRole(roles: string | string[], payload: NotificationPayload, projectId?: string): Promise<void> {
+    // Ensure roles is always an array for consistent processing
     const rolesArray = Array.isArray(roles) ? roles : [roles];
     const userIdsToNotify = await findUsersByRole(rolesArray);
 
@@ -98,6 +104,12 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
     
     await addInAppNotifications(userIdsToNotify, payload, projectId);
     
+    // Check if VAPID keys are configured before attempting to send push notifications
+    if (!process.env.VAPID_PRIVATE_KEY || !process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
+        console.log("[NotificationService] Skipping push notifications because VAPID keys are not set.");
+        return;
+    }
+
     const allSubscriptions = await readDb<{ userId: string, subscription: PushSubscription }[]>(SUBSCRIPTION_DB_PATH, []);
     const targetSubscriptions = allSubscriptions.filter(sub => userIdsToNotify.includes(sub.userId));
 
@@ -106,13 +118,14 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
         return;
     }
     
+    // Create a simple, direct payload for the push service
     const pushPayload = JSON.stringify({
-        notification: {
-            title: payload.title,
-            body: payload.body,
-            data: { url: payload.url || '/' }
-        }
+        title: payload.title,
+        body: payload.body,
+        data: { url: payload.url || '/' }
     });
+
+    console.log(`[NotificationService] Sending push payload: ${pushPayload}`);
 
     await Promise.all(
         targetSubscriptions.map(subRecord => 
@@ -121,8 +134,10 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
     );
 }
 
+// A simplified alias to notify a single user
 export async function notifyUserById(userId: string, payload: NotificationPayload, projectId?: string): Promise<void> {
     if (!userId) return;
+    // Internally, it's just notifying a role list with one member
     await notifyUsersByRole([userId], payload, projectId);
 }
 

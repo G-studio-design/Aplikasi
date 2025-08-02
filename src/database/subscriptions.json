@@ -9,5 +9,16 @@
         "auth": "axLJdjtc_EYLW8gKVKhUxg"
       }
     }
+  },
+  {
+    "userId": "usr_owner_default",
+    "subscription": {
+      "endpoint": "https://fcm.googleapis.com/fcm/send/dDd7Zw8HBW4:APA91bHC-jJrF3eY6KP-gEefELTcvcF_L4QkVdtH5LdcqwLjpnLAoqTsewzVPLCQMcvDxFeL-N_6QSr85VwykcJCchUUA0Blcpn72VIaWiD0yoYMX_glniveeI9oY6iQCIuINbaMxBC-",
+      "expirationTime": null,
+      "keys": {
+        "p256dh": "BJWpcjEE6zo9v7LevnKIU7T5r7k8aZCIu-JfQGFJ9c4XLIRRtCBW2yxyeAHtxv_oBKf9lqb_AVeYFdew7AxYHSk",
+        "auth": "bbdn5xzyatb74CqI8TLvGA"
+      }
+    }
   }
 ]

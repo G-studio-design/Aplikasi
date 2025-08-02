@@ -113,10 +113,10 @@
   {
     "id": "project_1754114678978_bwy5o",
     "title": "proyek tol megamendung ",
-    "status": "Pending Approval",
-    "progress": 20,
-    "assignedDivision": "Owner",
-    "nextAction": "Setujui Dokumen Penawaran",
+    "status": "Pending Offer",
+    "progress": 10,
+    "assignedDivision": "Admin Proyek",
+    "nextAction": "Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.",
     "workflowId": "msa_workflow",
     "workflowHistory": [
       {
@@ -140,6 +140,12 @@
         "action": "komangmerta (Admin Proyek) submitted for \"Unggah Dokumen Penawaran\"",
         "timestamp": "2025-08-02T06:22:50.164Z",
         "note": "done"
+      },
+      {
+        "division": "Owner",
+        "action": "sudina (Owner) requested revision.",
+        "timestamp": "2025-08-02T06:35:24.470Z",
+        "note": "ulangi"
       }
     ],
     "files": [
@@ -157,6 +163,55 @@
       }
     ],
     "createdAt": "2025-08-02T06:04:38.978Z",
+    "createdBy": "sudina"
+  },
+  {
+    "id": "project_1754116377920_b67tf",
+    "title": "proyek indonesia tanah ir siapa",
+    "status": "Pending Approval",
+    "progress": 20,
+    "assignedDivision": "Owner",
+    "nextAction": "Setujui Dokumen Penawaran",
+    "workflowId": "msa_workflow",
+    "workflowHistory": [
+      {
+        "division": "sudina",
+        "action": "Created Project with workflow: msa_workflow",
+        "timestamp": "2025-08-02T06:32:57.920Z",
+        "note": "Project entry created."
+      },
+      {
+        "division": "System",
+        "action": "Assigned to Admin Proyek for Unggah Dokumen Penawaran",
+        "timestamp": "2025-08-02T06:32:57.920Z"
+      },
+      {
+        "division": "komangmerta",
+        "action": "Uploaded initial file(s): RAP MEp.pdf",
+        "timestamp": "2025-08-02T06:33:51.620Z"
+      },
+      {
+        "division": "Admin Proyek",
+        "action": "komangmerta (Admin Proyek) submitted for \"Unggah Dokumen Penawaran\"",
+        "timestamp": "2025-08-02T06:33:53.506Z",
+        "note": "done"
+      }
+    ],
+    "files": [
+      {
+        "name": "RAP MEp.pdf",
+        "path": "project_1754116377920_b67tf/rap_mep.pdf",
+        "timestamp": "2025-08-02T06:33:51.575Z",
+        "uploadedBy": "Admin Proyek"
+      },
+      {
+        "name": "RAP MEp.pdf",
+        "uploadedBy": "Admin Proyek",
+        "path": "project_1754116377920_b67tf/rap_mep.pdf",
+        "timestamp": "2025-08-02T06:33:53.506Z"
+      }
+    ],
+    "createdAt": "2025-08-02T06:32:57.920Z",
     "createdBy": "sudina"
   }
 ]

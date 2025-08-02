@@ -1,5 +1,29 @@
 [
   {
+    "id": "notif_1754116524502_hpn2d",
+    "userId": "usr_1747799008584_4r22a",
+    "projectId": "project_1754114678978_bwy5o",
+    "message": "Penawaran untuk proyek 'proyek tol megamendung ' perlu direvisi oleh Anda berdasarkan masukan dari sudina.",
+    "timestamp": "2025-08-02T06:35:24.502Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1754116433550_79owd",
+    "userId": "usr_owner_default",
+    "projectId": "project_1754116377920_b67tf",
+    "message": "Penawaran untuk proyek 'proyek indonesia tanah ir siapa' telah diajukan oleh komangmerta dan menunggu persetujuan Anda.",
+    "timestamp": "2025-08-02T06:33:53.550Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1754116378001_rbbkw",
+    "userId": "usr_1747799008584_4r22a",
+    "projectId": "project_1754116377920_b67tf",
+    "message": "Anda ditugaskan untuk langkah awal pada proyek baru \"proyek indonesia tanah ir siapa\". Tugas: Unggah Dokumen Penawaran.",
+    "timestamp": "2025-08-02T06:32:58.001Z",
+    "isRead": true
+  },
+  {
     "id": "notif_1754115770225_k8m7q",
     "userId": "usr_owner_default",
     "projectId": "project_1754114678978_bwy5o",
