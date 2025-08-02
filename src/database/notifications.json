@@ -1,5 +1,21 @@
 [
   {
+    "id": "notif_1754131963072_opl33",
+    "userId": "usr_owner_default",
+    "projectId": "project_1754116377920_b67tf",
+    "message": "Penawaran untuk proyek 'proyek indonesia tanah ir siapa' telah diajukan oleh komangmerta dan menunggu persetujuan Anda.",
+    "timestamp": "2025-08-02T10:52:43.072Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1754131942551_sp0g6",
+    "userId": "usr_1747799008584_4r22a",
+    "projectId": "project_1754116377920_b67tf",
+    "message": "Penawaran untuk proyek 'proyek indonesia tanah ir siapa' perlu direvisi oleh Anda berdasarkan masukan dari sudina.",
+    "timestamp": "2025-08-02T10:52:22.551Z",
+    "isRead": false
+  },
+  {
     "id": "notif_1754131698456_wpxoy",
     "userId": "usr_owner_default",
     "projectId": "project_1754116377920_b67tf",

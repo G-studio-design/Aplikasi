@@ -109,7 +109,6 @@ export default function DashboardLayoutWrapper({ children, attendanceEnabled }: 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       const handleServiceWorkerMessage = (event: MessageEvent) => {
-        console.log("Message received from service worker:", event.data);
         if (event.data && event.data.type === 'navigate' && event.data.url) {
           router.push(event.data.url);
         }

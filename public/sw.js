@@ -1,57 +1,52 @@
 // public/sw.js
 
-// Version: 1.0.8 - Reliable Navigation Fix
-
-self.addEventListener('install', (event) => {
-  console.log('[Service Worker] Install event');
-  event.waitUntil(self.skipWaiting());
-});
-
-self.addEventListener('activate', (event) => {
-  console.log('[Service Worker] Activate event');
-  event.waitUntil(self.clients.claim());
-});
-
-self.addEventListener('push', (event) => {
-  console.log('[Service Worker] Push Received.');
-  if (!event.data) {
-    console.error('[Service Worker] Push event but no data');
-    return;
-  }
-
-  let payload;
-  try {
-    payload = event.data.json();
-  } catch (e) {
-    console.warn('[Service Worker] Could not parse push data as JSON, falling back to text.');
-    const textData = event.data.text();
-    payload = {
-      title: 'Msarch App Notification',
-      body: textData || 'You have a new update.',
-      data: { url: '/' },
-    };
-  }
-
-  const title = payload.title || 'Msarch App Notification';
+self.addEventListener('push', event => {
+  const data = event.data.json();
+  console.log('Push notification received:', data);
   const options = {
-    body: payload.body || 'You have a new update.',
-    icon: '/msarch-logo-192.png',
-    badge: '/msarch-logo-72.png',
+    body: data.body,
+    icon: '/msarch-logo.png',
+    badge: '/msarch-badge.png',
     data: {
-      url: payload.url || payload.data?.url || '/',
-    },
+      url: data.url || '/'
+    }
   };
-
-  event.waitUntil(self.registration.showNotification(title, options));
+  event.waitUntil(
+    self.registration.showNotification(data.title, options)
+  );
 });
 
 
-self.addEventListener('notificationclick', (event) => {
-  console.log('[Service Worker] Notification click Received.');
-  event.notification.close();
+self.addEventListener('notificationclick', event => {
+  const notification = event.notification;
+  const urlToOpen = new URL(notification.data.url, self.location.origin).href;
 
-  const urlToOpen = new URL(event.notification.data.url, self.location.origin).href;
+  notification.close();
 
-  const promiseChain = clients.openWindow(urlToOpen);
-  event.waitUntil(promiseChain);
+  event.waitUntil(
+    clients.matchAll({
+      type: 'window',
+      includeUncontrolled: true,
+    }).then(clientList => {
+      if (clientList.length > 0) {
+        let client = clientList[0];
+        for (let i = 0; i < clientList.length; i++) {
+          if (clientList[i].focused) {
+            client = clientList[i];
+            break;
+          }
+        }
+        
+        // Kirim pesan ke klien untuk navigasi
+        client.postMessage({
+            type: 'navigate',
+            url: urlToOpen,
+        });
+
+        return client.focus();
+
+      }
+      return clients.openWindow(urlToOpen);
+    })
+  );
 });
