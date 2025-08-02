@@ -13,11 +13,11 @@
   {
     "userId": "usr_owner_default",
     "subscription": {
-      "endpoint": "https://updates.push.services.mozilla.com/wpush/v2/gAAAAABojbbzZif4mV_5A-0olstsRf4Hjv5bUKz12_kaZ1DYhGdpCDQYaZ_VtUhukCqdDM2vpWqBfhU9dTU02p381oKxSfdBHAaDnLgmeC3FUkAlzxHMyctIw-XUy_9mz2qzpucxYbmX2xF8lZ0H6Wfl7U3IYn1dwy6jAHhnRU6CSAI7UjgMXwc",
+      "endpoint": "https://updates.push.services.mozilla.com/wpush/v2/gAAAAABojcIOT76xmTdhzBDyqez2PkalEol6sKuD_thoqtm5XtOEiLLjEWW6JFq5uDUoYaS6yVQAD2cafYSRmtc6ljTC2udy_Lxu6zBPAvNy6oXZBI5zSmEfQNRrnkxM-IGLubs0aswsSX3JPT_p9MOvJxHaEDXPFpo3q4m_bUN0lLYzByjJPUU",
       "expirationTime": null,
       "keys": {
-        "auth": "CsIbF8vzTTEYI0Pp-ZT4dA",
-        "p256dh": "BM5utu-RtZPBKNwAwPsQ7LFOAVIlSFNa96Fb8qoG24WquCn8SpCTl1ZmlW7vRiXqWig6QWnRU2XD2zxE5CS8unc"
+        "auth": "E08gJT5_1RK28MuVW5fTGA",
+        "p256dh": "BMhr9CFMMOo5CG1D6pbx81PD4kufxiPrzl3c1-9EVE7HhYxzqjS_TDuBzVROu9LkivoZxzBAxd21a34Ax8qsoT0"
       }
     }
   }

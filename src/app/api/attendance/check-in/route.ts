@@ -2,6 +2,8 @@
 import { NextResponse } from 'next/server';
 import { checkIn, type CheckInData } from '@/services/attendance-service';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   try {
     const data: CheckInData = await request.json();

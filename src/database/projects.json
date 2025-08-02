@@ -94,6 +94,22 @@
         "division": "Admin Proyek",
         "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
         "timestamp": "2025-08-02T06:54:24.692Z"
+      },
+      {
+        "division": "Owner",
+        "action": "sudina (Owner) requested revision.",
+        "timestamp": "2025-08-02T07:40:17.338Z",
+        "note": "revisi lagi"
+      },
+      {
+        "division": "komangmerta",
+        "action": "Uploaded initial file(s): pool warung semana-1.pdf",
+        "timestamp": "2025-08-02T07:44:15.047Z"
+      },
+      {
+        "division": "Admin Proyek",
+        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
+        "timestamp": "2025-08-02T07:44:19.951Z"
       }
     ],
     "files": [
@@ -156,6 +172,18 @@
         "uploadedBy": "Admin Proyek",
         "path": "project_1752215890356_ujcbz/pemecahan_nangka_2.pdf",
         "timestamp": "2025-08-02T06:54:24.692Z"
+      },
+      {
+        "name": "pool warung semana-1.pdf",
+        "path": "project_1752215890356_ujcbz/pool_warung_semana-1.pdf",
+        "timestamp": "2025-08-02T07:44:15.038Z",
+        "uploadedBy": "Admin Proyek"
+      },
+      {
+        "name": "pool warung semana-1.pdf",
+        "uploadedBy": "Admin Proyek",
+        "path": "project_1752215890356_ujcbz/pool_warung_semana-1.pdf",
+        "timestamp": "2025-08-02T07:44:19.951Z"
       }
     ],
     "createdAt": "2025-07-11T06:38:10.355Z",
@@ -315,6 +343,22 @@
         "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
         "timestamp": "2025-08-02T07:22:14.681Z",
         "note": "done"
+      },
+      {
+        "division": "Owner",
+        "action": "sudina (Owner) requested revision.",
+        "timestamp": "2025-08-02T07:46:18.753Z",
+        "note": "revisi"
+      },
+      {
+        "division": "komangmerta",
+        "action": "Uploaded initial file(s): pool warung semana-1.pdf",
+        "timestamp": "2025-08-02T07:47:37.811Z"
+      },
+      {
+        "division": "Admin Proyek",
+        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
+        "timestamp": "2025-08-02T07:47:40.670Z"
       }
     ],
     "files": [
@@ -341,6 +385,18 @@
         "uploadedBy": "Admin Proyek",
         "path": "project_1754116377920_b67tf/rap_mep.pdf",
         "timestamp": "2025-08-02T07:22:14.681Z"
+      },
+      {
+        "name": "pool warung semana-1.pdf",
+        "path": "project_1754116377920_b67tf/pool_warung_semana-1.pdf",
+        "timestamp": "2025-08-02T07:47:37.806Z",
+        "uploadedBy": "Admin Proyek"
+      },
+      {
+        "name": "pool warung semana-1.pdf",
+        "uploadedBy": "Admin Proyek",
+        "path": "project_1754116377920_b67tf/pool_warung_semana-1.pdf",
+        "timestamp": "2025-08-02T07:47:40.670Z"
       }
     ],
     "createdAt": "2025-08-02T06:32:57.920Z",

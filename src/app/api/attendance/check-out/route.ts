@@ -7,6 +7,8 @@ interface CheckOutRequest {
     reason: 'Normal' | 'Survei' | 'Sidang';
 }
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   try {
     const { userId, reason }: CheckOutRequest = await request.json();
