@@ -1,11 +1,27 @@
 [
   {
+    "id": "notif_1754127708071_i261k",
+    "userId": "usr_1747799008584_4r22a",
+    "projectId": "project_1754116377920_b67tf",
+    "message": "Penawaran untuk proyek 'proyek indonesia tanah ir siapa' perlu direvisi oleh Anda berdasarkan masukan dari sudina.",
+    "timestamp": "2025-08-02T09:41:48.071Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1754127204934_qlopd",
+    "userId": "usr_owner_default",
+    "projectId": "project_1754116377920_b67tf",
+    "message": "Penawaran untuk proyek 'proyek indonesia tanah ir siapa' telah diajukan oleh komangmerta dan menunggu persetujuan Anda.",
+    "timestamp": "2025-08-02T09:33:24.934Z",
+    "isRead": false
+  },
+  {
     "id": "notif_1754125921438_m6slc",
     "userId": "usr_1747799008584_4r22a",
     "projectId": "project_1754116377920_b67tf",
     "message": "Penawaran untuk proyek 'proyek indonesia tanah ir siapa' perlu direvisi oleh Anda berdasarkan masukan dari sudina.",
     "timestamp": "2025-08-02T09:12:01.438Z",
-    "isRead": false
+    "isRead": true
   },
   {
     "id": "notif_1754125677538_csgya",
@@ -28,7 +44,7 @@
     "userId": "usr_owner_default",
     "message": "Ini adalah notifikasi tes untuk memastikan peran Owner menerima pemberitahuan.",
     "timestamp": "2025-08-02T08:08:55.409Z",
-    "isRead": false
+    "isRead": true
   },
   {
     "id": "notif_1754120860735_39zdx",
