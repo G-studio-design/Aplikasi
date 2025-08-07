@@ -1,11 +1,59 @@
 [
   {
+    "id": "notif_1754549261806_cn875",
+    "userId": "usr_1747799008584_4r22a",
+    "projectId": "project_1754301256386_k96g5",
+    "message": "Penawaran untuk proyek 'proyek hotel seminyak' perlu direvisi oleh Anda berdasarkan masukan dari sudina.",
+    "timestamp": "2025-08-07T06:47:41.806Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1754549116052_72u6g",
+    "userId": "usr_1747799008584_4r22a",
+    "projectId": "project_1752215890356_ujcbz",
+    "message": "Penawaran untuk proyek 'proyek hotel kuta' perlu direvisi oleh Anda berdasarkan masukan dari sudina.",
+    "timestamp": "2025-08-07T06:45:16.052Z",
+    "isRead": true
+  },
+  {
+    "id": "notif_1754549091820_bih11",
+    "userId": "usr_owner_default",
+    "projectId": "project_1752215890356_ujcbz",
+    "message": "Penawaran untuk proyek 'proyek hotel kuta' telah diajukan oleh komangmerta dan menunggu persetujuan Anda.",
+    "timestamp": "2025-08-07T06:44:51.820Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1754549050220_g0sbd",
+    "userId": "usr_owner_default",
+    "projectId": "project_1754301256386_k96g5",
+    "message": "Penawaran untuk proyek 'proyek hotel seminyak' telah diajukan oleh komangmerta dan menunggu persetujuan Anda.",
+    "timestamp": "2025-08-07T06:44:10.220Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1754547991866_lrcpd",
+    "userId": "usr_1747799008584_4r22a",
+    "projectId": "project_1754301256386_k96g5",
+    "message": "Penawaran untuk proyek 'proyek hotel seminyak' perlu direvisi oleh Anda berdasarkan masukan dari sudina.",
+    "timestamp": "2025-08-07T06:26:31.866Z",
+    "isRead": true
+  },
+  {
+    "id": "notif_1754547881172_7b4uq",
+    "userId": "usr_owner_default",
+    "projectId": "project_1754301256386_k96g5",
+    "message": "Penawaran untuk proyek 'proyek hotel seminyak' telah diajukan oleh komangmerta dan menunggu persetujuan Anda.",
+    "timestamp": "2025-08-07T06:24:41.172Z",
+    "isRead": true
+  },
+  {
     "id": "notif_1754302567980_bellk",
     "userId": "usr_1747799008584_4r22a",
     "projectId": "project_1754301256386_k96g5",
     "message": "Penawaran untuk proyek 'proyek hotel seminyak' perlu direvisi oleh Anda berdasarkan masukan dari sudina.",
     "timestamp": "2025-08-04T10:16:07.980Z",
-    "isRead": false
+    "isRead": true
   },
   {
     "id": "notif_1754302472653_56iyl",
@@ -13,7 +61,7 @@
     "projectId": "project_1754301256386_k96g5",
     "message": "Penawaran untuk proyek 'proyek hotel seminyak' telah diajukan oleh komangmerta dan menunggu persetujuan Anda.",
     "timestamp": "2025-08-04T10:14:32.653Z",
-    "isRead": false
+    "isRead": true
   },
   {
     "id": "notif_1754301256423_0sw9l",

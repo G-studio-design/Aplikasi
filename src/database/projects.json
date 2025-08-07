@@ -116,6 +116,22 @@
         "action": "sudina (Owner) requested revision.",
         "timestamp": "2025-08-02T10:20:50.351Z",
         "note": "revisi"
+      },
+      {
+        "division": "komangmerta",
+        "action": "Uploaded initial file(s): gami bukit KOS-Model.pdf",
+        "timestamp": "2025-08-07T06:44:50.870Z"
+      },
+      {
+        "division": "Admin Proyek",
+        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
+        "timestamp": "2025-08-07T06:44:51.515Z"
+      },
+      {
+        "division": "Owner",
+        "action": "sudina (Owner) requested revision.",
+        "timestamp": "2025-08-07T06:45:16.027Z",
+        "note": "revisi dong dikit"
       }
     ],
     "files": [
@@ -190,6 +206,18 @@
         "uploadedBy": "Admin Proyek",
         "path": "project_1752215890356_ujcbz/pool_warung_semana-1.pdf",
         "timestamp": "2025-08-02T07:44:19.951Z"
+      },
+      {
+        "name": "gami bukit KOS-Model.pdf",
+        "path": "project_1752215890356_ujcbz/gami_bukit_kos-model.pdf",
+        "timestamp": "2025-08-07T06:44:50.865Z",
+        "uploadedBy": "Admin Proyek"
+      },
+      {
+        "name": "gami bukit KOS-Model.pdf",
+        "uploadedBy": "Admin Proyek",
+        "path": "project_1752215890356_ujcbz/gami_bukit_kos-model.pdf",
+        "timestamp": "2025-08-07T06:44:51.515Z"
       }
     ],
     "createdAt": "2025-07-11T06:38:10.355Z",
@@ -235,6 +263,39 @@
         "action": "sudina (Owner) requested revision.",
         "timestamp": "2025-08-04T10:16:07.936Z",
         "note": "revisi"
+      },
+      {
+        "division": "komangmerta",
+        "action": "Uploaded initial file(s): pool warung semana.pdf",
+        "timestamp": "2025-08-07T06:24:39.218Z"
+      },
+      {
+        "division": "Admin Proyek",
+        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
+        "timestamp": "2025-08-07T06:24:41.137Z",
+        "note": "ini sudah"
+      },
+      {
+        "division": "Owner",
+        "action": "sudina (Owner) requested revision.",
+        "timestamp": "2025-08-07T06:26:31.822Z",
+        "note": "revisi lagi"
+      },
+      {
+        "division": "komangmerta",
+        "action": "Uploaded initial file(s): RAP MEp.pdf",
+        "timestamp": "2025-08-07T06:44:07.355Z"
+      },
+      {
+        "division": "Admin Proyek",
+        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
+        "timestamp": "2025-08-07T06:44:10.152Z"
+      },
+      {
+        "division": "Owner",
+        "action": "sudina (Owner) requested revision.",
+        "timestamp": "2025-08-07T06:47:41.775Z",
+        "note": "gkuigbjug"
       }
     ],
     "files": [
@@ -255,6 +316,30 @@
         "uploadedBy": "Admin Proyek",
         "path": "project_1754301256386_k96g5/rap_mep.pdf",
         "timestamp": "2025-08-04T10:14:32.630Z"
+      },
+      {
+        "name": "pool warung semana.pdf",
+        "path": "project_1754301256386_k96g5/pool_warung_semana.pdf",
+        "timestamp": "2025-08-07T06:24:39.216Z",
+        "uploadedBy": "Admin Proyek"
+      },
+      {
+        "name": "pool warung semana.pdf",
+        "uploadedBy": "Admin Proyek",
+        "path": "project_1754301256386_k96g5/pool_warung_semana.pdf",
+        "timestamp": "2025-08-07T06:24:41.137Z"
+      },
+      {
+        "name": "RAP MEp.pdf",
+        "path": "project_1754301256386_k96g5/rap_mep.pdf",
+        "timestamp": "2025-08-07T06:44:07.354Z",
+        "uploadedBy": "Admin Proyek"
+      },
+      {
+        "name": "RAP MEp.pdf",
+        "uploadedBy": "Admin Proyek",
+        "path": "project_1754301256386_k96g5/rap_mep.pdf",
+        "timestamp": "2025-08-07T06:44:10.152Z"
       }
     ],
     "createdAt": "2025-08-04T09:54:16.386Z",
