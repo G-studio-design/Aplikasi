@@ -1,29 +1,26 @@
-'use strict';
+// public/sw.js
 
-self.addEventListener('push', function (event) {
+// Listener untuk menerima pesan push dari server.
+// Ini yang bertanggung jawab untuk MENAMPILKAN notifikasi.
+self.addEventListener('push', (event) => {
   console.log('[Service Worker] Push Received.');
-
   let data = {};
-  if (event.data) {
-    try {
+  try {
+    // Mencoba parse payload sebagai JSON
+    if (event.data) {
       data = event.data.json();
-    } catch (e) {
-      console.error('[Service Worker] Error parsing push data:', e);
-      data = {
-        title: 'Notifikasi Baru',
-        body: event.data.text(),
-        url: '/dashboard',
-      };
     }
+  } catch (e) {
+    console.error('[Service Worker] Push event data is not JSON, falling back.', e);
   }
 
   const title = data.title || 'Msarch App';
   const options = {
-    body: data.body || 'Anda memiliki pembaruan baru.',
-    icon: '/msarch-logo.png',
-    badge: '/msarch-logo.png',
+    body: data.body || 'You have a new notification.',
+    icon: '/msarch-logo.png?v=5', // Ikon notifikasi
+    badge: '/msarch-logo.png?v=5', // Ikon kecil di status bar (Android)
     data: {
-      url: data.url || '/dashboard',
+      url: data.url || '/',
     },
   };
 
@@ -31,38 +28,39 @@ self.addEventListener('push', function (event) {
 });
 
 
-self.addEventListener('notificationclick', function (event) {
+// Listener untuk saat notifikasi DIKLIK.
+self.addEventListener('notificationclick', (event) => {
   console.log('[Service Worker] Notification click Received.');
-  event.notification.close();
+
+  event.notification.close(); // Tutup notifikasi yang diklik
+
   const urlToOpen = new URL(event.notification.data.url, self.location.origin).href;
 
-  event.waitUntil(
-    clients.matchAll({
-      type: 'window',
-      includeUncontrolled: true,
-    }).then(function (clientList) {
-      if (clientList.length > 0) {
-        let client = clientList[0];
-        for (let i = 0; i < clientList.length; i++) {
-          if (clientList[i].focused) {
-            client = clientList[i];
-            break;
-          }
-        }
-        
-        // If a matching client is found, focus it and post a message
-        if (client) {
-          client.focus();
-          client.postMessage({
-            type: 'navigate',
-            url: urlToOpen,
-          });
-          return;
-        }
-      }
+  const promiseChain = clients.matchAll({
+    type: 'window',
+    includeUncontrolled: true,
+  }).then((windowClients) => {
+    let matchingClient = null;
 
-      // If no matching client is found, open a new window
+    // Coba cari tab yang sudah terbuka dengan URL yang sama
+    for (let i = 0; i < windowClients.length; i++) {
+      const client = windowClients[i];
+      if (client.url === urlToOpen) {
+        matchingClient = client;
+        break;
+      }
+    }
+
+    // Jika tab yang sama ditemukan, fokus ke tab itu
+    if (matchingClient) {
+      console.log('[Service Worker] Found an existing tab, focusing it.');
+      return matchingClient.focus();
+    } else {
+      // Jika tidak ada tab yang cocok, buka tab baru
+      console.log('[Service Worker] No existing tab found, opening a new one.');
       return clients.openWindow(urlToOpen);
-    })
-  );
+    }
+  });
+
+  event.waitUntil(promiseChain);
 });

@@ -1,5 +1,13 @@
 [
   {
+    "id": "notif_1754561444907_6591n",
+    "userId": "usr_owner_default",
+    "projectId": "project_1752215890356_ujcbz",
+    "message": "Penawaran untuk proyek 'proyek hotel kuta' telah diajukan oleh komangmerta dan menunggu persetujuan Anda.",
+    "timestamp": "2025-08-07T10:10:44.907Z",
+    "isRead": false
+  },
+  {
     "id": "notif_1754560365151_x85mn",
     "userId": "usr_owner_default",
     "projectId": "project_1754301256386_k96g5",
@@ -13,7 +21,7 @@
     "projectId": "project_1754301256386_k96g5",
     "message": "Penawaran untuk proyek 'proyek hotel seminyak' perlu direvisi oleh Anda berdasarkan masukan dari sudina.",
     "timestamp": "2025-08-07T06:47:41.806Z",
-    "isRead": false
+    "isRead": true
   },
   {
     "id": "notif_1754549116052_72u6g",
