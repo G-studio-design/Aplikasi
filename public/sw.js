@@ -2,51 +2,45 @@
 
 self.addEventListener('push', event => {
   const data = event.data.json();
-  console.log('Push notification received:', data);
   const options = {
     body: data.body,
-    icon: '/msarch-logo.png',
-    badge: '/msarch-badge.png',
+    icon: '/msarch-logo-192.png',
+    badge: '/msarch-logo-72.png',
     data: {
-      url: data.url || '/'
-    }
+      url: data.url, // Menyimpan URL untuk navigasi
+    },
   };
   event.waitUntil(
     self.registration.showNotification(data.title, options)
   );
 });
 
-
 self.addEventListener('notificationclick', event => {
-  const notification = event.notification;
-  const urlToOpen = new URL(notification.data.url, self.location.origin).href;
+  const notificationData = event.notification.data;
+  event.notification.close();
 
-  notification.close();
+  const urlToOpen = new URL(notificationData.url || '/', self.location.origin).href;
 
-  event.waitUntil(
-    clients.matchAll({
-      type: 'window',
-      includeUncontrolled: true,
-    }).then(clientList => {
-      if (clientList.length > 0) {
-        let client = clientList[0];
-        for (let i = 0; i < clientList.length; i++) {
-          if (clientList[i].focused) {
-            client = clientList[i];
-            break;
-          }
-        }
-        
-        // Kirim pesan ke klien untuk navigasi
-        client.postMessage({
-            type: 'navigate',
-            url: urlToOpen,
-        });
-
-        return client.focus();
-
+  const promiseChain = clients.matchAll({
+    type: 'window',
+    includeUncontrolled: true,
+  }).then(windowClients => {
+    let clientIsFound = false;
+    for (const client of windowClients) {
+      // Memeriksa apakah ada tab aplikasi yang sudah terbuka
+      if (client.url.startsWith(self.location.origin) && 'focus' in client) {
+        clientIsFound = true;
+        client.focus();
+        // Mengirim pesan ke klien untuk melakukan navigasi
+        client.postMessage({ type: 'navigate', url: urlToOpen });
+        break;
       }
-      return clients.openWindow(urlToOpen);
-    })
-  );
+    }
+
+    if (!clientIsFound) {
+      clients.openWindow(urlToOpen);
+    }
+  });
+
+  event.waitUntil(promiseChain);
 });

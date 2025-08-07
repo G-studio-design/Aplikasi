@@ -129,7 +129,36 @@ export async function notifyUsersByRole(roles: string | string[], payload: Notif
 
 export async function notifyUserById(userId: string, payload: NotificationPayload, projectId?: string): Promise<void> {
     if (!userId) return;
-    await notifyUsersByRole([userId], payload, projectId);
+    const userIdsToNotify = [userId];
+
+    if (userIdsToNotify.length === 0) {
+        console.warn(`[NotificationService] No users found for ID: ${userId}. Aborting notification.`);
+        return;
+    }
+    
+    await addInAppNotifications(userIdsToNotify, payload, projectId);
+    
+    if (!process.env.VAPID_PRIVATE_KEY || !process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
+        console.log("[NotificationService] Skipping push notifications because VAPID keys are not set.");
+        return;
+    }
+
+    const allSubscriptions = await readDb<StoredSubscriptions[]>(SUBSCRIPTION_DB_PATH, []);
+    const pushPayload = JSON.stringify(payload);
+
+    for (const id of userIdsToNotify) {
+        const userSubscriptionRecord = allSubscriptions.find(sub => sub.userId === id);
+        if (userSubscriptionRecord && userSubscriptionRecord.subscriptions.length > 0) {
+            console.log(`[NotificationService] Found ${userSubscriptionRecord.subscriptions.length} subscription(s) for user ${id}.`);
+            await Promise.all(
+                userSubscriptionRecord.subscriptions.map(subscription => 
+                    sendPushNotification(subscription, pushPayload)
+                )
+            );
+        } else {
+             console.log(`[NotificationService] No push subscriptions found for user ${id}.`);
+        }
+    }
 }
 
 export async function getNotificationsForUser(userId: string): Promise<Notification[]> {

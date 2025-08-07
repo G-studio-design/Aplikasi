@@ -196,8 +196,8 @@
     "createdBy": "sudina"
   },
   {
-    "id": "project_1754114678978_bwy5o",
-    "title": "proyek tol megamendung ",
+    "id": "project_1754301256386_k96g5",
+    "title": "proyek hotel seminyak",
     "status": "Pending Offer",
     "progress": 10,
     "assignedDivision": "Admin Proyek",
@@ -207,380 +207,57 @@
       {
         "division": "sudina",
         "action": "Created Project with workflow: msa_workflow",
-        "timestamp": "2025-08-02T06:04:38.978Z",
+        "timestamp": "2025-08-04T09:54:16.386Z",
         "note": "Project entry created."
       },
       {
         "division": "System",
         "action": "Assigned to Admin Proyek for Unggah Dokumen Penawaran",
-        "timestamp": "2025-08-02T06:04:38.978Z"
+        "timestamp": "2025-08-04T09:54:16.386Z"
       },
-      {
-        "division": "komangmerta",
-        "action": "Uploaded initial file(s): RAP MEp.pdf",
-        "timestamp": "2025-08-02T06:22:46.620Z"
-      },
-      {
-        "division": "Admin Proyek",
-        "action": "komangmerta (Admin Proyek) submitted for \"Unggah Dokumen Penawaran\"",
-        "timestamp": "2025-08-02T06:22:50.164Z",
-        "note": "done"
-      },
-      {
-        "division": "Owner",
-        "action": "sudina (Owner) requested revision.",
-        "timestamp": "2025-08-02T06:35:24.470Z",
-        "note": "ulangi"
-      },
-      {
-        "division": "komangmerta",
-        "action": "Uploaded initial file(s): pool warung semana-1.pdf",
-        "timestamp": "2025-08-02T07:00:06.488Z"
-      },
-      {
-        "division": "Admin Proyek",
-        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
-        "timestamp": "2025-08-02T07:00:11.658Z",
-        "note": "done"
-      },
-      {
-        "division": "Owner",
-        "action": "sudina (Owner) requested revision.",
-        "timestamp": "2025-08-02T07:01:52.178Z",
-        "note": "revisi lagi dikit"
-      },
-      {
-        "division": "komangmerta",
-        "action": "Uploaded initial file(s): KUSEN gami 1.pdf",
-        "timestamp": "2025-08-02T07:02:32.932Z"
-      },
-      {
-        "division": "Admin Proyek",
-        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
-        "timestamp": "2025-08-02T07:02:33.590Z",
-        "note": "done"
-      },
-      {
-        "division": "Owner",
-        "action": "sudina (Owner) requested revision.",
-        "timestamp": "2025-08-02T10:10:13.784Z",
-        "note": "revisi dikit joss\n"
-      }
-    ],
-    "files": [
-      {
-        "name": "RAP MEp.pdf",
-        "path": "project_1754114678978_bwy5o/rap_mep.pdf",
-        "timestamp": "2025-08-02T06:22:46.618Z",
-        "uploadedBy": "Admin Proyek"
-      },
-      {
-        "name": "RAP MEp.pdf",
-        "uploadedBy": "Admin Proyek",
-        "path": "project_1754114678978_bwy5o/rap_mep.pdf",
-        "timestamp": "2025-08-02T06:22:50.164Z"
-      },
-      {
-        "name": "pool warung semana-1.pdf",
-        "path": "project_1754114678978_bwy5o/pool_warung_semana-1.pdf",
-        "timestamp": "2025-08-02T07:00:06.483Z",
-        "uploadedBy": "Admin Proyek"
-      },
-      {
-        "name": "pool warung semana-1.pdf",
-        "uploadedBy": "Admin Proyek",
-        "path": "project_1754114678978_bwy5o/pool_warung_semana-1.pdf",
-        "timestamp": "2025-08-02T07:00:11.658Z"
-      },
-      {
-        "name": "KUSEN gami 1.pdf",
-        "path": "project_1754114678978_bwy5o/kusen_gami_1.pdf",
-        "timestamp": "2025-08-02T07:02:32.930Z",
-        "uploadedBy": "Admin Proyek"
-      },
-      {
-        "name": "KUSEN gami 1.pdf",
-        "uploadedBy": "Admin Proyek",
-        "path": "project_1754114678978_bwy5o/kusen_gami_1.pdf",
-        "timestamp": "2025-08-02T07:02:33.590Z"
-      }
-    ],
-    "createdAt": "2025-08-02T06:04:38.978Z",
-    "createdBy": "sudina"
-  },
-  {
-    "id": "project_1754116377920_b67tf",
-    "title": "proyek indonesia tanah ir siapa",
-    "status": "Pending Approval",
-    "progress": 20,
-    "assignedDivision": "Owner",
-    "nextAction": "Setujui Dokumen Penawaran",
-    "workflowId": "msa_workflow",
-    "workflowHistory": [
       {
         "division": "sudina",
-        "action": "Created Project with workflow: msa_workflow",
-        "timestamp": "2025-08-02T06:32:57.920Z",
-        "note": "Project entry created."
-      },
-      {
-        "division": "System",
-        "action": "Assigned to Admin Proyek for Unggah Dokumen Penawaran",
-        "timestamp": "2025-08-02T06:32:57.920Z"
+        "action": "Uploaded initial file(s): TEMBOK  WRS.pdf",
+        "timestamp": "2025-08-04T09:54:17.678Z"
       },
       {
         "division": "komangmerta",
         "action": "Uploaded initial file(s): RAP MEp.pdf",
-        "timestamp": "2025-08-02T06:33:51.620Z"
+        "timestamp": "2025-08-04T10:14:30.103Z"
       },
       {
         "division": "Admin Proyek",
         "action": "komangmerta (Admin Proyek) submitted for \"Unggah Dokumen Penawaran\"",
-        "timestamp": "2025-08-02T06:33:53.506Z",
-        "note": "done"
+        "timestamp": "2025-08-04T10:14:32.630Z"
       },
       {
         "division": "Owner",
         "action": "sudina (Owner) requested revision.",
-        "timestamp": "2025-08-02T07:21:26.446Z",
-        "note": "Revisi Dikit"
-      },
-      {
-        "division": "komangmerta",
-        "action": "Uploaded initial file(s): RAP MEp.pdf",
-        "timestamp": "2025-08-02T07:22:13.951Z"
-      },
-      {
-        "division": "Admin Proyek",
-        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
-        "timestamp": "2025-08-02T07:22:14.681Z",
-        "note": "done"
-      },
-      {
-        "division": "Owner",
-        "action": "sudina (Owner) requested revision.",
-        "timestamp": "2025-08-02T07:46:18.753Z",
+        "timestamp": "2025-08-04T10:16:07.936Z",
         "note": "revisi"
-      },
-      {
-        "division": "komangmerta",
-        "action": "Uploaded initial file(s): pool warung semana-1.pdf",
-        "timestamp": "2025-08-02T07:47:37.811Z"
-      },
-      {
-        "division": "Admin Proyek",
-        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
-        "timestamp": "2025-08-02T07:47:40.670Z"
-      },
-      {
-        "division": "Owner",
-        "action": "sudina (Owner) requested revision.",
-        "timestamp": "2025-08-02T08:48:44.262Z",
-        "note": "ulangi"
-      },
-      {
-        "division": "komangmerta",
-        "action": "Uploaded initial file(s): pemecahan nangka 2.pdf",
-        "timestamp": "2025-08-02T09:07:55.096Z"
-      },
-      {
-        "division": "Admin Proyek",
-        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
-        "timestamp": "2025-08-02T09:07:57.505Z"
-      },
-      {
-        "division": "Owner",
-        "action": "sudina (Owner) requested revision.",
-        "timestamp": "2025-08-02T09:12:01.421Z",
-        "note": "revisi\n"
-      },
-      {
-        "division": "komangmerta",
-        "action": "Uploaded initial file(s): pemecahan nangka 2.pdf",
-        "timestamp": "2025-08-02T09:33:23.190Z"
-      },
-      {
-        "division": "Admin Proyek",
-        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
-        "timestamp": "2025-08-02T09:33:24.905Z"
-      },
-      {
-        "division": "Owner",
-        "action": "sudina (Owner) requested revision.",
-        "timestamp": "2025-08-02T09:41:48.011Z",
-        "note": "uh9u"
-      },
-      {
-        "division": "komangmerta",
-        "action": "Uploaded initial file(s): RAP MEp.pdf",
-        "timestamp": "2025-08-02T10:26:32.695Z"
-      },
-      {
-        "division": "Admin Proyek",
-        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
-        "timestamp": "2025-08-02T10:26:38.846Z"
-      },
-      {
-        "division": "Owner",
-        "action": "sudina (Owner) requested revision.",
-        "timestamp": "2025-08-02T10:27:13.997Z",
-        "note": "revisi"
-      },
-      {
-        "division": "komangmerta",
-        "action": "Uploaded initial file(s): RAP MEp.pdf",
-        "timestamp": "2025-08-02T10:31:55.403Z"
-      },
-      {
-        "division": "Admin Proyek",
-        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
-        "timestamp": "2025-08-02T10:31:56.790Z"
-      },
-      {
-        "division": "Owner",
-        "action": "sudina (Owner) requested revision.",
-        "timestamp": "2025-08-02T10:32:48.255Z",
-        "note": "revisi"
-      },
-      {
-        "division": "komangmerta",
-        "action": "Uploaded initial file(s): RAP MEp.pdf",
-        "timestamp": "2025-08-02T10:48:15.535Z"
-      },
-      {
-        "division": "Admin Proyek",
-        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
-        "timestamp": "2025-08-02T10:48:18.370Z"
-      },
-      {
-        "division": "Owner",
-        "action": "sudina (Owner) requested revision.",
-        "timestamp": "2025-08-02T10:52:22.502Z",
-        "note": "revisi"
-      },
-      {
-        "division": "komangmerta",
-        "action": "Uploaded initial file(s): RAP MEp.pdf",
-        "timestamp": "2025-08-02T10:52:42.117Z"
-      },
-      {
-        "division": "Admin Proyek",
-        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
-        "timestamp": "2025-08-02T10:52:42.809Z",
-        "note": "done"
       }
     ],
     "files": [
       {
+        "name": "TEMBOK  WRS.pdf",
+        "path": "project_1754301256386_k96g5/tembok_wrs.pdf",
+        "timestamp": "2025-08-04T09:54:17.247Z",
+        "uploadedBy": "sudina"
+      },
+      {
         "name": "RAP MEp.pdf",
-        "path": "project_1754116377920_b67tf/rap_mep.pdf",
-        "timestamp": "2025-08-02T06:33:51.575Z",
+        "path": "project_1754301256386_k96g5/rap_mep.pdf",
+        "timestamp": "2025-08-04T10:14:30.102Z",
         "uploadedBy": "Admin Proyek"
       },
       {
         "name": "RAP MEp.pdf",
         "uploadedBy": "Admin Proyek",
-        "path": "project_1754116377920_b67tf/rap_mep.pdf",
-        "timestamp": "2025-08-02T06:33:53.506Z"
-      },
-      {
-        "name": "RAP MEp.pdf",
-        "path": "project_1754116377920_b67tf/rap_mep.pdf",
-        "timestamp": "2025-08-02T07:22:13.948Z",
-        "uploadedBy": "Admin Proyek"
-      },
-      {
-        "name": "RAP MEp.pdf",
-        "uploadedBy": "Admin Proyek",
-        "path": "project_1754116377920_b67tf/rap_mep.pdf",
-        "timestamp": "2025-08-02T07:22:14.681Z"
-      },
-      {
-        "name": "pool warung semana-1.pdf",
-        "path": "project_1754116377920_b67tf/pool_warung_semana-1.pdf",
-        "timestamp": "2025-08-02T07:47:37.806Z",
-        "uploadedBy": "Admin Proyek"
-      },
-      {
-        "name": "pool warung semana-1.pdf",
-        "uploadedBy": "Admin Proyek",
-        "path": "project_1754116377920_b67tf/pool_warung_semana-1.pdf",
-        "timestamp": "2025-08-02T07:47:40.670Z"
-      },
-      {
-        "name": "pemecahan nangka 2.pdf",
-        "path": "project_1754116377920_b67tf/pemecahan_nangka_2.pdf",
-        "timestamp": "2025-08-02T09:07:55.093Z",
-        "uploadedBy": "Admin Proyek"
-      },
-      {
-        "name": "pemecahan nangka 2.pdf",
-        "uploadedBy": "Admin Proyek",
-        "path": "project_1754116377920_b67tf/pemecahan_nangka_2.pdf",
-        "timestamp": "2025-08-02T09:07:57.505Z"
-      },
-      {
-        "name": "pemecahan nangka 2.pdf",
-        "path": "project_1754116377920_b67tf/pemecahan_nangka_2.pdf",
-        "timestamp": "2025-08-02T09:33:23.187Z",
-        "uploadedBy": "Admin Proyek"
-      },
-      {
-        "name": "pemecahan nangka 2.pdf",
-        "uploadedBy": "Admin Proyek",
-        "path": "project_1754116377920_b67tf/pemecahan_nangka_2.pdf",
-        "timestamp": "2025-08-02T09:33:24.905Z"
-      },
-      {
-        "name": "RAP MEp.pdf",
-        "path": "project_1754116377920_b67tf/rap_mep.pdf",
-        "timestamp": "2025-08-02T10:26:32.692Z",
-        "uploadedBy": "Admin Proyek"
-      },
-      {
-        "name": "RAP MEp.pdf",
-        "uploadedBy": "Admin Proyek",
-        "path": "project_1754116377920_b67tf/rap_mep.pdf",
-        "timestamp": "2025-08-02T10:26:38.846Z"
-      },
-      {
-        "name": "RAP MEp.pdf",
-        "path": "project_1754116377920_b67tf/rap_mep.pdf",
-        "timestamp": "2025-08-02T10:31:55.371Z",
-        "uploadedBy": "Admin Proyek"
-      },
-      {
-        "name": "RAP MEp.pdf",
-        "uploadedBy": "Admin Proyek",
-        "path": "project_1754116377920_b67tf/rap_mep.pdf",
-        "timestamp": "2025-08-02T10:31:56.790Z"
-      },
-      {
-        "name": "RAP MEp.pdf",
-        "path": "project_1754116377920_b67tf/rap_mep.pdf",
-        "timestamp": "2025-08-02T10:48:15.530Z",
-        "uploadedBy": "Admin Proyek"
-      },
-      {
-        "name": "RAP MEp.pdf",
-        "uploadedBy": "Admin Proyek",
-        "path": "project_1754116377920_b67tf/rap_mep.pdf",
-        "timestamp": "2025-08-02T10:48:18.370Z"
-      },
-      {
-        "name": "RAP MEp.pdf",
-        "path": "project_1754116377920_b67tf/rap_mep.pdf",
-        "timestamp": "2025-08-02T10:52:42.099Z",
-        "uploadedBy": "Admin Proyek"
-      },
-      {
-        "name": "RAP MEp.pdf",
-        "uploadedBy": "Admin Proyek",
-        "path": "project_1754116377920_b67tf/rap_mep.pdf",
-        "timestamp": "2025-08-02T10:52:42.809Z"
+        "path": "project_1754301256386_k96g5/rap_mep.pdf",
+        "timestamp": "2025-08-04T10:14:32.630Z"
       }
     ],
-    "createdAt": "2025-08-02T06:32:57.920Z",
+    "createdAt": "2025-08-04T09:54:16.386Z",
     "createdBy": "sudina"
   }
 ]
