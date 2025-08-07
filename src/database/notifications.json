@@ -1,11 +1,27 @@
 [
   {
+    "id": "notif_1754561683560_qlg1l",
+    "userId": "usr_owner_default",
+    "projectId": "project_1752215890356_ujcbz",
+    "message": "Penawaran untuk proyek 'proyek hotel kuta' telah diajukan oleh komangmerta dan menunggu persetujuan Anda.",
+    "timestamp": "2025-08-07T10:14:43.560Z",
+    "isRead": false
+  },
+  {
+    "id": "notif_1754561651014_yzoen",
+    "userId": "usr_1747799008584_4r22a",
+    "projectId": "project_1752215890356_ujcbz",
+    "message": "Penawaran untuk proyek 'proyek hotel kuta' perlu direvisi oleh Anda berdasarkan masukan dari sudina.",
+    "timestamp": "2025-08-07T10:14:11.014Z",
+    "isRead": false
+  },
+  {
     "id": "notif_1754561444907_6591n",
     "userId": "usr_owner_default",
     "projectId": "project_1752215890356_ujcbz",
     "message": "Penawaran untuk proyek 'proyek hotel kuta' telah diajukan oleh komangmerta dan menunggu persetujuan Anda.",
     "timestamp": "2025-08-07T10:10:44.907Z",
-    "isRead": false
+    "isRead": true
   },
   {
     "id": "notif_1754560365151_x85mn",
