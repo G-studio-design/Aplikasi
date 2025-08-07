@@ -226,10 +226,10 @@
   {
     "id": "project_1754301256386_k96g5",
     "title": "proyek hotel seminyak",
-    "status": "Pending Offer",
-    "progress": 10,
-    "assignedDivision": "Admin Proyek",
-    "nextAction": "Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.",
+    "status": "Pending Approval",
+    "progress": 20,
+    "assignedDivision": "Owner",
+    "nextAction": "Setujui Dokumen Penawaran",
     "workflowId": "msa_workflow",
     "workflowHistory": [
       {
@@ -296,6 +296,16 @@
         "action": "sudina (Owner) requested revision.",
         "timestamp": "2025-08-07T06:47:41.775Z",
         "note": "gkuigbjug"
+      },
+      {
+        "division": "komangmerta",
+        "action": "Uploaded initial file(s): pemecahan nangka 2.pdf",
+        "timestamp": "2025-08-07T09:52:41.035Z"
+      },
+      {
+        "division": "Admin Proyek",
+        "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
+        "timestamp": "2025-08-07T09:52:45.088Z"
       }
     ],
     "files": [
@@ -340,6 +350,18 @@
         "uploadedBy": "Admin Proyek",
         "path": "project_1754301256386_k96g5/rap_mep.pdf",
         "timestamp": "2025-08-07T06:44:10.152Z"
+      },
+      {
+        "name": "pemecahan nangka 2.pdf",
+        "path": "project_1754301256386_k96g5/pemecahan_nangka_2.pdf",
+        "timestamp": "2025-08-07T09:52:40.991Z",
+        "uploadedBy": "Admin Proyek"
+      },
+      {
+        "name": "pemecahan nangka 2.pdf",
+        "uploadedBy": "Admin Proyek",
+        "path": "project_1754301256386_k96g5/pemecahan_nangka_2.pdf",
+        "timestamp": "2025-08-07T09:52:45.088Z"
       }
     ],
     "createdAt": "2025-08-04T09:54:16.386Z",

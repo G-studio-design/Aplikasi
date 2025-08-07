@@ -1,84 +1,68 @@
+'use strict';
 
-// /public/sw.js
+self.addEventListener('push', function (event) {
+  console.log('[Service Worker] Push Received.');
 
-self.addEventListener('install', (event) => {
-  console.log('Service Worker: Install in progress...');
-  event.waitUntil(self.skipWaiting()); // Force activation
-});
-
-self.addEventListener('activate', (event) => {
-  console.log('Service Worker: Activation complete.');
-  event.waitUntil(self.clients.claim()); // Take control of all clients
-});
-
-self.addEventListener('push', (event) => {
-  console.log('Service Worker: Push event received.');
-  if (!event.data) {
-    console.error('Service Worker: Push event but no data');
-    return;
+  let data = {};
+  if (event.data) {
+    try {
+      data = event.data.json();
+    } catch (e) {
+      console.error('[Service Worker] Error parsing push data:', e);
+      data = {
+        title: 'Notifikasi Baru',
+        body: event.data.text(),
+        url: '/dashboard',
+      };
+    }
   }
 
-  try {
-    const data = event.data.json();
-    console.log('Service Worker: Push data parsed:', data);
+  const title = data.title || 'Msarch App';
+  const options = {
+    body: data.body || 'Anda memiliki pembaruan baru.',
+    icon: '/msarch-logo.png',
+    badge: '/msarch-logo.png',
+    data: {
+      url: data.url || '/dashboard',
+    },
+  };
 
-    const title = data.title || 'Msarch App Notification';
-    const options = {
-      body: data.body || 'You have a new update.',
-      icon: '/msarch-logo-192.png', // Main icon
-      badge: '/msarch-logo-72.png', // Badge for smaller UI areas
-      vibrate: [100, 50, 100],
-      data: {
-        url: data.url || '/',
-      },
-    };
-
-    const promiseChain = self.registration.showNotification(title, options);
-    event.waitUntil(promiseChain);
-
-  } catch (e) {
-    console.error('Service Worker: Error processing push event data.', e);
-  }
+  event.waitUntil(self.registration.showNotification(title, options));
 });
 
 
-self.addEventListener('notificationclick', (event) => {
-  console.log('Service Worker: Notification clicked.');
+self.addEventListener('notificationclick', function (event) {
+  console.log('[Service Worker] Notification click Received.');
   event.notification.close();
-
   const urlToOpen = new URL(event.notification.data.url, self.location.origin).href;
 
-  console.log(`Service Worker: Attempting to navigate to or focus: ${urlToOpen}`);
-
-  const promiseChain = clients.matchAll({
-    type: 'window',
-    includeUncontrolled: true,
-  }).then((windowClients) => {
-    let matchingClient = null;
-
-    for (let i = 0; i < windowClients.length; i++) {
-      const client = windowClients[i];
-      // Looser check: if the origin matches, it's a potential candidate.
-      if (new URL(client.url).origin === new URL(urlToOpen).origin) {
-        matchingClient = client;
-        break; // Found a matching client, no need to look further.
+  event.waitUntil(
+    clients.matchAll({
+      type: 'window',
+      includeUncontrolled: true,
+    }).then(function (clientList) {
+      if (clientList.length > 0) {
+        let client = clientList[0];
+        for (let i = 0; i < clientList.length; i++) {
+          if (clientList[i].focused) {
+            client = clientList[i];
+            break;
+          }
+        }
+        
+        // If a matching client is found, focus it and post a message
+        if (client) {
+          client.focus();
+          client.postMessage({
+            type: 'navigate',
+            url: urlToOpen,
+          });
+          return;
+        }
       }
-    }
 
-    if (matchingClient) {
-      console.log('Service Worker: Matching client found, focusing and navigating...');
-      return matchingClient.focus().then((client) => {
-        // Post message to the client to navigate internally
-        client.postMessage({
-          type: 'navigate',
-          url: urlToOpen,
-        });
-      });
-    } else {
-      console.log('Service Worker: No matching client found, opening new window.');
+      // If no matching client is found, open a new window
       return clients.openWindow(urlToOpen);
-    }
-  });
-
-  event.waitUntil(promiseChain);
+    })
+  );
 });

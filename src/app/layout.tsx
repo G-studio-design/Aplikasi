@@ -30,6 +30,12 @@ export default function RootLayout({
       <head>
         <meta name="theme-color" content="#1A237E" />
         <link rel="manifest" href="/manifest.json" />
+        
+        {/* iOS-specific tags for PWA */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Msarch App" />
+        <link rel="apple-touch-icon" href="/msarch-logo.png?v=5" />
       </head>
       <body className={inter.className}>
         <AuthProvider>
