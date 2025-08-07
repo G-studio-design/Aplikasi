@@ -209,5 +209,5 @@ export async function saveSubscription(userId: string, newSubscription: PushSubs
     }
 
     await writeDb(SUBSCRIPTION_DB_PATH, allStoredSubscriptions);
-    console.log(`[NotificationService] Subscription saved for user ${userId}. User now has ${userSubscriptionRecord?.subscriptions.length || 1} subscription(s).`);
+    console.log(`[NotificationService] Subscription saved for user ${userId}. User now has ${allStoredSubscriptions.find(s => s.userId === userId)?.subscriptions.length || 0} subscription(s).`);
 }
