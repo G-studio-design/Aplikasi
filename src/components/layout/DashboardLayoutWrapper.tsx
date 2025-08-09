@@ -1,3 +1,4 @@
+
 // src/components/layout/DashboardLayoutWrapper.tsx
 'use client';
 
@@ -105,11 +106,12 @@ export default function DashboardLayoutWrapper({ children, attendanceEnabled }: 
     setIsClient(true);
   }, []);
 
-  // Listener untuk pesan dari Service Worker
+  // Listener untuk pesan dari Service Worker untuk navigasi
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       const handleServiceWorkerMessage = (event: MessageEvent) => {
         if (event.data && event.data.type === 'navigate' && event.data.url) {
+          console.log('[App] Received navigate command from SW:', event.data.url);
           router.push(event.data.url);
         }
       };
@@ -195,7 +197,7 @@ export default function DashboardLayoutWrapper({ children, attendanceEnabled }: 
     const items: MenuItem[] = [
       { href: "/dashboard", icon: LayoutDashboard, labelKey: "dashboard", roles: allRoles },
       { href: "/dashboard/projects", icon: ClipboardList, labelKey: "projects", roles: allRoles },
-      { href: "/dashboard/users", icon: Users, labelKey: "manageUsers", roles: ["Owner", "Akuntan", "Admin Proyek", "Admin Developer"] },
+      { href: "/dashboard/users", icon: Users, labelKey: "manageUsers", roles: ["Owner", "Admin Developer"] },
       { href: "/dashboard/attendance", icon: CalendarCheck, labelKey: "attendance", roles: allRoles, featureFlag: true },
       { href: "/dashboard/attendance-report", icon: FileClock, labelKey: "attendanceReport", roles: ["Owner", "Admin Developer"], featureFlag: true },
       { href: "/dashboard/leave-request/new", icon: Plane, labelKey: "requestLeave", roles: allRoles },

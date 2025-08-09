@@ -1,24 +1,43 @@
-// public/sw.js
 
-// Listener untuk menerima pesan push dari server.
-// Ini yang bertanggung jawab untuk MENAMPILKAN notifikasi.
+// /public/sw.js
+
+// Listener untuk instalasi Service Worker
+self.addEventListener('install', (event) => {
+  console.log('[Service Worker] Install');
+  // Skip waiting untuk mempercepat aktivasi
+  self.skipWaiting();
+});
+
+// Listener untuk aktivasi Service Worker
+self.addEventListener('activate', (event) => {
+  console.log('[Service Worker] Activate');
+  // Service Worker mengambil kontrol segera
+  event.waitUntil(self.clients.claim());
+});
+
+// Listener untuk menerima pesan push dari server
 self.addEventListener('push', (event) => {
   console.log('[Service Worker] Push Received.');
   let data = {};
-  try {
-    // Mencoba parse payload sebagai JSON
-    if (event.data) {
+  // Coba parse data dari payload push, jika ada
+  if (event.data) {
+    try {
       data = event.data.json();
+    } catch (e) {
+      console.error('[Service Worker] Push event data parse error:', e);
+      data = {
+        title: 'Notifikasi Baru',
+        body: event.data.text(),
+        url: '/',
+      };
     }
-  } catch (e) {
-    console.error('[Service Worker] Push event data is not JSON, falling back.', e);
   }
 
-  const title = data.title || 'Msarch App';
+  const title = data.title || 'Notifikasi Baru';
   const options = {
-    body: data.body || 'You have a new notification.',
-    icon: '/msarch-logo.png?v=5', // Ikon notifikasi
-    badge: '/msarch-logo.png?v=5', // Ikon kecil di status bar (Android)
+    body: data.body || 'Anda memiliki pembaruan baru.',
+    icon: '/msarch-logo.png', // Ikon default
+    badge: '/msarch-logo.png', // Ikon untuk status bar Android
     data: {
       url: data.url || '/',
     },
@@ -27,38 +46,42 @@ self.addEventListener('push', (event) => {
   event.waitUntil(self.registration.showNotification(title, options));
 });
 
-
-// Listener untuk saat notifikasi DIKLIK.
+// Listener untuk menangani klik pada notifikasi
 self.addEventListener('notificationclick', (event) => {
   console.log('[Service Worker] Notification click Received.');
 
-  event.notification.close(); // Tutup notifikasi yang diklik
+  event.notification.close();
 
   const urlToOpen = new URL(event.notification.data.url, self.location.origin).href;
 
-  const promiseChain = clients.matchAll({
+  const promiseChain = self.clients.matchAll({
     type: 'window',
     includeUncontrolled: true,
   }).then((windowClients) => {
     let matchingClient = null;
 
-    // Coba cari tab yang sudah terbuka dengan URL yang sama
-    for (let i = 0; i < windowClients.length; i++) {
-      const client = windowClients[i];
+    // Coba temukan tab yang sudah terbuka dengan URL yang sama
+    for (const client of windowClients) {
       if (client.url === urlToOpen) {
         matchingClient = client;
         break;
       }
     }
 
-    // Jika tab yang sama ditemukan, fokus ke tab itu
+    // Jika tidak ada yang cocok persis, gunakan tab pertama yang terbuka
+    if (!matchingClient && windowClients.length > 0) {
+      matchingClient = windowClients[0];
+    }
+
+    // Jika tab ditemukan, fokus dan kirim pesan
     if (matchingClient) {
-      console.log('[Service Worker] Found an existing tab, focusing it.');
-      return matchingClient.focus();
+      matchingClient.focus();
+      // Kirim pesan ke klien untuk navigasi internal
+      matchingClient.postMessage({ type: 'navigate', url: urlToOpen });
+      return matchingClient;
     } else {
-      // Jika tidak ada tab yang cocok, buka tab baru
-      console.log('[Service Worker] No existing tab found, opening a new one.');
-      return clients.openWindow(urlToOpen);
+      // Jika tidak ada tab yang terbuka, buka jendela baru
+      return self.clients.openWindow(urlToOpen);
     }
   });
 

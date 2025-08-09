@@ -44,7 +44,7 @@ export default function RootLayout({
             <Toaster />
           </LanguageProvider>
         </AuthProvider>
-        <Script id="service-worker-registration">
+        <Script id="service-worker-registration" strategy="afterInteractive">
           {`
             if ('serviceWorker' in navigator) {
               window.addEventListener('load', () => {
