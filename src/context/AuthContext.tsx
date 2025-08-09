@@ -14,6 +14,24 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
+const unsubscribeFromPushNotifications = async () => {
+    if ('serviceWorker' in navigator && 'PushManager' in window) {
+        try {
+            const registration = await navigator.serviceWorker.getRegistration();
+            if (registration) {
+                const subscription = await registration.pushManager.getSubscription();
+                if (subscription) {
+                    await subscription.unsubscribe();
+                    console.log('Successfully unsubscribed from push notifications.');
+                }
+            }
+        } catch (error) {
+            console.error('Error unsubscribing from push notifications:', error);
+        }
+    }
+};
+
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<User | null>(() => {
@@ -41,9 +59,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [currentUser]);
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    await unsubscribeFromPushNotifications();
     setCurrentUser(null);
-    console.log("User logged out. Redirecting to login page.");
+    console.log("User logged out and unsubscribed. Redirecting to login page.");
     router.push('/');
   }, [router]);
 
