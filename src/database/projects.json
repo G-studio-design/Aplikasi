@@ -2,10 +2,10 @@
   {
     "id": "project_1752215890356_ujcbz",
     "title": "proyek hotel kuta",
-    "status": "Pending Approval",
-    "progress": 20,
-    "assignedDivision": "Owner",
-    "nextAction": "Setujui Dokumen Penawaran",
+    "status": "Pending Offer",
+    "progress": 10,
+    "assignedDivision": "Admin Proyek",
+    "nextAction": "Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.",
     "workflowId": "msa_workflow",
     "workflowHistory": [
       {
@@ -159,6 +159,12 @@
         "action": "komangmerta (Admin Proyek) submitted for \"Revisi dan Unggah Ulang Dokumen Penawaran berdasarkan masukan Owner.\"",
         "timestamp": "2025-08-07T10:14:43.333Z",
         "note": "revisi done"
+      },
+      {
+        "division": "Owner",
+        "action": "sudina (Owner) requested revision.",
+        "timestamp": "2025-08-07T10:30:51.161Z",
+        "note": "revisi lagi"
       }
     ],
     "files": [

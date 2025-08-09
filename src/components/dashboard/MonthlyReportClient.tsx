@@ -46,7 +46,6 @@ import {
 } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LabelList, Cell } from "recharts";
 import type { Language } from '@/context/LanguageContext';
-import { toPng } from 'html-to-image';
 import { cn } from '@/lib/utils';
 import { Card as ResponsiveCard } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -92,7 +91,6 @@ export default function MonthlyReportClient({ initialProjects }: MonthlyReportCl
   const [isGeneratingReport, setIsGeneratingReport] = React.useState(false);
   const [isDownloading, setIsDownloading] = React.useState<false | 'word'>(false);
   const chartContainerRef = React.useRef<HTMLDivElement>(null);
-  const [chartImageDataUrl, setChartImageDataUrl] = React.useState<string | null>(null);
   
   React.useEffect(() => {
     const newDict = getDictionary(language);
@@ -146,7 +144,6 @@ export default function MonthlyReportClient({ initialProjects }: MonthlyReportCl
     }
     setIsGeneratingReport(true);
     setReportData(null);
-    setChartImageDataUrl(null); 
 
     const monthInt = parseInt(selectedMonth, 10);
     const yearInt = parseInt(selectedYear, 10);
@@ -211,31 +208,6 @@ export default function MonthlyReportClient({ initialProjects }: MonthlyReportCl
   }, [selectedMonth, selectedYear, initialProjects, toast, reportDict, language, getMonthName]);
 
 
-  React.useEffect(() => {
-    const generateChartImage = async () => {
-        if (reportData && chartContainerRef.current && (reportData.inProgress.length > 0 || reportData.completed.length > 0 || reportData.canceled.length > 0)) {
-            try {
-                const dataUrl = await toPng(chartContainerRef.current, {
-                    skipFonts: true, 
-                    backgroundColor: '#FFFFFF' 
-                });
-                setChartImageDataUrl(dataUrl);
-            } catch (error) {
-                console.error('Failed to generate chart image:', error);
-                toast({ variant: 'destructive', title: reportDict.toast.chartImageErrorTitle, description: reportDict.toast.chartImageErrorDesc });
-                setChartImageDataUrl(null);
-            }
-        } else if (reportData) { 
-            setChartImageDataUrl(null);
-        }
-    };
-    if (reportData) { 
-        const timer = setTimeout(generateChartImage, 500);
-        return () => clearTimeout(timer);
-    }
-  }, [reportData, toast, reportDict.toast.chartImageErrorTitle, reportDict.toast.chartImageErrorDesc]);
-
-
   const handleDownloadWord = async () => {
     if (!reportData) {
         toast({ variant: 'destructive', title: reportDict.toast.error, description: reportDict.toast.generateReportFirst });
@@ -248,7 +220,7 @@ export default function MonthlyReportClient({ initialProjects }: MonthlyReportCl
             monthName: reportData.monthName,
             year: reportData.year,
             language,
-            chartImageDataUrl, 
+            chartImageDataUrl: null, // No longer sending image data
         };
         const response = await fetch('/api/generate-report/word', {
             method: 'POST',
@@ -536,7 +508,7 @@ export default function MonthlyReportClient({ initialProjects }: MonthlyReportCl
             <CardDescription>{reportDict.downloadReportSectionDesc}</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={handleDownloadWord} disabled={isDownloading === 'word' || isGeneratingReport || (!chartImageDataUrl && !noDataForChart)} className="w-full sm:w-auto">
+            <Button onClick={handleDownloadWord} disabled={isDownloading === 'word' || isGeneratingReport} className="w-full sm:w-auto">
               {isDownloading === 'word' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FileText className="mr-2 h-4 w-4" />}
               {reportDict.downloadWord}
             </Button>
