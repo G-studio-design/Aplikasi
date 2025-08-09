@@ -1,3 +1,4 @@
+
 'use client';
 
 // src/components/dashboard/MonthlyReportClient.tsx
@@ -38,6 +39,7 @@ import { type Project } from '@/services/project-service';
 import { Badge } from '@/components/ui/badge';
 import { format, parseISO, getMonth, getYear } from 'date-fns';
 import { id as idLocale, enUS as enLocale } from 'date-fns/locale';
+import { toPng } from 'html-to-image';
 import {
   ChartContainer,
   ChartTooltip,
@@ -214,13 +216,32 @@ export default function MonthlyReportClient({ initialProjects }: MonthlyReportCl
         return;
     }
     setIsDownloading('word');
+    
+    let chartImageDataUrl: string | null = null;
+    if (chartContainerRef.current) {
+      try {
+        chartImageDataUrl = await toPng(chartContainerRef.current, {
+          cacheBust: true,
+          backgroundColor: 'white',
+          pixelRatio: 2, // Increase resolution
+        });
+      } catch (err) {
+        console.error('oops, something went wrong!', err);
+        toast({
+            variant: "destructive",
+            title: reportDict.toast.chartImageErrorTitle,
+            description: reportDict.toast.chartImageErrorDesc
+        })
+      }
+    }
+
     try {
         const payload = {
             reportData,
             monthName: reportData.monthName,
             year: reportData.year,
             language,
-            chartImageDataUrl: null, // No longer sending image data
+            chartImageDataUrl,
         };
         const response = await fetch('/api/generate-report/word', {
             method: 'POST',
